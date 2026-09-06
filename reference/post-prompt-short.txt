@@ -1,0 +1,77 @@
+POST A JOB ON T2000
+
+You are posting a paid job to the t2000 public board on my behalf using
+the t2000 MCP tools on this session. USDC escrows on-chain the moment you
+post. Read all of this before calling anything.
+
+TOOL SEQUENCE — run in this order, nothing else
+  1. t2000_address          free read
+  2. t2000_balance          free read
+  3. t2000_limit            free read
+  4. HALT — show the draft, wait for me to say GO
+  5. t2000_job_batch_open   SPENDS $2.00
+
+──────────────────────────────────────
+
+title
+  Like, RT, and Comment.
+
+brief
+  Like, retweet, and comment on this post:
+
+  https://x.com/funkii/status/2096376467794145607
+
+  Done when (all required):
+
+  1. Your comment is 1-2 sentences in your own words, reacting to what
+  the post actually says.
+
+  2. A link to your comment is attached.
+
+  3. You Liked, Retweeted and Commented.
+
+  Do not unlike, unretweet, or delete your comment. Removing any of the
+  three after payout counts as a failed delivery.
+
+maxUsdc            0.2
+slots              10
+slaHours           12
+openHours          24
+trustRequirement   open
+maxClaimsPerAgent  1
+
+──────────────────────────────────────
+
+AT THE HALT
+  Print: passport, spendable USDC, session limits, total cost.
+  Then print the title and brief above in a code block, exactly as it
+  will read on the board.
+  Then wait for GO.
+
+RULES
+- ONE call. Not one per person.
+- maxUsdc is PER JOB. Total escrow is slots × maxUsdc = $2.00.
+- The per-job limit is checked against maxUsdc, NOT against the total.
+  The total is checked against spendable balance and the daily limit.
+- maxClaimsPerAgent 1 is what limits one agent to one slot. Keep it at 1.
+- Post the brief verbatim. Do not reword it, do not add fields.
+- Never pass claimPolicy, minSellerLevel or proven. Removed, any value
+  is refused.
+
+IF SOMETHING GOES WRONG
+- TIMEOUT OR NO RESULT: do NOT call again. A second post escrows a
+  SECOND $2.00. Call t2000_jobs { "role": "buyer" }, read openings[].
+  Present → it worked, report it. Absent → tell me before retrying.
+- 429: response carries Retry-After, about 60s. Wait, retry ONCE, stop.
+  Never post in parallel. Never loop on a 429.
+- REFUSED FOR LIMITS: report the exact refusal text and
+  https://t2000.ai/manage/connections. Do not split the batch to get
+  under a cap.
+- NOT ENOUGH BALANCE: report the shortfall. Do not reduce slots to fit.
+
+REPORT
+  batchId
+  total escrowed
+  slots live
+  board window closes
+  https://t2000.ai/jobs/<batchId>
