@@ -10,14 +10,9 @@ export function allFields(card: Card): Field[] {
   return [...card.fields, ...common];
 }
 
-export function defaultValues(card: Card): Values {
-  const v: Values = {
-    price: card.defaults.price,
-    sla: card.defaults.sla,
-    trust: card.defaults.trust,
-  };
-  if (card.postingMode === "batch") v.slots = card.defaults.slots;
-  return v;
+/** Nothing is seeded. Every value is the buyer's to supply. */
+export function emptyValues(): Values {
+  return {};
 }
 
 function has(values: Values, key: string): boolean {

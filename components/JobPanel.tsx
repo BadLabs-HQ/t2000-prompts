@@ -6,7 +6,7 @@ import { categories } from "@/lib/types";
 import {
   allFields,
   compile,
-  defaultValues,
+  emptyValues,
   missingFields,
   totalEscrow,
 } from "@/lib/compile";
@@ -29,7 +29,7 @@ const TABS: { id: Tab; label: string; note: string }[] = [
 
 export function JobPanel({ card, onClose }: { card: Card; onClose: () => void }) {
   const [tab, setTab] = useState<Tab>("post");
-  const [values, setValues] = useState<Values>(() => defaultValues(card));
+  const [values, setValues] = useState<Values>(emptyValues);
 
   const fields = allFields(card);
   const missing = missingFields(card, values);
@@ -58,7 +58,6 @@ export function JobPanel({ card, onClose }: { card: Card; onClose: () => void })
             {card.blurb}
           </p>
           <p className="mt-2 font-mono text-[11.5px] text-muted">
-            typical {card.priceBand} ·{" "}
             {card.postingMode === "batch" ? "many workers" : "one worker"}
           </p>
         </div>
@@ -103,7 +102,7 @@ export function JobPanel({ card, onClose }: { card: Card; onClose: () => void })
 
       <div className="flex min-h-0 flex-1 flex-col">
         {tab !== "settle" ? (
-          <section className="max-h-[236px] shrink-0 overflow-y-auto border-b border-hairline px-5 py-4">
+          <section className="max-h-[236px] shrink-0 overflow-y-auto overscroll-contain border-b border-hairline px-5 py-4">
             <div className="flex flex-col gap-3.5">
               {fields.map((f) => (
                 <FieldRow

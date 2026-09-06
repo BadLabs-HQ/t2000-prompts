@@ -1,20 +1,47 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { cards } from "@/lib/cards";
 import { categories, type CategoryId } from "@/lib/types";
 import { JobPanel } from "./JobPanel";
 
-/** Opens on the first card so the panel shows a working state, but only on
- *  screens wide enough to sit beside the list. Below that the panel is an
- *  overlay and has to be asked for. */
-const RESTING_CARD = "like-rt-comment";
+const RAIL_KEY = "t2000:rail:expanded";
 
 export function Catalog() {
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<CategoryId | "all">("all");
-  const [openId, setOpenId] = useState<string | null>(RESTING_CARD);
-  const [picked, setPicked] = useState(false);
+  const [openId, setOpenId] = useState<string | null>(null);
+  const [expanded, setExpanded] = useState(true);
+  const [hydrated, setHydrated] = useState(false);
+
+  useEffect(() => {
+    const stored = window.localStorage.getItem(RAIL_KEY);
+    if (stored !== null) setExpanded(stored === "true");
+    setHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    if (hydrated) window.localStorage.setItem(RAIL_KEY, String(expanded));
+  }, [expanded, hydrated]);
+
+  // The panel layers over the page, so the page behind it must not scroll.
+  useEffect(() => {
+    if (!openId) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [openId]);
+
+  useEffect(() => {
+    if (!openId) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpenId(null);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [openId]);
 
   const visible = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -39,11 +66,6 @@ export function Catalog() {
     .filter((g) => g.items.length > 0);
 
   const open = cards.find((c) => c.id === openId) ?? null;
-
-  function pick(id: string) {
-    setOpenId(id);
-    setPicked(true);
-  }
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -92,12 +114,15 @@ export function Catalog() {
       <div className="flex min-h-0 flex-1">
         <nav
           aria-label="Categories"
-          className="hidden w-52 shrink-0 border-r border-hairline px-2 py-3 md:block"
+          className={`hidden shrink-0 flex-col border-r border-hairline px-2 py-3 transition-[width] duration-200 ease-out md:flex ${
+            expanded ? "w-52" : "w-14"
+          }`}
         >
           <RailItem
             label="All jobs"
             count={cards.length}
             active={filter === "all"}
+            expanded={expanded}
             onClick={() => setFilter("all")}
           />
           <div role="separator" className="my-1.5 h-px bg-hairline" />
@@ -110,13 +135,37 @@ export function Catalog() {
                 label={cat.label}
                 count={count}
                 active={filter === cat.id}
+                expanded={expanded}
                 onClick={() => setFilter(cat.id)}
               />
             );
           })}
+
+          <button
+            type="button"
+            onClick={() => setExpanded((v) => !v)}
+            aria-label={expanded ? "Collapse sidebar" : "Expand sidebar"}
+            aria-expanded={expanded}
+            title={expanded ? undefined : "Expand"}
+            className={`mt-auto flex h-9 items-center gap-3 rounded-md text-[13px] text-muted transition hover:bg-subtle hover:text-ink ${
+              expanded ? "px-2.5" : "justify-center px-0"
+            }`}
+          >
+            <ToggleIcon
+              expanded={expanded}
+              className="h-[18px] w-[18px] shrink-0"
+            />
+            <span
+              className={`overflow-hidden whitespace-nowrap transition-[opacity,max-width] duration-200 ${
+                expanded ? "max-w-[140px] opacity-100" : "max-w-0 opacity-0"
+              }`}
+            >
+              Collapse
+            </span>
+          </button>
         </nav>
 
-        <main className="min-w-0 flex-1 overflow-y-auto px-4 py-6 sm:px-6">
+        <main className="min-w-0 flex-1 px-4 py-6 sm:px-6">
           <p className="max-w-[62ch] text-[13.5px] leading-relaxed text-muted">
             Pick a job, fill in what you know, copy the prompt. Blanks are fine
             — the prompt carries instructions for your AI to ask you for
@@ -129,36 +178,24 @@ export function Catalog() {
                 <h2 className="font-mono text-[11px] uppercase tracking-wider text-muted">
                   {cat.label}
                 </h2>
-                <ul className="mt-2.5 grid grid-cols-1 gap-x-8 gap-y-0.5 lg:grid-cols-2">
-                  {items.map((c) => {
-                    const active = c.id === openId;
-                    return (
-                      <li key={c.id}>
-                        <button
-                          type="button"
-                          onClick={() => pick(c.id)}
-                          className={`group flex w-full items-baseline gap-3 rounded-md px-2 py-1.5 text-left transition ${
-                            active ? "bg-subtle" : "hover:bg-subtle"
-                          }`}
-                        >
-                          <span
-                            aria-hidden
-                            className={`mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full transition ${
-                              active
-                                ? "bg-ink"
-                                : "bg-hairline group-hover:bg-muted"
-                            }`}
-                          />
-                          <span className="min-w-0 flex-1 truncate text-[13.5px] text-ink">
-                            {c.name}
-                          </span>
-                          <span className="shrink-0 font-mono text-[11px] tabular-nums text-muted">
-                            {c.priceBand.split(" to ")[0]}
-                          </span>
-                        </button>
-                      </li>
-                    );
-                  })}
+                <ul className="mt-2.5 grid grid-cols-1 gap-x-8 gap-y-0.5 lg:grid-cols-2 2xl:grid-cols-3">
+                  {items.map((c) => (
+                    <li key={c.id}>
+                      <button
+                        type="button"
+                        onClick={() => setOpenId(c.id)}
+                        className="group flex w-full items-baseline gap-3 rounded-md px-2 py-1.5 text-left transition hover:bg-subtle"
+                      >
+                        <span
+                          aria-hidden
+                          className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-hairline transition group-hover:bg-ink"
+                        />
+                        <span className="min-w-0 flex-1 truncate text-[13.5px] text-ink">
+                          {c.name}
+                        </span>
+                      </button>
+                    </li>
+                  ))}
                 </ul>
               </section>
             ))}
@@ -176,24 +213,46 @@ export function Catalog() {
             the brief before you post — it is public.
           </p>
         </main>
-
-        {open ? (
-          <div
-            className={`fixed inset-y-0 right-0 z-30 w-full max-w-[580px] shadow-cardHover xl:static xl:z-auto xl:w-[580px] xl:shadow-none ${
-              picked ? "block" : "hidden xl:block"
-            }`}
-          >
-            <JobPanel
-              card={open}
-              onClose={() => {
-                setOpenId(null);
-                setPicked(false);
-              }}
-            />
-          </div>
-        ) : null}
       </div>
+
+      {open ? (
+        <>
+          <div
+            aria-hidden
+            onClick={() => setOpenId(null)}
+            className="fixed inset-0 z-30 bg-ink/10"
+          />
+          <div className="fixed inset-y-0 right-0 z-40 w-full max-w-[580px] shadow-cardHover">
+            <JobPanel card={open} onClose={() => setOpenId(null)} />
+          </div>
+        </>
+      ) : null}
     </div>
+  );
+}
+
+function ToggleIcon({
+  expanded,
+  className,
+}: {
+  expanded: boolean;
+  className?: string;
+}) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+      className={className}
+    >
+      <rect x="3.5" y="4.5" width="17" height="15" rx="2" />
+      <path d="M9.5 4.5v15" />
+      {expanded ? <path d="M15 9l-3 3 3 3" /> : <path d="M13 9l3 3-3 3" />}
+    </svg>
   );
 }
 
@@ -225,27 +284,38 @@ function RailItem({
   label,
   count,
   active,
+  expanded,
   onClick,
 }: {
   label: string;
   count: number;
   active: boolean;
+  expanded: boolean;
   onClick: () => void;
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className={`flex h-8 w-full items-center gap-2 rounded-md px-2.5 text-[13px] transition ${
+      title={expanded ? undefined : `${label} (${count})`}
+      className={`flex h-8 w-full items-center gap-2 rounded-md text-[13px] transition ${
+        expanded ? "px-2.5" : "justify-center px-0"
+      } ${
         active
           ? "bg-subtle text-ink"
           : "text-muted hover:bg-subtle hover:text-ink"
       }`}
     >
-      <span className="min-w-0 flex-1 truncate text-left">{label}</span>
-      <span className="font-mono text-[11px] tabular-nums text-muted">
-        {count}
-      </span>
+      {expanded ? (
+        <>
+          <span className="min-w-0 flex-1 truncate text-left">{label}</span>
+          <span className="font-mono text-[11px] tabular-nums text-muted">
+            {count}
+          </span>
+        </>
+      ) : (
+        <span className="font-mono text-[11px] tabular-nums">{count}</span>
+      )}
     </button>
   );
 }

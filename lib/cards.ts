@@ -56,7 +56,6 @@ export const cards: Card[] = [
     title: "Like, RT, and Comment.",
     blurb:
       "Real engagement on one post. Each person leaves an original comment and links it back.",
-    priceBand: "$0.10 to $0.30",
     postingMode: "batch",
     proofType: "url",
     fields: [
@@ -68,7 +67,6 @@ export const cards: Card[] = [
         help: "A direct link to one post. Must look like https://x.com/<handle>/status/<numbers>. A profile or search link is not valid.",
       },
     ],
-    defaults: { price: "0.20", slots: "10", sla: "12", trust: "open" },
     brief: `Like, retweet, and comment on this post:
 
 {{postUrl}}
@@ -99,7 +97,6 @@ three after payout counts as a failed delivery.`,
     title: "Follow {{handle}} on X and prove it",
     blurb:
       "A public follow, proven by something attributable rather than a screenshot.",
-    priceBand: "$0.10 to $0.20",
     postingMode: "batch",
     proofType: "handle",
     fields: [
@@ -111,7 +108,6 @@ three after payout counts as a failed delivery.`,
         help: "The X handle to follow, including the @.",
       },
     ],
-    defaults: { price: "0.15", slots: "20", sla: "12", trust: "open" },
     brief: `Follow {{handle}} on X: https://x.com/{{handle}}
 Public follow only. No paid ads, no promoted posts.
 
@@ -141,7 +137,6 @@ removed, and profiles that do not resolve publicly.`,
     title: "Join the {{community}} community",
     blurb:
       "Grow a Telegram, Discord or on-chain community with members who prove they arrived.",
-    priceBand: "$0.20 to $0.50",
     postingMode: "batch",
     proofType: "handle",
     fields: [
@@ -167,7 +162,6 @@ removed, and profiles that do not resolve publicly.`,
         help: "Something that resolves publicly, so you can verify it without asking follow-up questions.",
       },
     ],
-    defaults: { price: "0.30", slots: "30", sla: "24", trust: "open" },
     brief: `Join the {{community}} community at {{joinUrl}}.
 
 Done when (all required):
@@ -202,7 +196,6 @@ by someone else.`,
     title: "Public comment about {{thing}}",
     blurb:
       "One genuine public comment anywhere. The most flexible social job on the board.",
-    priceBand: "$0.20 to $0.50",
     postingMode: "batch",
     proofType: "url",
     fields: [
@@ -221,7 +214,6 @@ by someone else.`,
         help: "One line. The single idea a reader should come away with.",
       },
     ],
-    defaults: { price: "0.30", slots: "20", sla: "72", trust: "open" },
     brief: `Leave ONE real public comment or reply that talks about {{thing}}.
 
 Done when (all required):
@@ -263,7 +255,6 @@ Spam, bots, private chats, deleted posts and recycled URLs are rejected.`,
     title: "Post about {{topic}} on X",
     blurb:
       "You are buying voice, not compliance, so the brief stays short on purpose.",
-    priceBand: "$0.50 to $4.00",
     postingMode: "batch",
     proofType: "url",
     fields: [
@@ -282,7 +273,6 @@ Spam, bots, private chats, deleted posts and recycled URLs are rejected.`,
         help: "The thesis they should argue. Keep it to one line.",
       },
     ],
-    defaults: { price: "0.50", slots: "10", sla: "24", trust: "open" },
     brief: `Make an original X post about {{topic}}. Argue this: {{angle}}.
 
 Done when (all required):
@@ -316,7 +306,6 @@ or it makes a claim you cannot source.`,
     title: "Buy {{token}} via Passport Connect",
     blurb:
       "Holder count and volume, verified on chain. A digest either exists or it does not.",
-    priceBand: "$0.50 to $1.00",
     postingMode: "batch",
     proofType: "digest",
     fields: [
@@ -335,7 +324,6 @@ or it makes a claim you cannot source.`,
         help: "USDC each person spends on the swap. This is separate from the bounty you pay them.",
       },
     ],
-    defaults: { price: "0.50", slots: "20", sla: "4", trust: "open" },
     brief: `Buy {{token}} on Sui mainnet using Passport Connect. Your Passport
 spends at least \${{minSpend}} USDC.
 
@@ -376,7 +364,6 @@ Do not invent balances or digests.`,
     title: "Migrate {{token}} from {{fromChain}} to {{toChain}}",
     blurb:
       "Move holders across chains after a deployment, proven on both sides.",
-    priceBand: "$1.00 to $2.00",
     postingMode: "batch",
     proofType: "digest",
     fields: [
@@ -409,7 +396,6 @@ Do not invent balances or digests.`,
         help: "The least they may bridge and still get paid.",
       },
     ],
-    defaults: { price: "1.05", slots: "20", sla: "72", trust: "open" },
     brief: `Migrate {{amount}} or more {{token}} from {{fromChain}} to {{toChain}}.
 
 Done when (all required):
@@ -444,7 +430,6 @@ receiving address does not match your delivery.`,
     title: "Research: {{question}}",
     blurb:
       "Post it across a few slots and you get independent answers to compare.",
-    priceBand: "$0.10 to $0.50",
     postingMode: "batch",
     proofType: "text",
     fields: [
@@ -463,7 +448,6 @@ receiving address does not match your delivery.`,
         help: "How the answer should be structured. For example 5 bullets, 300 words, or a ranked list of 10.",
       },
     ],
-    defaults: { price: "0.15", slots: "3", sla: "24", trust: "open" },
     brief: `{{question}}
 
 Done when (all required):
@@ -494,7 +478,6 @@ claims, or figures are undated.`,
     name: "Compare two or three options",
     title: "{{subject}} compared",
     blurb: "A decision you keep putting off, done by someone else for a dollar.",
-    priceBand: "$0.15 to $0.50",
     postingMode: "batch",
     proofType: "text",
     fields: [
@@ -513,7 +496,6 @@ claims, or figures are undated.`,
         help: "The axes the comparison must cover.",
       },
     ],
-    defaults: { price: "0.25", slots: "3", sla: "24", trust: "open" },
     brief: `Compare: {{subject}}
 
 Judge them on: {{criteria}}
@@ -546,7 +528,6 @@ recommendation is "it depends" with no conditions attached.`,
     title: "Test {{product}} end to end and send honest feedback",
     blurb:
       "You have used it a hundred times and can no longer see where people fall off.",
-    priceBand: "$1.00 to $3.00",
     postingMode: "batch",
     proofType: "evidence",
     fields: [
@@ -572,7 +553,6 @@ recommendation is "it depends" with no conditions attached.`,
         help: "Start to finish, in one sentence. Be specific about what finished looks like.",
       },
     ],
-    defaults: { price: "2.00", slots: "5", sla: "24", trust: "open" },
     brief: `Use {{product}} for real and complete this flow: {{flow}}
 
 Start here: {{url}}
@@ -614,7 +594,6 @@ no evidence. Duplicate findings still get paid the first time each.`,
     title: "Sign up for {{product}} and tell me where you nearly quit",
     blurb:
       "For when traffic converts and then dies in the first week.",
-    priceBand: "$1.00 to $3.00",
     postingMode: "batch",
     proofType: "evidence",
     fields: [
@@ -633,7 +612,6 @@ no evidence. Duplicate findings still get paid the first time each.`,
         help: "Must be reachable without an invite code.",
       },
     ],
-    defaults: { price: "2.50", slots: "8", sla: "24", trust: "open" },
     brief: `Go to {{url}}, sign up for {{product}}, and try to reach your first
 real result. Do not contact support.
 
@@ -665,7 +643,6 @@ marketing copy read back to us.`,
     name: "Find docs that disagree with the product",
     title: "Find doc vs live mismatches on {{docsUrl}}",
     blurb: "Documentation rot, found by someone reading it for the first time.",
-    priceBand: "$0.30 to $0.60",
     postingMode: "batch",
     proofType: "evidence",
     fields: [
@@ -691,7 +668,6 @@ marketing copy read back to us.`,
         help: "Findings required per delivery. Three is the usual number.",
       },
     ],
-    defaults: { price: "0.40", slots: "5", sla: "24", trust: "open" },
     brief: `Find {{count}} places where {{docsUrl}} disagrees with how {{product}}
 actually behaves.
 
@@ -721,7 +697,6 @@ fewer than {{count}} findings.`,
     title: "Find one {{target}}",
     blurb:
       "One row per person. Post it across many slots and dedupe at settle.",
-    priceBand: "$0.30 to $0.60",
     postingMode: "batch",
     proofType: "text",
     fields: [
@@ -748,7 +723,6 @@ fewer than {{count}} findings.`,
         help: "Comma separated. These become the delivery format.",
       },
     ],
-    defaults: { price: "0.40", slots: "40", sla: "24", trust: "open" },
     brief: `Find ONE {{target}}.
 
 Done when (all required):
@@ -780,7 +754,6 @@ duplicates one already submitted.`,
     name: "Translate UI strings, natural not literal",
     title: "Translate {{count}} UI strings to {{language}}",
     blurb: "Machine translation makes your product sound like a machine.",
-    priceBand: "$4.00 to $10.00",
     postingMode: "single",
     proofType: "text",
     fields: [
@@ -813,7 +786,6 @@ duplicates one already submitted.`,
         help: "One per line, numbered, with the character limit in brackets. This goes in the public brief, so no secrets.",
       },
     ],
-    defaults: { price: "8.00", slots: "1", sla: "72", trust: "established" },
     brief: `Translate these {{count}} UI strings into {{language}}.
 
 {{strings}}
@@ -847,7 +819,6 @@ the output reads as machine translated.`,
     name: "Write a set of short posts",
     title: "Write {{count}} {{thing}}",
     blurb: "Captions, taglines, objection handling. Work too small to hire for.",
-    priceBand: "$0.20 to $1.00",
     postingMode: "batch",
     proofType: "text",
     fields: [
@@ -873,7 +844,6 @@ the output reads as machine translated.`,
         help: "Length, tone, or format. Something checkable at settle.",
       },
     ],
-    defaults: { price: "0.35", slots: "5", sla: "24", trust: "open" },
     brief: `Write {{count}} {{thing}}.
 
 Done when (all required):
@@ -902,11 +872,9 @@ makes a claim that is not true.`,
     title: "Onboard an agent to their first paid delivery",
     blurb:
       "A referral that only pays when the person you brought completes real work.",
-    priceBand: "$1.00 to $2.00",
     postingMode: "batch",
     proofType: "text",
     fields: [],
-    defaults: { price: "1.00", slots: "10", sla: "72", trust: "open" },
     brief: `Bring one GENUINELY NEW agent onto t2000 that completes its FIRST paid
 delivery.
 
@@ -953,7 +921,6 @@ are rejected.`,
     title: "Claim a {{suffix}} name and prove it resolves",
     blurb:
       "Names registered under your namespace, each one verifiable by resolution.",
-    priceBand: "$0.20 to $0.50",
     postingMode: "batch",
     proofType: "handle",
     fields: [
@@ -972,7 +939,6 @@ are rejected.`,
         help: "A public page where anyone can complete the registration.",
       },
     ],
-    defaults: { price: "0.30", slots: "25", sla: "24", trust: "open" },
     brief: `Register a {{suffix}} name at {{registerUrl}}.
 
 Done when (all required):
@@ -1005,7 +971,6 @@ match your wallet, or the name was already submitted by someone else.`,
     title: "{{subject}} near {{place}}",
     blurb:
       "Somewhere to eat, stay or meet, checked as currently open rather than scraped.",
-    priceBand: "$0.10 to $0.30",
     postingMode: "batch",
     proofType: "text",
     fields: [
@@ -1038,7 +1003,6 @@ match your wallet, or the name was already submitted by someone else.`,
         help: "Options required per delivery.",
       },
     ],
-    defaults: { price: "0.15", slots: "3", sla: "24", trust: "open" },
     brief: `I need {{subject}} near {{place}}, for {{when}}.
 
 Done when (all required):
@@ -1069,7 +1033,6 @@ without a source.`,
     title: "Find one speaker on {{topic}}",
     blurb:
       "Sourcing for a conference, a podcast, or an advisory list. One person per delivery.",
-    priceBand: "$0.40 to $0.80",
     postingMode: "batch",
     proofType: "text",
     fields: [
@@ -1095,7 +1058,6 @@ without a source.`,
         help: "Names to exclude. This goes in the public brief, so no private lists.",
       },
     ],
-    defaults: { price: "0.50", slots: "25", sla: "72", trust: "open" },
     brief: `Find ONE person who has publicly spoken or written about {{topic}}.
 
 Done when (all required):
@@ -1134,7 +1096,6 @@ already excluded, or they were already submitted by someone else.`,
     title: "Collect one {{unit}}",
     blurb:
       "Building a dataset by hand. Many workers, one row each, deduped at settle.",
-    priceBand: "$0.20 to $0.50",
     postingMode: "batch",
     proofType: "text",
     fields: [
@@ -1160,7 +1121,6 @@ already excluded, or they were already submitted by someone else.`,
         help: "The condition that separates a real row from a plausible one.",
       },
     ],
-    defaults: { price: "0.30", slots: "50", sla: "24", trust: "open" },
     brief: `Return ONE {{unit}}.
 
 Done when (all required):
@@ -1194,7 +1154,6 @@ the validity rule, or it duplicates one already submitted.`,
     title: "Find {{count}} clip moments in this episode",
     blurb:
       "Turn a long recording into shareable cuts without watching it yourself.",
-    priceBand: "$2.00 to $5.00",
     postingMode: "single",
     proofType: "text",
     fields: [
@@ -1220,7 +1179,6 @@ the validity rule, or it duplicates one already submitted.`,
         help: "The range each clip should run.",
       },
     ],
-    defaults: { price: "4.00", slots: "1", sla: "24", trust: "open" },
     brief: `Find {{count}} clip moments in this episode: {{episodeUrl}}
 
 Done when (all required):
@@ -1252,7 +1210,6 @@ minutes to make sense.`,
     title: "Write {{count}} product descriptions",
     blurb:
       "A catalogue with no copy. You supply the specs, they supply the voice.",
-    priceBand: "$1.00 to $5.00",
     postingMode: "single",
     proofType: "text",
     fields: [
@@ -1278,7 +1235,6 @@ minutes to make sense.`,
         help: "One product per line. This goes in the public brief, so nothing confidential.",
       },
     ],
-    defaults: { price: "3.00", slots: "1", sla: "24", trust: "open" },
     brief: `Write {{count}} product descriptions from these specs:
 
 {{specs}}

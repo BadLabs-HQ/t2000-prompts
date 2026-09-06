@@ -25,7 +25,7 @@ export function PromptView({
         <CopyButton text={text} label="prompt" />
       </div>
 
-      <div className="min-h-0 flex-1 overflow-auto rounded-lg border border-hairline bg-subtle">
+      <div className="min-h-0 flex-1 overflow-auto overscroll-contain rounded-lg border border-hairline bg-subtle">
         <pre className="whitespace-pre px-4 py-3 font-mono text-[12px] leading-[1.55] text-ink">
           <code>{text}</code>
         </pre>

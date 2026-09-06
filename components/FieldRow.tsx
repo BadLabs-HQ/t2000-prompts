@@ -32,10 +32,11 @@ export function FieldRow({
 
       {field.type === "select" ? (
         <select
-          className={`${INPUT} appearance-none`}
+          className={`${INPUT} appearance-none ${empty ? "text-muted" : ""}`}
           value={value}
           onChange={(e) => onChange(e.target.value)}
         >
+          <option value="">Choose…</option>
           {field.options?.map((o) => (
             <option key={o.value} value={o.value}>
               {o.label}

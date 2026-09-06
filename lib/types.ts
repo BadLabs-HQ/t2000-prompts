@@ -45,19 +45,12 @@ export type Card = {
   /** Job title as it appears on the public board. */
   title: string;
   blurb: string;
-  priceBand: string;
   postingMode: "single" | "batch";
   proofType: ProofType;
   /** Brief body with {{key}} slots. Posted verbatim. */
   brief: string;
   /** Card-specific fields. The four common ones are added by the compiler. */
   fields: Field[];
-  defaults: {
-    price: string;
-    slots: string;
-    sla: string;
-    trust: string;
-  };
   /** Extra checks the settle prompt should run for this job shape. */
   settleChecks: string[];
 };
