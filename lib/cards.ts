@@ -945,6 +945,365 @@ are rejected.`,
       "Confirm the referred agent has not already been claimed on this batch.",
     ],
   },
+
+  {
+    id: "claim-handle",
+    category: "onchain",
+    name: "Claim a subdomain or on-chain handle",
+    title: "Claim a {{suffix}} name and prove it resolves",
+    blurb:
+      "Names registered under your namespace, each one verifiable by resolution.",
+    priceBand: "$0.20 to $0.50",
+    postingMode: "batch",
+    proofType: "handle",
+    fields: [
+      {
+        key: "suffix",
+        label: "Name suffix",
+        type: "text",
+        placeholder: ".carib",
+        help: "The suffix people register under, including the dot.",
+      },
+      {
+        key: "registerUrl",
+        label: "Where to register",
+        type: "url",
+        placeholder: "https://suins.io/communities/carib",
+        help: "A public page where anyone can complete the registration.",
+      },
+    ],
+    defaults: { price: "0.30", slots: "25", sla: "24", trust: "open" },
+    brief: `Register a {{suffix}} name at {{registerUrl}}.
+
+Done when (all required):
+
+1. The name is registered to an address you control.
+
+2. It resolves publicly. Anyone can look it up and get your address.
+
+3. It is still registered at settle time.
+
+Deliver exactly:
+
+1. NAME: the full {{suffix}} name you claimed
+2. RESOLVES TO: the address it points at
+3. WALLET: your 0x address, which must match
+
+Rejected if the name does not resolve, the resolved address does not
+match your wallet, or the name was already submitted by someone else.`,
+    settleChecks: [
+      "Resolve the name and confirm it returns an address.",
+      "Confirm the resolved address matches the wallet in the delivery.",
+      "Confirm the name is not already paid on this batch.",
+    ],
+  },
+
+  {
+    id: "local-research",
+    category: "research",
+    name: "Local research for a place and date",
+    title: "{{subject}} near {{place}}",
+    blurb:
+      "Somewhere to eat, stay or meet, checked as currently open rather than scraped.",
+    priceBand: "$0.10 to $0.30",
+    postingMode: "batch",
+    proofType: "text",
+    fields: [
+      {
+        key: "subject",
+        label: "What you need",
+        type: "text",
+        placeholder: "Top restaurants",
+        help: "The category you are looking for.",
+      },
+      {
+        key: "place",
+        label: "Where",
+        type: "text",
+        placeholder: "Marina Bay Sands, Singapore",
+        help: "A landmark or address specific enough to measure distance from.",
+      },
+      {
+        key: "when",
+        label: "When",
+        type: "text",
+        placeholder: "October 6 to 10",
+        help: "Dates matter. Opening hours and availability change.",
+      },
+      {
+        key: "count",
+        label: "How many options",
+        type: "int",
+        placeholder: "5",
+        help: "Options required per delivery.",
+      },
+    ],
+    defaults: { price: "0.15", slots: "3", sla: "24", trust: "open" },
+    brief: `I need {{subject}} near {{place}}, for {{when}}.
+
+Done when (all required):
+
+1. {{count}} options, all within 15 minutes on foot.
+
+2. For each: what it is, rough price per head, and why it made the list.
+
+3. Whether it takes bookings, and a link.
+
+4. You confirmed each one is currently open, not permanently closed.
+
+Deliver {{count}} numbered entries, then a SOURCES list.
+
+Rejected if any place is closed, further away than stated, or listed
+without a source.`,
+    settleChecks: [
+      "Spot check that the places are currently open.",
+      "Confirm the distances are plausible for the stated location.",
+      "Every entry carries a working source link.",
+    ],
+  },
+
+  {
+    id: "find-expert",
+    category: "sourcing",
+    name: "Find one speaker or expert",
+    title: "Find one speaker on {{topic}}",
+    blurb:
+      "Sourcing for a conference, a podcast, or an advisory list. One person per delivery.",
+    priceBand: "$0.40 to $0.80",
+    postingMode: "batch",
+    proofType: "text",
+    fields: [
+      {
+        key: "topic",
+        label: "Topic",
+        type: "text",
+        placeholder: "formal verification",
+        help: "The subject they must have spoken or written about publicly.",
+      },
+      {
+        key: "since",
+        label: "Recent since",
+        type: "text",
+        placeholder: "January 2024",
+        help: "How recent their public work has to be.",
+      },
+      {
+        key: "exclude",
+        label: "Already have",
+        type: "textarea",
+        placeholder: "Alice Chen, Bob Ito",
+        help: "Names to exclude. This goes in the public brief, so no private lists.",
+      },
+    ],
+    defaults: { price: "0.50", slots: "25", sla: "72", trust: "open" },
+    brief: `Find ONE person who has publicly spoken or written about {{topic}}.
+
+Done when (all required):
+
+1. Their talk, paper or post is public and you link it.
+
+2. It is from {{since}} or later.
+
+3. You found a contact route: email, X, or LinkedIn.
+
+4. They are not on this list: {{exclude}}
+
+Deliver exactly, one per line:
+
+NAME
+WHAT THEY PUBLISHED
+LINK
+DATE
+CONTACT
+AFFILIATION
+
+Rejected if the work predates {{since}}, the link is dead, the person is
+already excluded, or they were already submitted by someone else.`,
+    settleChecks: [
+      "The link resolves and is genuinely about the topic.",
+      "The date meets the recency requirement.",
+      "The person is not on the exclusion list.",
+      "The person has not already been paid on this batch.",
+    ],
+  },
+
+  {
+    id: "collect-row",
+    category: "sourcing",
+    name: "Collect one verified data row",
+    title: "Collect one {{unit}}",
+    blurb:
+      "Building a dataset by hand. Many workers, one row each, deduped at settle.",
+    priceBand: "$0.20 to $0.50",
+    postingMode: "batch",
+    proofType: "text",
+    fields: [
+      {
+        key: "unit",
+        label: "One row is",
+        type: "text",
+        placeholder: "token launch from the last 30 days",
+        help: "The single record a delivery returns.",
+      },
+      {
+        key: "columns",
+        label: "Fields",
+        type: "text",
+        placeholder: "NAME, CHAIN, LAUNCH DATE, MARKET CAP",
+        help: "Comma separated. These become the delivery format.",
+      },
+      {
+        key: "rule",
+        label: "What makes it valid",
+        type: "textarea",
+        placeholder: "must be verifiable on a block explorer, not an aggregator",
+        help: "The condition that separates a real row from a plausible one.",
+      },
+    ],
+    defaults: { price: "0.30", slots: "50", sla: "24", trust: "open" },
+    brief: `Return ONE {{unit}}.
+
+Done when (all required):
+
+1. Every field filled: {{columns}}
+
+2. No blanks, no "n/a", nothing estimated or invented.
+
+3. {{rule}}
+
+4. You include where you got it.
+
+Deliver one row, one field per line:
+{{columns}}
+SOURCE
+
+Rejected if any field is empty, the figure has no source, the row fails
+the validity rule, or it duplicates one already submitted.`,
+    settleChecks: [
+      "Every field is filled with a real value.",
+      "The source resolves and supports the row.",
+      "The row satisfies the validity rule in the brief.",
+      "The row is not a duplicate of one already paid on this batch.",
+    ],
+  },
+
+  {
+    id: "clip-moments",
+    category: "content",
+    name: "Find clip moments in an episode",
+    title: "Find {{count}} clip moments in this episode",
+    blurb:
+      "Turn a long recording into shareable cuts without watching it yourself.",
+    priceBand: "$2.00 to $5.00",
+    postingMode: "single",
+    proofType: "text",
+    fields: [
+      {
+        key: "episodeUrl",
+        label: "Episode link",
+        type: "url",
+        placeholder: "https://youtube.com/watch?v=…",
+        help: "A public link. Anyone claiming this has to be able to open it.",
+      },
+      {
+        key: "count",
+        label: "How many clips",
+        type: "int",
+        placeholder: "5",
+        help: "Moments required.",
+      },
+      {
+        key: "length",
+        label: "Clip length",
+        type: "text",
+        placeholder: "20 to 60 seconds",
+        help: "The range each clip should run.",
+      },
+    ],
+    defaults: { price: "4.00", slots: "1", sla: "24", trust: "open" },
+    brief: `Find {{count}} clip moments in this episode: {{episodeUrl}}
+
+Done when (all required):
+
+1. {{count}} moments, each {{length}} long.
+
+2. Start and end timestamp for each, to the second.
+
+3. The exact quote, transcribed. Not paraphrased.
+
+4. One line per clip on why it stands alone without context.
+
+Deliver {{count}} numbered blocks.
+
+Rejected if the timestamps are wrong when checked, quotes are
+paraphrased rather than transcribed, or a clip needs the previous ten
+minutes to make sense.`,
+    settleChecks: [
+      "Spot check two timestamps against the actual recording.",
+      "Confirm the quotes are transcribed, not paraphrased.",
+      "Confirm each clip is self-contained.",
+    ],
+  },
+
+  {
+    id: "product-descriptions",
+    category: "content",
+    name: "Write product descriptions from specs",
+    title: "Write {{count}} product descriptions",
+    blurb:
+      "A catalogue with no copy. You supply the specs, they supply the voice.",
+    priceBand: "$1.00 to $5.00",
+    postingMode: "single",
+    proofType: "text",
+    fields: [
+      {
+        key: "count",
+        label: "How many",
+        type: "int",
+        placeholder: "5",
+        help: "Descriptions required.",
+      },
+      {
+        key: "length",
+        label: "Length each",
+        type: "text",
+        placeholder: "60 to 90 words",
+        help: "The word range per description.",
+      },
+      {
+        key: "specs",
+        label: "The specs",
+        type: "textarea",
+        placeholder: "1. Oak desk — 140x70cm, solid oak, cable channel…",
+        help: "One product per line. This goes in the public brief, so nothing confidential.",
+      },
+    ],
+    defaults: { price: "3.00", slots: "1", sla: "24", trust: "open" },
+    brief: `Write {{count}} product descriptions from these specs:
+
+{{specs}}
+
+Done when (all required):
+
+1. {{count}} descriptions, {{length}} each.
+
+2. Each leads with the problem it solves, not the material.
+
+3. No claims that are not in the specs above. No invented
+certifications, no invented origin stories.
+
+4. Reads as one voice across all of them.
+
+Deliver the numbered descriptions and nothing else.
+
+Rejected if any description makes a claim not present in the specs, or
+the count or length is wrong.`,
+    settleChecks: [
+      "Every claim traces back to a spec you supplied.",
+      "The count and word range are right.",
+      "The voice is consistent across all of them.",
+    ],
+  },
 ];
 
 export function cardById(id: string): Card | undefined {

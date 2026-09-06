@@ -5,54 +5,87 @@ import { cards } from "@/lib/cards";
 import { categories, type CategoryId } from "@/lib/types";
 import { JobPanel } from "./JobPanel";
 
+/** Opens on the first card so the panel shows a working state, but only on
+ *  screens wide enough to sit beside the list. Below that the panel is an
+ *  overlay and has to be asked for. */
+const RESTING_CARD = "like-rt-comment";
+
 export function Catalog() {
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<CategoryId | "all">("all");
-  const [openId, setOpenId] = useState<string | null>("like-rt-comment");
+  const [openId, setOpenId] = useState<string | null>(RESTING_CARD);
+  const [picked, setPicked] = useState(false);
 
   const visible = useMemo(() => {
     const q = query.trim().toLowerCase();
+    if (!q && filter === "all") return cards;
     return cards.filter((c) => {
       if (filter !== "all" && c.category !== filter) return false;
       if (!q) return true;
+      const label =
+        categories.find((cat) => cat.id === c.category)?.label ?? "";
       return (
         c.name.toLowerCase().includes(q) ||
         c.blurb.toLowerCase().includes(q) ||
-        c.title.toLowerCase().includes(q)
+        c.title.toLowerCase().includes(q) ||
+        c.brief.toLowerCase().includes(q) ||
+        label.toLowerCase().includes(q)
       );
     });
   }, [query, filter]);
 
   const grouped = categories
-    .map((cat) => ({
-      cat,
-      items: visible.filter((c) => c.category === cat.id),
-    }))
+    .map((cat) => ({ cat, items: visible.filter((c) => c.category === cat.id) }))
     .filter((g) => g.items.length > 0);
 
   const open = cards.find((c) => c.id === openId) ?? null;
 
+  function pick(id: string) {
+    setOpenId(id);
+    setPicked(true);
+  }
+
   return (
     <div className="flex min-h-screen flex-col">
       <header className="sticky top-0 z-20 border-b border-hairline bg-paper">
-        <div className="flex h-14 items-center gap-4 px-5">
-          <div className="flex items-baseline gap-2">
+        <div className="flex h-14 items-center gap-3 px-4 sm:px-5">
+          <span className="hidden shrink-0 items-baseline gap-2 sm:flex">
             <span className="text-[14px] font-medium text-ink">
               t2000 prompts
             </span>
             <span className="font-mono text-[11px] uppercase tracking-wider text-muted">
               BadLabs
             </span>
-          </div>
+          </span>
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search jobs — engagement, research, testing, leads…"
-            className="ml-2 w-full max-w-md rounded-md border border-hairline bg-paper px-3 py-1.5 text-[13px] text-ink outline-none transition placeholder:text-muted/70 focus:border-ink"
+            placeholder="Describe what you need done…"
+            className="w-full max-w-md rounded-md border border-hairline bg-paper px-3 py-1.5 text-[13px] text-ink outline-none transition placeholder:text-muted/70 focus:border-ink sm:ml-2"
           />
-          <span className="ml-auto hidden font-mono text-[11px] text-muted sm:block">
+          <span className="ml-auto hidden shrink-0 font-mono text-[11px] text-muted sm:block">
             {cards.length} jobs
           </span>
+        </div>
+
+        <div className="flex gap-1 overflow-x-auto border-t border-hairline px-4 py-2 md:hidden">
+          <Chip
+            label="All"
+            active={filter === "all"}
+            onClick={() => setFilter("all")}
+          />
+          {categories.map((cat) => {
+            const count = cards.filter((c) => c.category === cat.id).length;
+            if (count === 0) return null;
+            return (
+              <Chip
+                key={cat.id}
+                label={cat.label}
+                active={filter === cat.id}
+                onClick={() => setFilter(cat.id)}
+              />
+            );
+          })}
         </div>
       </header>
 
@@ -83,7 +116,7 @@ export function Catalog() {
           })}
         </nav>
 
-        <main className="min-w-0 flex-1 overflow-y-auto px-6 py-6">
+        <main className="min-w-0 flex-1 overflow-y-auto px-4 py-6 sm:px-6">
           <p className="max-w-[62ch] text-[13.5px] leading-relaxed text-muted">
             Pick a job, fill in what you know, copy the prompt. Blanks are fine
             — the prompt carries instructions for your AI to ask you for
@@ -103,7 +136,7 @@ export function Catalog() {
                       <li key={c.id}>
                         <button
                           type="button"
-                          onClick={() => setOpenId(c.id)}
+                          onClick={() => pick(c.id)}
                           className={`group flex w-full items-baseline gap-3 rounded-md px-2 py-1.5 text-left transition ${
                             active ? "bg-subtle" : "hover:bg-subtle"
                           }`}
@@ -111,7 +144,9 @@ export function Catalog() {
                           <span
                             aria-hidden
                             className={`mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full transition ${
-                              active ? "bg-ink" : "bg-hairline group-hover:bg-muted"
+                              active
+                                ? "bg-ink"
+                                : "bg-hairline group-hover:bg-muted"
                             }`}
                           />
                           <span className="min-w-0 flex-1 truncate text-[13.5px] text-ink">
@@ -130,25 +165,59 @@ export function Catalog() {
 
             {grouped.length === 0 ? (
               <p className="text-[13px] text-muted">
-                Nothing matches “{query}”. Try engagement, research, testing, or
-                leads.
+                Nothing matches “{query}”. Try engagement, research, testing,
+                leads, or on-chain.
               </p>
             ) : null}
           </div>
 
-          <p className="mt-10 font-mono text-[11px] text-muted">
+          <p className="mt-10 font-mono text-[11px] leading-relaxed text-muted">
             Escrow, deadlines and the review window are on-chain clocks. Read
             the brief before you post — it is public.
           </p>
         </main>
 
         {open ? (
-          <div className="fixed inset-y-0 right-0 z-30 w-full max-w-[580px] shadow-cardHover xl:static xl:z-auto xl:w-[580px] xl:shadow-none">
-            <JobPanel card={open} onClose={() => setOpenId(null)} />
+          <div
+            className={`fixed inset-y-0 right-0 z-30 w-full max-w-[580px] shadow-cardHover xl:static xl:z-auto xl:w-[580px] xl:shadow-none ${
+              picked ? "block" : "hidden xl:block"
+            }`}
+          >
+            <JobPanel
+              card={open}
+              onClose={() => {
+                setOpenId(null);
+                setPicked(false);
+              }}
+            />
           </div>
         ) : null}
       </div>
     </div>
+  );
+}
+
+function Chip({
+  label,
+  active,
+  onClick,
+}: {
+  label: string;
+  active: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`shrink-0 whitespace-nowrap rounded-md border px-2.5 py-1 text-[12px] transition ${
+        active
+          ? "border-ink text-ink"
+          : "border-hairline text-muted hover:border-ink hover:text-ink"
+      }`}
+    >
+      {label}
+    </button>
   );
 }
 
@@ -168,7 +237,9 @@ function RailItem({
       type="button"
       onClick={onClick}
       className={`flex h-8 w-full items-center gap-2 rounded-md px-2.5 text-[13px] transition ${
-        active ? "bg-subtle text-ink" : "text-muted hover:bg-subtle hover:text-ink"
+        active
+          ? "bg-subtle text-ink"
+          : "text-muted hover:bg-subtle hover:text-ink"
       }`}
     >
       <span className="min-w-0 flex-1 truncate text-left">{label}</span>
