@@ -162,6 +162,29 @@ export function Catalog() {
             expanded ? "w-52" : "w-14"
           }`}
         >
+          <button
+            type="button"
+            onClick={() => setExpanded((v) => !v)}
+            aria-label={expanded ? "Collapse sidebar" : "Expand sidebar"}
+            aria-expanded={expanded}
+            title={expanded ? "Collapse" : "Expand"}
+            className={`mb-2 flex h-8 items-center gap-2 rounded-md text-muted transition hover:bg-subtle hover:text-ink ${
+              expanded ? "px-2.5" : "justify-center px-0"
+            }`}
+          >
+            <ToggleIcon
+              expanded={expanded}
+              className="h-[17px] w-[17px] shrink-0"
+            />
+            <span
+              className={`overflow-hidden whitespace-nowrap font-mono text-[10.5px] uppercase tracking-wider transition-[opacity,max-width] duration-200 ${
+                expanded ? "max-w-[140px] opacity-100" : "max-w-0 opacity-0"
+              }`}
+            >
+              Browse
+            </span>
+          </button>
+
           <RailItem
             label="All jobs"
             count={cards.length}
@@ -169,7 +192,15 @@ export function Catalog() {
             expanded={expanded}
             onClick={() => setFilter("all")}
           />
-          <div role="separator" className="my-1.5 h-px bg-hairline" />
+
+          {expanded ? (
+            <p className="mb-1 mt-4 px-2.5 font-mono text-[10.5px] uppercase tracking-wider text-muted">
+              Categories
+            </p>
+          ) : (
+            <div role="separator" className="my-1.5 h-px bg-hairline" />
+          )}
+
           {categories.map((cat) => {
             const count = cards.filter((c) => c.category === cat.id).length;
             if (count === 0) return null;
@@ -185,28 +216,13 @@ export function Catalog() {
             );
           })}
 
-          <button
-            type="button"
-            onClick={() => setExpanded((v) => !v)}
-            aria-label={expanded ? "Collapse sidebar" : "Expand sidebar"}
-            aria-expanded={expanded}
-            title={expanded ? undefined : "Expand"}
-            className={`mt-auto flex h-9 items-center gap-3 rounded-md text-[13px] text-muted transition hover:bg-subtle hover:text-ink ${
-              expanded ? "px-2.5" : "justify-center px-0"
-            }`}
+          <div
+            className={`mt-auto pt-3 ${expanded ? "px-2.5" : "text-center"}`}
           >
-            <ToggleIcon
-              expanded={expanded}
-              className="h-[18px] w-[18px] shrink-0"
-            />
-            <span
-              className={`overflow-hidden whitespace-nowrap transition-[opacity,max-width] duration-200 ${
-                expanded ? "max-w-[140px] opacity-100" : "max-w-0 opacity-0"
-              }`}
-            >
-              Collapse
+            <span className="font-mono text-[10.5px] uppercase tracking-wider text-muted">
+              {expanded ? "BadLabs" : "BL"}
             </span>
-          </button>
+          </div>
         </nav>
 
         <main className="min-w-0 flex-1 px-4 py-6 sm:px-6">
@@ -218,13 +234,11 @@ export function Catalog() {
               placeholder="Describe what you need done — e.g. “get 20 people to join my Telegram and prove it”"
               className="w-full resize-none bg-transparent text-[14px] leading-relaxed text-ink outline-none placeholder:text-muted/80"
             />
-            <div className="mt-2 flex items-center justify-between gap-3">
-              <span className="font-mono text-[11px] text-muted">
-                {query.trim()
-                  ? `${visible.length} of ${cards.length} jobs match`
-                  : `${cards.length} jobs · ${categories.length} categories`}
-              </span>
-              {query.trim() ? (
+            {query.trim() ? (
+              <div className="mt-2 flex items-center justify-between gap-3">
+                <span className="font-mono text-[11px] text-muted">
+                  {visible.length} match
+                </span>
                 <button
                   type="button"
                   onClick={() => setQuery("")}
@@ -232,8 +246,8 @@ export function Catalog() {
                 >
                   Clear
                 </button>
-              ) : null}
-            </div>
+              </div>
+            ) : null}
           </div>
 
           <p className="mt-5 max-w-[62ch] text-[13.5px] leading-relaxed text-muted">
@@ -281,10 +295,6 @@ export function Catalog() {
             ) : null}
           </div>
 
-          <p className="mt-10 font-mono text-[11px] leading-relaxed text-muted">
-            Escrow, deadlines and the review window are on-chain clocks. Read
-            the brief before you post — it is public.
-          </p>
         </main>
       </div>
 
