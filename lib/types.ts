@@ -37,6 +37,15 @@ export type Field = {
 /** How the delivery gets verified. Drives the settle prompt. */
 export type ProofType = "url" | "digest" | "handle" | "text" | "evidence";
 
+/** What a buyer will be checking at settle. Shown on each catalog row. */
+export const proofLabels: Record<ProofType, string> = {
+  url: "public link",
+  digest: "on-chain tx",
+  handle: "handle",
+  text: "written answer",
+  evidence: "evidence",
+};
+
 export type Card = {
   id: string;
   category: CategoryId;

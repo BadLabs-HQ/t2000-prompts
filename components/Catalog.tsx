@@ -2,10 +2,16 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { cards } from "@/lib/cards";
-import { categories, type CategoryId } from "@/lib/types";
+import { categories, proofLabels, type CategoryId } from "@/lib/types";
 import { JobPanel } from "./JobPanel";
 
 const RAIL_KEY = "t2000:rail:expanded";
+
+const STOPWORDS = new Set([
+  "and", "the", "for", "with", "you", "your", "from", "that", "this", "have",
+  "get", "want", "need", "some", "who", "can", "will", "them", "their", "are",
+  "how", "one", "job", "jobs", "please", "would", "someone", "there",
+]);
 
 export function Catalog() {
   const [query, setQuery] = useState("");
@@ -61,26 +67,48 @@ export function Catalog() {
   }, [openId]);
 
   const visible = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q && filter === "all") return cards;
-    return cards.filter((c) => {
-      if (filter !== "all" && c.category !== filter) return false;
-      if (!q) return true;
-      const label =
-        categories.find((cat) => cat.id === c.category)?.label ?? "";
-      return (
-        c.name.toLowerCase().includes(q) ||
-        c.blurb.toLowerCase().includes(q) ||
-        c.title.toLowerCase().includes(q) ||
-        c.brief.toLowerCase().includes(q) ||
-        label.toLowerCase().includes(q)
-      );
-    });
+    const inFilter =
+      filter === "all" ? cards : cards.filter((c) => c.category === filter);
+
+    const words = query
+      .toLowerCase()
+      .split(/[^a-z0-9]+/)
+      .filter((w) => w.length > 2 && !STOPWORDS.has(w));
+
+    if (words.length === 0) return inFilter;
+
+    // The box invites a sentence, so score on words rather than matching the
+    // whole string — "get people to join my telegram" matches nothing verbatim.
+    return inFilter
+      .map((c) => {
+        const label =
+          categories.find((cat) => cat.id === c.category)?.label ?? "";
+        const strong = `${c.name} ${c.blurb} ${label}`.toLowerCase();
+        const all = `${strong} ${c.title} ${c.brief}`.toLowerCase();
+        let score = 0;
+        for (const w of words) {
+          if (strong.includes(w)) score += 3;
+          else if (all.includes(w)) score += 1;
+        }
+        return { c, score };
+      })
+      .filter((r) => r.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .map((r) => r.c);
   }, [query, filter]);
 
-  const grouped = categories
-    .map((cat) => ({ cat, items: visible.filter((c) => c.category === cat.id) }))
-    .filter((g) => g.items.length > 0);
+  const searching = query.trim().length > 0;
+
+  // Ranked results are ordered by match quality, so regrouping them by
+  // category would throw that away. Sections are for browsing only.
+  const grouped = searching
+    ? [{ cat: { id: "results", label: "Best match first" }, items: visible }]
+    : categories
+        .map((cat) => ({
+          cat,
+          items: visible.filter((c) => c.category === cat.id),
+        }))
+        .filter((g) => g.items.length > 0);
 
   const open = cards.find((c) => c.id === openId) ?? null;
 
@@ -96,15 +124,14 @@ export function Catalog() {
               BadLabs
             </span>
           </span>
-          <input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Describe what you need done…"
-            className="w-full max-w-md rounded-md border border-hairline bg-paper px-3 py-1.5 text-[13px] text-ink outline-none transition placeholder:text-muted/70 focus:border-ink sm:ml-2"
-          />
-          <span className="ml-auto hidden shrink-0 font-mono text-[11px] text-muted sm:block">
-            {cards.length} jobs
-          </span>
+          <a
+            href="https://t2000.ai"
+            target="_blank"
+            rel="noreferrer"
+            className="ml-auto shrink-0 font-mono text-[11px] text-muted transition hover:text-ink"
+          >
+            t2000.ai ↗
+          </a>
         </div>
 
         <div className="flex gap-1 overflow-x-auto border-t border-hairline px-4 py-2 md:hidden">
@@ -183,7 +210,33 @@ export function Catalog() {
         </nav>
 
         <main className="min-w-0 flex-1 px-4 py-6 sm:px-6">
-          <p className="max-w-[62ch] text-[13.5px] leading-relaxed text-muted">
+          <div className="rounded-xl border border-hairline bg-subtle p-4">
+            <textarea
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              rows={2}
+              placeholder="Describe what you need done — e.g. “get 20 people to join my Telegram and prove it”"
+              className="w-full resize-none bg-transparent text-[14px] leading-relaxed text-ink outline-none placeholder:text-muted/80"
+            />
+            <div className="mt-2 flex items-center justify-between gap-3">
+              <span className="font-mono text-[11px] text-muted">
+                {query.trim()
+                  ? `${visible.length} of ${cards.length} jobs match`
+                  : `${cards.length} jobs · ${categories.length} categories`}
+              </span>
+              {query.trim() ? (
+                <button
+                  type="button"
+                  onClick={() => setQuery("")}
+                  className="shrink-0 rounded-md border border-hairline bg-paper px-2.5 py-1 font-mono text-[11px] text-muted transition hover:border-ink hover:text-ink"
+                >
+                  Clear
+                </button>
+              ) : null}
+            </div>
+          </div>
+
+          <p className="mt-5 max-w-[62ch] text-[13.5px] leading-relaxed text-muted">
             Pick a job, fill in what you know, copy the prompt. Blanks are fine
             — the prompt carries instructions for your AI to ask you for
             anything you left out. Nothing here touches your wallet.
@@ -209,6 +262,9 @@ export function Catalog() {
                         />
                         <span className="min-w-0 flex-1 truncate text-[13.5px] text-ink">
                           {c.name}
+                        </span>
+                        <span className="shrink-0 font-mono text-[10.5px] text-muted opacity-0 transition group-hover:opacity-100">
+                          {proofLabels[c.proofType]}
                         </span>
                       </button>
                     </li>
