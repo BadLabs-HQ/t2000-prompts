@@ -2,6 +2,7 @@ import Link from "next/link";
 import { cards } from "@/lib/cards";
 import { categories } from "@/lib/types";
 import { PromptStates } from "@/components/PromptStates";
+import { TopNav } from "@/components/TopNav";
 
 const STEPS = [
   {
@@ -41,19 +42,8 @@ const EXAMPLES: Record<string, string[]> = {
 export default function Home() {
   return (
     <div className="min-h-screen">
-      <header className="border-b border-hairline">
-        <div className="mx-auto flex h-14 max-w-5xl items-center gap-3 px-6">
-          <span className="text-[14px] font-medium text-ink">t2000 prompts</span>
-          <span className="font-mono text-[11px] uppercase tracking-wider text-muted">
-            BadLabs
-          </span>
-          <Link
-            href="/jobs"
-            className="ml-auto font-mono text-[11px] text-muted transition hover:text-ink"
-          >
-            Jobs
-          </Link>
-        </div>
+      <header className="sticky top-0 z-20 border-b border-hairline bg-paper">
+        <TopNav />
       </header>
 
       <main className="mx-auto max-w-5xl px-6">
@@ -78,10 +68,10 @@ export default function Home() {
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <Link
-              href="/jobs"
+              href="/prompts"
               className="rounded-md bg-ink px-4 py-2 text-[13px] font-medium text-paper transition hover:opacity-90"
             >
-              Browse {cards.length} jobs →
+              Browse {cards.length} prompts →
             </Link>
             <a
               href="#how"
@@ -164,7 +154,7 @@ export default function Home() {
                     {items.map((c) => (
                       <Link
                         key={c.id}
-                        href={`/jobs#${c.id}`}
+                        href={`/prompts#${c.id}`}
                         className="text-[13.5px] text-ink underline decoration-hairline underline-offset-4 transition hover:decoration-ink"
                       >
                         {c.name}
@@ -218,10 +208,10 @@ export default function Home() {
 
         <section className="py-16">
           <Link
-            href="/jobs"
+            href="/prompts"
             className="inline-block rounded-md bg-ink px-4 py-2 text-[13px] font-medium text-paper transition hover:opacity-90"
           >
-            Browse the jobs →
+            Browse the prompts →
           </Link>
         </section>
       </main>

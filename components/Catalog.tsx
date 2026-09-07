@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { cards } from "@/lib/cards";
 import { categories, proofLabels, type CategoryId } from "@/lib/types";
 import { JobPanel } from "./JobPanel";
+import { TopNav } from "./TopNav";
 
 const RAIL_KEY = "t2000:rail:expanded";
 
@@ -115,28 +116,7 @@ export function Catalog() {
   return (
     <div className="flex min-h-screen flex-col">
       <header className="sticky top-0 z-20 border-b border-hairline bg-paper">
-        <div className="flex h-14 items-center gap-3 px-4 sm:px-5">
-          <a
-            href="/"
-            className="hidden shrink-0 items-baseline gap-2 sm:flex"
-            aria-label="Home"
-          >
-            <span className="text-[14px] font-medium text-ink">
-              t2000 prompts
-            </span>
-            <span className="font-mono text-[11px] uppercase tracking-wider text-muted">
-              BadLabs
-            </span>
-          </a>
-          <a
-            href="https://t2000.ai"
-            target="_blank"
-            rel="noreferrer"
-            className="ml-auto shrink-0 font-mono text-[11px] text-muted transition hover:text-ink"
-          >
-            t2000.ai ↗
-          </a>
-        </div>
+        <TopNav />
 
         <div className="flex gap-1 overflow-x-auto border-t border-hairline px-4 py-2 md:hidden">
           <Chip
