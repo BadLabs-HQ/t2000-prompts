@@ -20,6 +20,23 @@ export function Catalog() {
     setHydrated(true);
   }, []);
 
+  // The open job lives in the URL, so a card can be linked and shared.
+  useEffect(() => {
+    const fromHash = () => {
+      const id = window.location.hash.replace(/^#/, "");
+      setOpenId(cards.some((c) => c.id === id) ? id : null);
+    };
+    fromHash();
+    window.addEventListener("hashchange", fromHash);
+    return () => window.removeEventListener("hashchange", fromHash);
+  }, []);
+
+  function show(id: string | null) {
+    setOpenId(id);
+    const url = id ? `#${id}` : window.location.pathname;
+    window.history.replaceState(null, "", url);
+  }
+
   useEffect(() => {
     if (hydrated) window.localStorage.setItem(RAIL_KEY, String(expanded));
   }, [expanded, hydrated]);
@@ -37,7 +54,7 @@ export function Catalog() {
   useEffect(() => {
     if (!openId) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpenId(null);
+      if (e.key === "Escape") show(null);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -183,7 +200,7 @@ export function Catalog() {
                     <li key={c.id}>
                       <button
                         type="button"
-                        onClick={() => setOpenId(c.id)}
+                        onClick={() => show(c.id)}
                         className="group flex w-full items-baseline gap-3 rounded-md px-2 py-1.5 text-left transition hover:bg-subtle"
                       >
                         <span
@@ -219,11 +236,11 @@ export function Catalog() {
         <>
           <div
             aria-hidden
-            onClick={() => setOpenId(null)}
+            onClick={() => show(null)}
             className="fixed inset-0 z-30 bg-ink/10"
           />
           <div className="fixed inset-y-0 right-0 z-40 w-full max-w-[580px] shadow-cardHover">
-            <JobPanel card={open} onClose={() => setOpenId(null)} />
+            <JobPanel card={open} onClose={() => show(null)} />
           </div>
         </>
       ) : null}

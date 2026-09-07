@@ -215,7 +215,10 @@ export function compilePost(card: Card, values: Values): string {
   return out.join("\n");
 }
 
-export function compileSettle(card: Card, values: Values): string {
+/** Settling needs no inputs, so this never reads `values`. Anything it
+ *  printed from a template would be an unguarded placeholder — the settle
+ *  prompt has no ask block to cover it. */
+export function compileSettle(card: Card): string {
   const out: string[] = [
     "SETTLE DELIVERIES ON T2000",
     "",
@@ -250,7 +253,7 @@ export function compileSettle(card: Card, values: Values): string {
     "  t2000_job_status { jobId } returns the work order AND the delivery.",
     "  Read them against each other.",
     "",
-    `  For this job — ${jobTitle(card, values)} — check:`,
+    `  For a "${card.name}" job, check:`,
   ];
 
   card.settleChecks.forEach((c) => out.push(`    - ${c}`));
@@ -301,7 +304,7 @@ export function compileSettle(card: Card, values: Values): string {
 
 export function compileBoth(card: Card, values: Values): string {
   const post = compilePost(card, values);
-  const settle = compileSettle(card, values);
+  const settle = compileSettle(card);
 
   const header = [
     "POST AND SETTLE ON T2000",
@@ -332,7 +335,7 @@ export function compileBoth(card: Card, values: Values): string {
 }
 
 export function compile(card: Card, values: Values, tab: Tab): string {
-  if (tab === "settle") return compileSettle(card, values);
+  if (tab === "settle") return compileSettle(card);
   if (tab === "both") return compileBoth(card, values);
   return compilePost(card, values);
 }
