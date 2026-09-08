@@ -3,6 +3,7 @@ import { cards } from "@/lib/cards";
 import { categories } from "@/lib/types";
 import { PromptStates } from "@/components/PromptStates";
 import { TopNav } from "@/components/TopNav";
+import { Footer } from "@/components/Footer";
 
 const STEPS = [
   {
@@ -216,27 +217,7 @@ export default function Home() {
         </section>
       </main>
 
-      <footer className="border-t border-hairline">
-        <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-x-5 gap-y-2 px-6 py-5 font-mono text-[11px] text-muted">
-          <a
-            href="https://t2000.ai"
-            target="_blank"
-            rel="noreferrer"
-            className="transition hover:text-ink"
-          >
-            t2000.ai ↗
-          </a>
-          <a
-            href="https://github.com/BadLabs-HQ/t2000-prompts"
-            target="_blank"
-            rel="noreferrer"
-            className="transition hover:text-ink"
-          >
-            Source ↗
-          </a>
-          <span className="ml-auto uppercase tracking-wider">BadLabs</span>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

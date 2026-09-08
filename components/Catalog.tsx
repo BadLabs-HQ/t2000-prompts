@@ -5,6 +5,7 @@ import { cards } from "@/lib/cards";
 import { categories, proofLabels, type CategoryId } from "@/lib/types";
 import { JobPanel } from "./JobPanel";
 import { TopNav } from "./TopNav";
+import { Footer } from "./Footer";
 
 const RAIL_KEY = "t2000:rail:expanded";
 
@@ -281,6 +282,8 @@ export function Catalog() {
 
         </main>
       </div>
+
+      <Footer />
 
       {open ? (
         <>
