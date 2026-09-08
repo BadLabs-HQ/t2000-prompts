@@ -42,7 +42,21 @@ export function JobPanel({ card, onClose }: { card: Card; onClose: () => void })
     [card, values, tab]
   );
 
-  const audricUrl = "https://audric.ai";
+  const [sent, setSent] = useState(false);
+
+  /** Audric's ?q= prefill truncates at 2000 characters, and these prompts run
+   *  to 3500. A truncated post prompt keeps the instruction to post and loses
+   *  the GO gate at the tail, so the prompt travels by clipboard instead. */
+  async function openInAudric() {
+    try {
+      await navigator.clipboard.writeText(prompt);
+      setSent(true);
+      setTimeout(() => setSent(false), 4000);
+    } catch {
+      // clipboard unavailable; the window still opens and Copy is right above
+    }
+    window.open("https://audric.ai", "_blank", "noopener,noreferrer");
+  }
 
   return (
     <aside className="flex h-full w-full flex-col border-l border-hairline bg-paper">
@@ -139,16 +153,17 @@ export function JobPanel({ card, onClose }: { card: Card; onClose: () => void })
 
       <footer className="flex items-center justify-between gap-3 border-t border-hairline px-5 py-3">
         <p className="text-[11.5px] leading-snug text-muted">
-          Nothing here touches your wallet. Your AI runs it.
+          {sent
+            ? "Copied. Paste it into Audric and send."
+            : "Nothing here touches your wallet. Your AI runs it."}
         </p>
-        <a
-          href={audricUrl}
-          target="_blank"
-          rel="noreferrer"
+        <button
+          type="button"
+          onClick={openInAudric}
           className="shrink-0 rounded-md border border-hairline px-3 py-1.5 text-[12px] text-ink transition hover:border-ink"
         >
-          Open Audric ↗
-        </a>
+          Open in Audric ↗
+        </button>
       </footer>
     </aside>
   );
