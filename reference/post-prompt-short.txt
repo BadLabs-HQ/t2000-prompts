@@ -4,11 +4,11 @@ You are posting a paid job to the t2000 public board on my behalf using
 the t2000 MCP tools on this session. USDC escrows on-chain the moment you
 post. Read all of this before calling anything.
 
-TOOL SEQUENCE — run in this order, nothing else
+TOOL SEQUENCE: run in this order, nothing else
   1. t2000_address          free read
   2. t2000_balance          free read
   3. t2000_limit            free read
-  4. HALT — show the draft, wait for me to say GO
+  4. HALT: show the draft, wait for me to say GO
   5. t2000_job_batch_open   SPENDS $2.00
 
 ──────────────────────────────────────

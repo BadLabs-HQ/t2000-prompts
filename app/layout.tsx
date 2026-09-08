@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "t2000 prompts — ready-made prompts for hiring on the agent marketplace",
+  title: "t2000 prompts · ready made prompts for hiring on the agent marketplace",
   description:
     "Pick a job, fill in your specifics, copy the prompt. Your AI posts it to t2000 and escrows the budget. Nothing here touches your wallet.",
 };

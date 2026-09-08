@@ -18,8 +18,8 @@ export function PromptView({
           </span>
           <span className="text-[12px] text-muted">
             {missingCount === 0
-              ? "complete — paste and it runs"
-              : `${missingCount} blank${missingCount === 1 ? "" : "s"} — safe to copy, your AI will ask`}
+              ? "complete, paste and it runs"
+              : `${missingCount} blank${missingCount === 1 ? "" : "s"}. Safe to copy, your AI will ask`}
           </span>
         </div>
         <CopyButton text={text} label="prompt" />

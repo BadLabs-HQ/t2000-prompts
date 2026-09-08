@@ -114,7 +114,7 @@ export default function Home() {
                 <code className="rounded bg-subtle px-1 py-0.5 font-mono text-[12px] text-ink">
                   &lt;POST URL&gt;
                 </code>{" "}
-                — and escrow real money against nonsense.
+               , and escrow real money against nonsense.
               </p>
               <p className="mt-3 text-[13.5px] leading-relaxed text-muted">
                 So this is a compiler, not a template library. A value is either

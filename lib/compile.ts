@@ -66,7 +66,7 @@ function askBlock(card: Card, values: Values): string[] {
   if (missing.length === 0) return [];
 
   const lines: string[] = [
-    "BEFORE YOU START — I HAVE NOT GIVEN YOU EVERYTHING",
+    "BEFORE YOU START: I HAVE NOT GIVEN YOU EVERYTHING",
     "",
     "Ask me for each item below in ONE message, not one at a time. Do not",
     "guess, do not fall back to defaults, and do not call a single tool",
@@ -140,11 +140,11 @@ export function compilePost(card: Card, values: Values): string {
     "the t2000 MCP tools on this session. USDC escrows on-chain the moment you",
     "post. Read all of this before calling anything.",
     "",
-    "TOOL SEQUENCE — run in this order, nothing else",
+    "TOOL SEQUENCE: run in this order, nothing else",
     "  1. t2000_address          free read",
     "  2. t2000_balance          free read",
     "  3. t2000_limit            free read",
-    "  4. HALT — show the draft, wait for me to say GO",
+    "  4. HALT: show the draft, wait for me to say GO",
     `  5. ${tool.padEnd(23)}${spend}`,
     "",
     RULE,
@@ -216,8 +216,8 @@ export function compilePost(card: Card, values: Values): string {
 }
 
 /** Settling needs no inputs, so this never reads `values`. Anything it
- *  printed from a template would be an unguarded placeholder — the settle
- *  prompt has no ask block to cover it. */
+ *  printed from a template would be an unguarded placeholder, because the
+ *  settle prompt has no ask block to cover it. */
 export function compileSettle(card: Card): string {
   const out: string[] = [
     "SETTLE DELIVERIES ON T2000",
@@ -235,18 +235,18 @@ export function compileSettle(card: Card): string {
     "",
     RULE,
     "",
-    "STEP 1 — LOAD THE QUEUE",
+    "STEP 1: LOAD THE QUEUE",
     '  Call t2000_jobs with BOTH needsOnly: true AND role: "buyer".',
     "  The role is mandatory. Without it the call can report work waiting",
     "  and hand you an empty list.",
     "  Grade from the rows themselves, never from the counters.",
     "",
-    "STEP 2 — REFUND LAPSED ROWS FIRST",
+    "STEP 2: REFUND LAPSED ROWS FIRST",
     "  Any row still funded with its deliver deadline passed:",
     "  t2000_job_refund { jobId }. Full amount, fee-free.",
     "  Do this before touching delivered rows.",
     "",
-    "STEP 3 — GRADE EACH DELIVERY",
+    "STEP 3: GRADE EACH DELIVERY",
     "  Oldest review window first. A lapsed window auto-releases to the",
     "  worker whatever the quality, so clock order beats list order.",
     "",
@@ -263,20 +263,20 @@ export function compileSettle(card: Card): string {
     "  Keep a running list of every proof already paid on this posting.",
     "  A repeat is a reject, not a second payment.",
     "",
-    "STEP 4 — SETTLE OR REJECT",
+    "STEP 4: SETTLE OR REJECT",
     "  Acceptable  → t2000_job_settle { jobId }",
     "  Junk        → t2000_job_reject { jobId }",
     "",
     "  Do not settle on the delivery text alone. If the brief asked for a",
     "  URL, a digest or an id, verify that artifact actually exists.",
     "",
-    "STEP 5 — REVIEW",
+    "STEP 5: REVIEW",
     "  t2000_job_review { jobId, stars, text } on every row you graded.",
     "",
     "  5  every done-when met, proof verified, nothing padded",
     "  4  all met, proof thin but checkable",
-    "  3  met the letter, missed the intent — settle and say what was missing",
-    "  2  partial — reject unless the gap is cosmetic",
+    "  3  met the letter, missed the intent, settle and say what was missing",
+    "  2  partial, reject unless the gap is cosmetic",
     "  1  fabricated, recycled from another claim, or self-dealt",
     "",
     "  My stars land on-chain and drive their trust tier. The text is",
@@ -316,7 +316,7 @@ export function compileBoth(card: Card, values: Values): string {
     "",
     RULE,
     "",
-    "PASS A — CLEAR WHAT IS OWED",
+    "PASS A: CLEAR WHAT IS OWED",
     "",
   ].join("\n");
 
@@ -324,7 +324,7 @@ export function compileBoth(card: Card, values: Values): string {
     "",
     RULE,
     "",
-    "PASS B — POST THE NEW JOB",
+    "PASS B: POST THE NEW JOB",
     "",
     "Only after Pass A is finished. Everything below is a fresh spend and",
     "still stops at the GO gate.",

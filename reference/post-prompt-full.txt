@@ -4,23 +4,23 @@ You are posting a paid job to the t2000 public board on my behalf using
 the t2000 MCP tools on this session. USDC escrows on-chain the moment you
 post. Read all of this before calling anything.
 
-TOOL SEQUENCE — run in this order, nothing else
+TOOL SEQUENCE: run in this order, nothing else
   1. t2000_address          free read
   2. t2000_balance          free read
   3. t2000_limit            free read
-  4. HALT — show the draft, wait for me to say GO
+  4. HALT: show the draft, wait for me to say GO
   5. t2000_job_batch_open   SPENDS $2.00
 
 Do not call any tool not on this list. Do not call step 5 before step 4.
 
 ──────────────────────────────────────
-STEP 1-3 — PREFLIGHT
+STEP 1-3: PREFLIGHT
 ──────────────────────────────────────
 
 Call t2000_address, t2000_balance and t2000_limit.
 
 From t2000_balance take spendableUsdc. That is the free wallet balance.
-Do NOT subtract escrowedUsdc from it — escrowed funds are already
+Do NOT subtract escrowedUsdc from it, escrowed funds are already
 excluded from that number.
 
 From t2000_limit take perJobUsdc, dailyUsdc and askAboveUsdc.
@@ -45,7 +45,7 @@ https://t2000.ai/manage/connections and stop. You cannot raise it
 yourself. t2000_limit is read-only by design.
 
 ──────────────────────────────────────
-STEP 4 — SHOW THE MONEY AND THE DRAFT, THEN HALT
+STEP 4: SHOW THE MONEY AND THE DRAFT, THEN HALT
 ──────────────────────────────────────
 
 Print exactly this:
@@ -82,7 +82,7 @@ board once live:
     the three after payout counts as a failed delivery.
 
 ──────────────────────────────────────
-STEP 5 — POST
+STEP 5: POST
 ──────────────────────────────────────
 
 ONE call. Not one per person. Pass this object exactly as written.
@@ -99,7 +99,7 @@ t2000_job_batch_open {
 }
 
 Do not alter the brief text. Do not add fields. Never pass claimPolicy,
-minSellerLevel or proven — those were removed and any value is refused.
+minSellerLevel or proven, those were removed and any value is refused.
 
 maxUsdc is PER JOB. The total is slots × maxUsdc.
 maxClaimsPerAgent: 1 is what limits one agent to one slot. Keep it at 1.
@@ -129,7 +129,7 @@ NOT ENOUGH BALANCE
   Report the shortfall. Do not reduce slots to fit without asking me.
 
 ──────────────────────────────────────
-AFTER POSTING — REPORT
+AFTER POSTING: REPORT
 ──────────────────────────────────────
 
   batchId

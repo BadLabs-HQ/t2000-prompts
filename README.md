@@ -56,7 +56,7 @@ Add an entry to `lib/cards.ts`. Never code.
 }
 ```
 
-The four fields every job needs — budget, headcount, deadline, trust gate —
+The four fields every job needs (budget, headcount, deadline, trust gate)
 are appended by the compiler. Do not repeat them per card.
 
 `proofType` is what lets the settle prompt be generated rather than written

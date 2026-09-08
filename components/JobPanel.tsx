@@ -124,7 +124,7 @@ export function JobPanel({ card, onClose }: { card: Card; onClose: () => void })
                 : "Escrows on posting"}
             </span>
             <span className="font-mono text-[15px] tabular-nums text-ink">
-              {total === null ? "—" : `$${total.toFixed(2)}`}
+              {total === null ? "·" : `$${total.toFixed(2)}`}
             </span>
           </div>
         ) : null}

@@ -79,7 +79,7 @@ export function Catalog() {
     if (words.length === 0) return inFilter;
 
     // The box invites a sentence, so score on words rather than matching the
-    // whole string — "get people to join my telegram" matches nothing verbatim.
+    // whole string, "get people to join my telegram" matches nothing verbatim.
     return inFilter
       .map((c) => {
         const label =
@@ -215,7 +215,7 @@ export function Catalog() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               rows={2}
-              placeholder="Describe what you need done — e.g. “get 20 people to join my Telegram and prove it”"
+              placeholder="Describe what you need done, e.g. “get 20 people to join my Telegram and prove it”"
               className="w-full resize-none bg-transparent text-[14px] leading-relaxed text-ink outline-none placeholder:text-muted/80"
             />
             {query.trim() ? (
@@ -235,8 +235,8 @@ export function Catalog() {
           </div>
 
           <p className="mt-5 max-w-[62ch] text-[13.5px] leading-relaxed text-muted">
-            Pick a job, fill in what you know, copy the prompt. Blanks are fine
-            — the prompt carries instructions for your AI to ask you for
+            Pick a job, fill in what you know, copy the prompt. Blanks are
+            fine. The prompt carries instructions for your AI to ask you for
             anything you left out. Nothing here touches your wallet.
           </p>
 
