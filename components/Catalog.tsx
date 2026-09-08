@@ -147,26 +147,26 @@ export function Catalog() {
           </nav>
         ) : null}
 
-        <main className="min-w-0 flex-1 px-4 py-8 sm:px-6">
-          <div className="mx-auto flex max-w-4xl flex-col items-center text-center">
-            <div className="w-full rounded-xl border border-hairline bg-subtle p-4 text-left">
+        <main className="min-w-0 flex-1 px-4 py-6 sm:px-6">
+          <div className="mx-auto max-w-5xl">
+            <div className="rounded-xl border border-hairline bg-paper p-4 shadow-card">
               <textarea
                 value={describe}
                 onChange={(e) => setDescribe(e.target.value)}
-                rows={2}
+                rows={3}
                 placeholder="Describe what you need done, e.g. “get 20 people to join my Telegram and prove it”"
-                className="w-full resize-none bg-transparent text-center text-[14px] leading-relaxed text-ink outline-none placeholder:text-muted/80"
+                className="w-full resize-none bg-transparent text-[15px] leading-relaxed text-ink outline-none placeholder:text-muted/80"
               />
             </div>
 
-            <label className="mt-3 flex w-full max-w-xl items-center gap-2 rounded-md border border-hairline px-3 py-1.5 focus-within:border-ink">
+            <label className="mt-3 flex items-center gap-3 rounded-full border border-hairline px-4 py-2.5 transition focus-within:border-ink">
               <svg
                 viewBox="0 0 16 16"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth={1.4}
                 aria-hidden
-                className="h-[14px] w-[14px] shrink-0 text-muted"
+                className="h-[15px] w-[15px] shrink-0 text-muted"
               >
                 <circle cx="7" cy="7" r="4.5" />
                 <path d="M10.5 10.5L14 14" strokeLinecap="round" />
@@ -174,14 +174,14 @@ export function Catalog() {
               <input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder={`Search ${cards.length} prompts`}
-                className="w-full bg-transparent text-center text-[13px] text-ink outline-none placeholder:text-muted/70"
+                placeholder={`Search ${cards.length} prompts…`}
+                className="w-full bg-transparent text-[14px] text-ink outline-none placeholder:text-muted/70"
               />
             </label>
 
             <nav
               aria-label="Filter by category"
-              className="mt-6 flex w-full flex-wrap items-center justify-center gap-x-5 gap-y-2"
+              className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-1 border-b border-hairline"
             >
               <CatLink
                 label="All"
@@ -198,7 +198,7 @@ export function Catalog() {
               ))}
             </nav>
 
-            <div className="mt-9 w-full">
+            <div className="mt-8">
               {visible.length === 0 ? (
                 <p className="text-[13px] text-muted">
                   Nothing matches. Try engagement, research, testing, leads, or
@@ -206,23 +206,26 @@ export function Catalog() {
                 </p>
               ) : ranking ? (
                 <section>
-                  <h2 className="font-mono text-[11px] uppercase tracking-wider text-muted">
+                  <h2 className="font-serif text-[19px] italic text-ink">
                     Best match first
                   </h2>
-                  <ul className="mt-3 grid grid-cols-1 gap-y-1 sm:grid-cols-2 lg:grid-cols-3">
+                  <ul className="mt-3 grid grid-cols-1 gap-y-0.5 sm:grid-cols-2 lg:grid-cols-3">
                     {visible.map((c) => (
                       <JobRow key={c.id} name={c.name} onClick={() => show(c.id)} />
                     ))}
                   </ul>
                 </section>
               ) : (
-                <div className="grid grid-cols-1 gap-x-8 gap-y-9 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="gap-x-10 sm:columns-2 lg:columns-3">
                   {grouped.map(({ cat, items }) => (
-                    <section key={cat.id}>
-                      <h2 className="font-mono text-[11px] uppercase tracking-wider text-muted">
+                    <section
+                      key={cat.id}
+                      className="mb-8 break-inside-avoid"
+                    >
+                      <h2 className="font-serif text-[19px] italic text-ink">
                         {cat.label}
                       </h2>
-                      <ul className="mt-3 flex flex-col gap-1">
+                      <ul className="mt-2.5 flex flex-col gap-0.5">
                         {items.map((c) => (
                           <JobRow
                             key={c.id}
@@ -264,9 +267,13 @@ function JobRow({ name, onClick }: { name: string; onClick: () => void }) {
       <button
         type="button"
         onClick={onClick}
-        className="w-full rounded-md px-2 py-1.5 text-[13.5px] text-ink transition hover:bg-subtle"
+        className="-mx-2 flex w-[calc(100%+1rem)] items-baseline gap-2.5 rounded-md px-2 py-1 text-left text-[14px] text-ink transition hover:bg-subtle"
       >
-        {name}
+        <span
+          aria-hidden
+          className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-hairline"
+        />
+        <span className="min-w-0 flex-1">{name}</span>
       </button>
     </li>
   );
@@ -285,13 +292,17 @@ function CatLink({
     <button
       type="button"
       onClick={onClick}
-      className={`whitespace-nowrap text-[12.5px] transition ${
-        active
-          ? "text-ink underline decoration-ink underline-offset-[6px]"
-          : "text-muted hover:text-ink"
+      className={`relative whitespace-nowrap py-2.5 text-[13px] transition ${
+        active ? "font-medium text-ink" : "text-muted hover:text-ink"
       }`}
     >
       {label}
+      {active ? (
+        <span
+          aria-hidden
+          className="absolute inset-x-0 -bottom-px h-0.5 bg-ink"
+        />
+      ) : null}
     </button>
   );
 }
