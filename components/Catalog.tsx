@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { cards } from "@/lib/cards";
-import { categories, proofLabels, type CategoryId } from "@/lib/types";
+import { categories, type CategoryId } from "@/lib/types";
 import { JobPanel } from "./JobPanel";
 import { TopNav } from "./TopNav";
 import { Footer } from "./Footer";
@@ -16,7 +16,8 @@ const STOPWORDS = new Set([
 ]);
 
 export function Catalog() {
-  const [query, setQuery] = useState("");
+  const [describe, setDescribe] = useState("");
+  const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<CategoryId | "all">("all");
   const [openId, setOpenId] = useState<string | null>(null);
   const [expanded, setExpanded] = useState(true);
@@ -28,7 +29,10 @@ export function Catalog() {
     setHydrated(true);
   }, []);
 
-  // The open job lives in the URL, so a card can be linked and shared.
+  useEffect(() => {
+    if (hydrated) window.localStorage.setItem(RAIL_KEY, String(expanded));
+  }, [expanded, hydrated]);
+
   useEffect(() => {
     const fromHash = () => {
       const id = window.location.hash.replace(/^#/, "");
@@ -41,13 +45,8 @@ export function Catalog() {
 
   function show(id: string | null) {
     setOpenId(id);
-    const url = id ? `#${id}` : window.location.pathname;
-    window.history.replaceState(null, "", url);
+    window.history.replaceState(null, "", id ? `#${id}` : window.location.pathname);
   }
-
-  useEffect(() => {
-    if (hydrated) window.localStorage.setItem(RAIL_KEY, String(expanded));
-  }, [expanded, hydrated]);
 
   // The panel layers over the page, so the page behind it must not scroll.
   useEffect(() => {
@@ -69,217 +68,175 @@ export function Catalog() {
   }, [openId]);
 
   const visible = useMemo(() => {
-    const inFilter =
-      filter === "all" ? cards : cards.filter((c) => c.category === filter);
+    let out = filter === "all" ? cards : cards.filter((c) => c.category === filter);
 
-    const words = query
+    // Describe ranks on intent. The box invites a sentence, so it scores on
+    // words rather than matching the whole string.
+    const words = describe
       .toLowerCase()
       .split(/[^a-z0-9]+/)
       .filter((w) => w.length > 2 && !STOPWORDS.has(w));
 
-    if (words.length === 0) return inFilter;
+    if (words.length > 0) {
+      out = out
+        .map((c) => {
+          const label =
+            categories.find((cat) => cat.id === c.category)?.label ?? "";
+          const strong = `${c.name} ${c.blurb} ${label}`.toLowerCase();
+          const all = `${strong} ${c.title} ${c.brief}`.toLowerCase();
+          let score = 0;
+          for (const w of words) {
+            if (strong.includes(w)) score += 3;
+            else if (all.includes(w)) score += 1;
+          }
+          return { c, score };
+        })
+        .filter((r) => r.score > 0)
+        .sort((a, b) => b.score - a.score)
+        .map((r) => r.c);
+    }
 
-    // The box invites a sentence, so score on words rather than matching the
-    // whole string, "get people to join my telegram" matches nothing verbatim.
-    return inFilter
-      .map((c) => {
-        const label =
-          categories.find((cat) => cat.id === c.category)?.label ?? "";
-        const strong = `${c.name} ${c.blurb} ${label}`.toLowerCase();
-        const all = `${strong} ${c.title} ${c.brief}`.toLowerCase();
-        let score = 0;
-        for (const w of words) {
-          if (strong.includes(w)) score += 3;
-          else if (all.includes(w)) score += 1;
-        }
-        return { c, score };
-      })
-      .filter((r) => r.score > 0)
-      .sort((a, b) => b.score - a.score)
-      .map((r) => r.c);
-  }, [query, filter]);
+    // Search is a plain literal narrowing on top.
+    const q = search.trim().toLowerCase();
+    if (q) out = out.filter((c) => c.name.toLowerCase().includes(q));
 
-  const searching = query.trim().length > 0;
+    return out;
+  }, [describe, search, filter]);
 
-  // Ranked results are ordered by match quality, so regrouping them by
-  // category would throw that away. Sections are for browsing only.
-  const grouped = searching
-    ? [{ cat: { id: "results", label: "Best match first" }, items: visible }]
-    : categories
-        .map((cat) => ({
-          cat,
-          items: visible.filter((c) => c.category === cat.id),
-        }))
-        .filter((g) => g.items.length > 0);
+  const ranking = describe.trim().length > 0;
+  const grouped = categories
+    .map((cat) => ({ cat, items: visible.filter((c) => c.category === cat.id) }))
+    .filter((g) => g.items.length > 0);
 
   const open = cards.find((c) => c.id === openId) ?? null;
 
   return (
     <div className="flex min-h-screen flex-col">
       <header className="sticky top-0 z-20 border-b border-hairline bg-paper">
-        <TopNav />
-
-        <div className="flex gap-1 overflow-x-auto border-t border-hairline px-4 py-2 md:hidden">
-          <Chip
-            label="All"
-            active={filter === "all"}
-            onClick={() => setFilter("all")}
-          />
-          {categories.map((cat) => {
-            const count = cards.filter((c) => c.category === cat.id).length;
-            if (count === 0) return null;
-            return (
-              <Chip
-                key={cat.id}
-                label={cat.label}
-                active={filter === cat.id}
-                onClick={() => setFilter(cat.id)}
-              />
-            );
-          })}
-        </div>
+        <TopNav
+          railExpanded={expanded}
+          onToggleRail={() => setExpanded((v) => !v)}
+        />
       </header>
 
       <div className="flex min-h-0 flex-1">
-        <nav
-          aria-label="Categories"
-          className={`hidden shrink-0 flex-col border-r border-hairline px-2 py-3 transition-[width] duration-200 ease-out md:flex ${
-            expanded ? "w-52" : "w-14"
-          }`}
-        >
-          <button
-            type="button"
-            onClick={() => setExpanded((v) => !v)}
-            aria-label={expanded ? "Collapse sidebar" : "Expand sidebar"}
-            aria-expanded={expanded}
-            title={expanded ? "Collapse" : "Expand"}
-            className={`mb-2 flex h-8 items-center gap-2 rounded-md text-muted transition hover:bg-subtle hover:text-ink ${
-              expanded ? "px-2.5" : "justify-center px-0"
-            }`}
+        {expanded ? (
+          <nav
+            aria-label="Categories"
+            className="hidden w-52 shrink-0 flex-col border-r border-hairline px-2 py-4 md:flex"
           >
-            <ToggleIcon
-              expanded={expanded}
-              className="h-[17px] w-[17px] shrink-0"
-            />
-            <span
-              className={`overflow-hidden whitespace-nowrap font-mono text-[10.5px] uppercase tracking-wider transition-[opacity,max-width] duration-200 ${
-                expanded ? "max-w-[140px] opacity-100" : "max-w-0 opacity-0"
-              }`}
-            >
-              Browse
-            </span>
-          </button>
-
-          <RailItem
-            label="All jobs"
-            count={cards.length}
-            active={filter === "all"}
-            expanded={expanded}
-            onClick={() => setFilter("all")}
-          />
-
-          {expanded ? (
-            <p className="mb-1 mt-4 px-2.5 font-mono text-[10.5px] uppercase tracking-wider text-muted">
+            <p className="mb-1 px-2.5 font-mono text-[10.5px] uppercase tracking-wider text-muted">
               Categories
             </p>
-          ) : (
-            <div role="separator" className="my-1.5 h-px bg-hairline" />
-          )}
-
-          {categories.map((cat) => {
-            const count = cards.filter((c) => c.category === cat.id).length;
-            if (count === 0) return null;
-            return (
+            <RailItem
+              label="All jobs"
+              active={filter === "all"}
+              onClick={() => setFilter("all")}
+            />
+            {categories.map((cat) => (
               <RailItem
                 key={cat.id}
                 label={cat.label}
-                count={count}
                 active={filter === cat.id}
-                expanded={expanded}
                 onClick={() => setFilter(cat.id)}
               />
-            );
-          })}
-
-          <div
-            className={`mt-auto pt-3 ${expanded ? "px-2.5" : "text-center"}`}
-          >
-            <span className="font-mono text-[10.5px] uppercase tracking-wider text-muted">
-              {expanded ? "BadLabs" : "BL"}
-            </span>
-          </div>
-        </nav>
-
-        <main className="min-w-0 flex-1 px-4 py-6 sm:px-6">
-          <div className="rounded-xl border border-hairline bg-subtle p-4">
-            <textarea
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              rows={2}
-              placeholder="Describe what you need done, e.g. “get 20 people to join my Telegram and prove it”"
-              className="w-full resize-none bg-transparent text-[14px] leading-relaxed text-ink outline-none placeholder:text-muted/80"
-            />
-            {query.trim() ? (
-              <div className="mt-2 flex items-center justify-between gap-3">
-                <span className="font-mono text-[11px] text-muted">
-                  {visible.length} match
-                </span>
-                <button
-                  type="button"
-                  onClick={() => setQuery("")}
-                  className="shrink-0 rounded-md border border-hairline bg-paper px-2.5 py-1 font-mono text-[11px] text-muted transition hover:border-ink hover:text-ink"
-                >
-                  Clear
-                </button>
-              </div>
-            ) : null}
-          </div>
-
-          <p className="mt-5 max-w-[62ch] text-[13.5px] leading-relaxed text-muted">
-            Pick a job, fill in what you know, copy the prompt. Blanks are
-            fine. The prompt carries instructions for your AI to ask you for
-            anything you left out. Nothing here touches your wallet.
-          </p>
-
-          <div className="mt-7 flex flex-col gap-7">
-            {grouped.map(({ cat, items }) => (
-              <section key={cat.id}>
-                <h2 className="font-mono text-[11px] uppercase tracking-wider text-muted">
-                  {cat.label}
-                </h2>
-                <ul className="mt-2.5 grid grid-cols-1 gap-x-8 gap-y-0.5 lg:grid-cols-2 2xl:grid-cols-3">
-                  {items.map((c) => (
-                    <li key={c.id}>
-                      <button
-                        type="button"
-                        onClick={() => show(c.id)}
-                        className="group flex w-full items-baseline gap-3 rounded-md px-2 py-1.5 text-left transition hover:bg-subtle"
-                      >
-                        <span
-                          aria-hidden
-                          className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-hairline transition group-hover:bg-ink"
-                        />
-                        <span className="min-w-0 flex-1 truncate text-[13.5px] text-ink">
-                          {c.name}
-                        </span>
-                        <span className="shrink-0 font-mono text-[10.5px] text-muted opacity-0 transition group-hover:opacity-100">
-                          {proofLabels[c.proofType]}
-                        </span>
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              </section>
             ))}
+            <span className="mt-auto px-2.5 pt-3 font-mono text-[10.5px] uppercase tracking-wider text-muted">
+              BadLabs
+            </span>
+          </nav>
+        ) : null}
 
-            {grouped.length === 0 ? (
-              <p className="text-[13px] text-muted">
-                Nothing matches “{query}”. Try engagement, research, testing,
-                leads, or on-chain.
-              </p>
-            ) : null}
+        <main className="min-w-0 flex-1 px-4 py-8 sm:px-6">
+          <div className="mx-auto flex max-w-4xl flex-col items-center text-center">
+            <div className="w-full rounded-xl border border-hairline bg-subtle p-4 text-left">
+              <textarea
+                value={describe}
+                onChange={(e) => setDescribe(e.target.value)}
+                rows={2}
+                placeholder="Describe what you need done, e.g. “get 20 people to join my Telegram and prove it”"
+                className="w-full resize-none bg-transparent text-center text-[14px] leading-relaxed text-ink outline-none placeholder:text-muted/80"
+              />
+            </div>
+
+            <label className="mt-3 flex w-full max-w-xl items-center gap-2 rounded-md border border-hairline px-3 py-1.5 focus-within:border-ink">
+              <svg
+                viewBox="0 0 16 16"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={1.4}
+                aria-hidden
+                className="h-[14px] w-[14px] shrink-0 text-muted"
+              >
+                <circle cx="7" cy="7" r="4.5" />
+                <path d="M10.5 10.5L14 14" strokeLinecap="round" />
+              </svg>
+              <input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder={`Search ${cards.length} prompts`}
+                className="w-full bg-transparent text-center text-[13px] text-ink outline-none placeholder:text-muted/70"
+              />
+            </label>
+
+            <nav
+              aria-label="Filter by category"
+              className="mt-6 flex w-full flex-wrap items-center justify-center gap-x-5 gap-y-2"
+            >
+              <CatLink
+                label="All"
+                active={filter === "all"}
+                onClick={() => setFilter("all")}
+              />
+              {categories.map((cat) => (
+                <CatLink
+                  key={cat.id}
+                  label={cat.label}
+                  active={filter === cat.id}
+                  onClick={() => setFilter(cat.id)}
+                />
+              ))}
+            </nav>
+
+            <div className="mt-9 w-full">
+              {visible.length === 0 ? (
+                <p className="text-[13px] text-muted">
+                  Nothing matches. Try engagement, research, testing, leads, or
+                  on-chain.
+                </p>
+              ) : ranking ? (
+                <section>
+                  <h2 className="font-mono text-[11px] uppercase tracking-wider text-muted">
+                    Best match first
+                  </h2>
+                  <ul className="mt-3 grid grid-cols-1 gap-y-1 sm:grid-cols-2 lg:grid-cols-3">
+                    {visible.map((c) => (
+                      <JobRow key={c.id} name={c.name} onClick={() => show(c.id)} />
+                    ))}
+                  </ul>
+                </section>
+              ) : (
+                <div className="grid grid-cols-1 gap-x-8 gap-y-9 sm:grid-cols-2 lg:grid-cols-3">
+                  {grouped.map(({ cat, items }) => (
+                    <section key={cat.id}>
+                      <h2 className="font-mono text-[11px] uppercase tracking-wider text-muted">
+                        {cat.label}
+                      </h2>
+                      <ul className="mt-3 flex flex-col gap-1">
+                        {items.map((c) => (
+                          <JobRow
+                            key={c.id}
+                            name={c.name}
+                            onClick={() => show(c.id)}
+                          />
+                        ))}
+                      </ul>
+                    </section>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
-
         </main>
       </div>
 
@@ -301,32 +258,21 @@ export function Catalog() {
   );
 }
 
-function ToggleIcon({
-  expanded,
-  className,
-}: {
-  expanded: boolean;
-  className?: string;
-}) {
+function JobRow({ name, onClick }: { name: string; onClick: () => void }) {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.5}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-      className={className}
-    >
-      <rect x="3.5" y="4.5" width="17" height="15" rx="2" />
-      <path d="M9.5 4.5v15" />
-      {expanded ? <path d="M15 9l-3 3 3 3" /> : <path d="M13 9l3 3-3 3" />}
-    </svg>
+    <li>
+      <button
+        type="button"
+        onClick={onClick}
+        className="w-full rounded-md px-2 py-1.5 text-[13.5px] text-ink transition hover:bg-subtle"
+      >
+        {name}
+      </button>
+    </li>
   );
 }
 
-function Chip({
+function CatLink({
   label,
   active,
   onClick,
@@ -339,10 +285,10 @@ function Chip({
     <button
       type="button"
       onClick={onClick}
-      className={`shrink-0 whitespace-nowrap rounded-md border px-2.5 py-1 text-[12px] transition ${
+      className={`whitespace-nowrap text-[12.5px] transition ${
         active
-          ? "border-ink text-ink"
-          : "border-hairline text-muted hover:border-ink hover:text-ink"
+          ? "text-ink underline decoration-ink underline-offset-[6px]"
+          : "text-muted hover:text-ink"
       }`}
     >
       {label}
@@ -352,40 +298,24 @@ function Chip({
 
 function RailItem({
   label,
-  count,
   active,
-  expanded,
   onClick,
 }: {
   label: string;
-  count: number;
   active: boolean;
-  expanded: boolean;
   onClick: () => void;
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
-      title={expanded ? undefined : `${label} (${count})`}
-      className={`flex h-8 w-full items-center gap-2 rounded-md text-[13px] transition ${
-        expanded ? "px-2.5" : "justify-center px-0"
-      } ${
+      className={`flex h-8 w-full items-center rounded-md px-2.5 text-left text-[13px] transition ${
         active
           ? "bg-subtle text-ink"
           : "text-muted hover:bg-subtle hover:text-ink"
       }`}
     >
-      {expanded ? (
-        <>
-          <span className="min-w-0 flex-1 truncate text-left">{label}</span>
-          <span className="font-mono text-[11px] tabular-nums text-muted">
-            {count}
-          </span>
-        </>
-      ) : (
-        <span className="font-mono text-[11px] tabular-nums">{count}</span>
-      )}
+      <span className="min-w-0 flex-1 truncate">{label}</span>
     </button>
   );
 }
