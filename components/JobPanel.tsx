@@ -44,18 +44,35 @@ export function JobPanel({ card, onClose }: { card: Card; onClose: () => void })
 
   const [sent, setSent] = useState(false);
 
-  /** Audric's ?q= prefill truncates at 2000 characters, and these prompts run
-   *  to 3500. A truncated post prompt keeps the instruction to post and loses
-   *  the GO gate at the tail, so the prompt travels by clipboard instead. */
+  /** Audric's ?q= prefill truncates at 2000 characters and these prompts run to
+   *  3500, so the prompt itself cannot travel in the URL. Audric can fetch a
+   *  URL, so it gets a short pointer at /p/<id> instead and reads the full
+   *  prompt from there. The clipboard copy is a fallback for the case where
+   *  the fetch fails. */
   async function openInAudric() {
+    const params = new URLSearchParams({ tab });
+    for (const [k, v] of Object.entries(values)) {
+      if (v && v.trim() !== "") params.set(k, v.trim());
+    }
+    const promptUrl = `${window.location.origin}/p/${card.id}?${params}`;
+    const instruction =
+      `Read ${promptUrl} and follow it exactly, start to finish. ` +
+      `It is a t2000 marketplace instruction. Do not skip any step and do ` +
+      `not spend anything until it tells you to stop and ask me.`;
+
     try {
       await navigator.clipboard.writeText(prompt);
       setSent(true);
-      setTimeout(() => setSent(false), 4000);
+      setTimeout(() => setSent(false), 5000);
     } catch {
-      // clipboard unavailable; the window still opens and Copy is right above
+      // clipboard unavailable; the pointer below still carries the prompt
     }
-    window.open("https://audric.ai", "_blank", "noopener,noreferrer");
+
+    window.open(
+      `https://audric.ai/?q=${encodeURIComponent(instruction)}`,
+      "_blank",
+      "noopener,noreferrer"
+    );
   }
 
   return (
@@ -154,7 +171,7 @@ export function JobPanel({ card, onClose }: { card: Card; onClose: () => void })
       <footer className="flex items-center justify-between gap-3 border-t border-hairline px-5 py-3">
         <p className="text-[11.5px] leading-snug text-muted">
           {sent
-            ? "Copied. Paste it into Audric and send."
+            ? "Opened in Audric. Also copied, in case you need to paste."
             : "Nothing here touches your wallet. Your AI runs it."}
         </p>
         <button
