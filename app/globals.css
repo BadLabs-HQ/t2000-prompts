@@ -6,15 +6,96 @@
   color-scheme: light;
 }
 
-html,
 body {
-  background: #ffffff;
+  margin: 0;
+  background: #f5f4f1;
   color: #0a0a0a;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
-::selection {
-  background: #0a0a0a;
-  color: #ffffff;
+input,
+textarea,
+select,
+button {
+  font: inherit;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+}
+
+.t2k-catalog ::selection {
+  background: #ff7a45;
+  color: #fff;
+}
+
+.t2k-home ::selection {
+  background: #ff7a45;
+  color: #2b1006;
+}
+
+.t2k-catalog a {
+  color: #0a0a0a;
+  text-decoration-color: #d8d8d4;
+}
+
+.t2k-home a {
+  color: #0a0a0a;
+}
+
+.t2k-catalog ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.t2k-catalog ::-webkit-scrollbar-thumb {
+  background: #e5e5e5;
+  border-radius: 8px;
+}
+
+.t2k-catalog ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Hover and focus states. Inline styles set the resting look, so these need
+   !important to win, the same way the design's style-hover attributes do. */
+.hv-bright:hover {
+  filter: brightness(1.12) !important;
+}
+
+.hv-peach:hover {
+  background: #ffb694 !important;
+}
+
+.hv-orange:hover {
+  color: #ff7a45 !important;
+}
+
+.hv-border-orange:hover {
+  border-color: #ff7a45 !important;
+}
+
+.hv-border-ink:hover {
+  border-color: #0a0a0a !important;
+}
+
+.hv-deco-orange:hover {
+  text-decoration-color: #ff7a45 !important;
+}
+
+.hv-subtle:hover {
+  background: #f7f7f7 !important;
+}
+
+.hv-close:hover {
+  border-color: #ff7a45 !important;
+  color: #0a0a0a !important;
+  font-weight: 700 !important;
+}
+
+.fc-border-orange:focus {
+  border-color: #ff7a45 !important;
+  outline: none;
 }

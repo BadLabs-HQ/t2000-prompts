@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
+import type { CSSProperties } from "react";
 import { cards } from "@/lib/cards";
-import { categories, type CategoryId } from "@/lib/types";
-import { JobPanel } from "./JobPanel";
-import { TopNav } from "./TopNav";
-import { Footer } from "./Footer";
-
-const RAIL_KEY = "t2000:rail:expanded";
+import { categories, type Card, type CategoryId } from "@/lib/types";
+import { SiteHeader } from "./SiteHeader";
+import { SiteFooter } from "./SiteFooter";
+import { JobDrawer } from "./JobDrawer";
+import { ACCENT, GEIST, GEIST_MONO } from "./fonts";
 
 const STOPWORDS = new Set([
   "and", "the", "for", "with", "you", "your", "from", "that", "this", "have",
@@ -15,74 +15,40 @@ const STOPWORDS = new Set([
   "how", "one", "job", "jobs", "please", "would", "someone", "there",
 ]);
 
+const TAB_UNDERLINE =
+  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='none' viewBox='0 0 100 6'%3E%3Cpath d='M1 4.4 Q 50 2.4 99 4' fill='none' stroke='%23FF7A45' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E\")";
+
+const EASE = "cubic-bezier(0.4, 0, 0.2, 1)";
+
+const CARD_SHADOW = "0 3px 10px -6px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.04)";
+
+const labelFor = (id: string) => categories.find((c) => c.id === id)?.label ?? "";
+
 export function Catalog() {
   const [describe, setDescribe] = useState("");
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<CategoryId | "all">("all");
+  const [catFilter, setCatFilter] = useState<CategoryId | null>(null);
+  const [railOpen, setRailOpen] = useState(false);
+  const [view, setView] = useState<"grid" | "list">("grid");
+  const [hotTab, setHotTab] = useState<string | null>(null);
+  const [hotRail, setHotRail] = useState<string | null>(null);
+  const [hotView, setHotView] = useState<string | null>(null);
   const [openId, setOpenId] = useState<string | null>(null);
-  const [expanded, setExpanded] = useState(true);
-  const [hydrated, setHydrated] = useState(false);
-
-  useEffect(() => {
-    const stored = window.localStorage.getItem(RAIL_KEY);
-    if (stored !== null) setExpanded(stored === "true");
-    setHydrated(true);
-  }, []);
-
-  useEffect(() => {
-    if (hydrated) window.localStorage.setItem(RAIL_KEY, String(expanded));
-  }, [expanded, hydrated]);
-
-  useEffect(() => {
-    const fromHash = () => {
-      const id = window.location.hash.replace(/^#/, "");
-      setOpenId(cards.some((c) => c.id === id) ? id : null);
-    };
-    fromHash();
-    window.addEventListener("hashchange", fromHash);
-    return () => window.removeEventListener("hashchange", fromHash);
-  }, []);
-
-  function show(id: string | null) {
-    setOpenId(id);
-    window.history.replaceState(null, "", id ? `#${id}` : window.location.pathname);
-  }
-
-  // The panel layers over the page, so the page behind it must not scroll.
-  useEffect(() => {
-    if (!openId) return;
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = prev;
-    };
-  }, [openId]);
-
-  useEffect(() => {
-    if (!openId) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") show(null);
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [openId]);
+  const [shown, setShown] = useState(false);
+  const closeTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   const visible = useMemo(() => {
-    let out = filter === "all" ? cards : cards.filter((c) => c.category === filter);
-
-    // Describe ranks on intent. The box invites a sentence, so it scores on
-    // words rather than matching the whole string.
+    const active = catFilter || filter;
+    let out = active === "all" ? cards : cards.filter((c) => c.category === active);
     const words = describe
       .toLowerCase()
       .split(/[^a-z0-9]+/)
       .filter((w) => w.length > 2 && !STOPWORDS.has(w));
-
-    if (words.length > 0) {
+    if (words.length) {
       out = out
         .map((c) => {
-          const label =
-            categories.find((cat) => cat.id === c.category)?.label ?? "";
-          const strong = `${c.name} ${c.blurb} ${label}`.toLowerCase();
+          const strong = `${c.name} ${c.blurb} ${labelFor(c.category)}`.toLowerCase();
           const all = `${strong} ${c.title} ${c.brief}`.toLowerCase();
           let score = 0;
           for (const w of words) {
@@ -95,238 +61,824 @@ export function Catalog() {
         .sort((a, b) => b.score - a.score)
         .map((r) => r.c);
     }
-
-    // Search is a plain literal narrowing on top.
     const q = search.trim().toLowerCase();
     if (q) out = out.filter((c) => c.name.toLowerCase().includes(q));
-
     return out;
-  }, [describe, search, filter]);
+  }, [describe, search, filter, catFilter]);
+
+  const open = (id: string) => {
+    clearTimeout(closeTimer.current);
+    setOpenId(id);
+    setShown(false);
+    requestAnimationFrame(() => requestAnimationFrame(() => setShown(true)));
+  };
+
+  const close = useCallback(() => {
+    setShown(false);
+    clearTimeout(closeTimer.current);
+    closeTimer.current = setTimeout(() => setOpenId(null), 280);
+  }, []);
 
   const ranking = describe.trim().length > 0;
-  const grouped = categories
-    .map((cat) => ({ cat, items: visible.filter((c) => c.category === cat.id) }))
-    .filter((g) => g.items.length > 0);
+  const catPage = !!catFilter && !ranking;
+  const openCard = cards.find((c) => c.id === openId) ?? null;
+  const countText = `${visible.length} ${visible.length === 1 ? "prompt" : "prompts"}`;
 
-  const open = cards.find((c) => c.id === openId) ?? null;
+  const groups: { label: string; items: Card[] }[] = ranking
+    ? [{ label: "Best match first", items: visible }]
+    : categories
+        .map((cat) => ({
+          label: cat.label,
+          items: visible.filter((c) => c.category === cat.id),
+        }))
+        .filter((g) => g.items.length > 0);
+
+  const railButton = (on: boolean, hot: boolean): CSSProperties => ({
+    display: "flex",
+    width: "100%",
+    height: 34,
+    alignItems: "center",
+    gap: 10,
+    border: 0,
+    cursor: "pointer",
+    borderRadius: 6,
+    padding: "0 10px",
+    textAlign: "left",
+    fontSize: 14,
+    background: on ? ACCENT : "transparent",
+    color: on ? "#fff" : hot ? ACCENT : "#4B5563",
+    fontWeight: on ? 500 : 400,
+  });
+
+  const railCount = (on: boolean, hot: boolean): CSSProperties => ({
+    flexShrink: 0,
+    fontSize: 12.5,
+    color: on ? "#fff" : hot ? ACCENT : "#6B7280",
+  });
+
+  const viewButton = (on: boolean, hot: boolean): CSSProperties => ({
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: 28,
+    height: 26,
+    border: 0,
+    borderRadius: 6,
+    cursor: "pointer",
+    background: on ? ACCENT : "transparent",
+    color: on ? "#fff" : hot ? ACCENT : "#6B7280",
+  });
+
+  const initialBadge = (size: number, radius: number, fontSize: number): CSSProperties => ({
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    flexShrink: 0,
+    width: size,
+    height: size,
+    borderRadius: radius,
+    background: "#F0F0F0",
+    fontFamily: GEIST_MONO,
+    fontSize,
+    color: "#6B7280",
+  });
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <header className="sticky top-0 z-20 border-b border-hairline bg-paper">
-        <TopNav
-          railExpanded={expanded}
-          onToggleRail={() => setExpanded((v) => !v)}
+    <div
+      className="t2k-catalog"
+      style={{
+        fontFamily: GEIST,
+        color: "#0A0A0A",
+        background: "transparent",
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      <svg
+        aria-hidden
+        preserveAspectRatio="none"
+        style={{
+          position: "fixed",
+          inset: 0,
+          width: "100%",
+          height: "100%",
+          zIndex: -1,
+          pointerEvents: "none",
+        }}
+      >
+        <defs>
+          <pattern id="t2kGrid" width="34" height="34" patternUnits="userSpaceOnUse">
+            <path
+              d="M34 0H0V34"
+              fill="none"
+              stroke="#E0DFDB"
+              strokeWidth="1.4"
+              strokeLinecap="round"
+            />
+          </pattern>
+          <filter id="t2kWobble" x="-15%" y="-15%" width="130%" height="130%">
+            <feTurbulence
+              type="fractalNoise"
+              baseFrequency="0.0055 0.0085"
+              numOctaves={2}
+              seed={7}
+              result="noise"
+            />
+            <feDisplacementMap
+              in="SourceGraphic"
+              in2="noise"
+              scale={16}
+              xChannelSelector="R"
+              yChannelSelector="G"
+            />
+          </filter>
+        </defs>
+        <rect
+          x="-6%"
+          y="-6%"
+          width="112%"
+          height="112%"
+          fill="url(#t2kGrid)"
+          filter="url(#t2kWobble)"
         />
-      </header>
+      </svg>
 
-      <div className="flex min-h-0 flex-1">
-        {expanded ? (
-          <nav
-            aria-label="Categories"
-            className="hidden w-52 shrink-0 flex-col border-r border-hairline px-2 py-4 md:flex"
+      <SiteHeader variant="catalog" />
+
+      <div style={{ position: "relative", display: "flex", minHeight: 0, flex: 1 }}>
+        <button
+          type="button"
+          onClick={() => setRailOpen((v) => !v)}
+          aria-label={railOpen ? "Collapse sidebar" : "Expand sidebar"}
+          title={railOpen ? "Collapse sidebar" : "Expand sidebar"}
+          className="hv-subtle"
+          style={{
+            position: "absolute",
+            zIndex: 5,
+            top: 6,
+            left: railOpen ? 164 : 8,
+            display: "flex",
+            height: 26,
+            width: 26,
+            alignItems: "center",
+            justifyContent: "center",
+            border: 0,
+            borderRadius: 6,
+            background: "transparent",
+            color: "#0A0A0A",
+            cursor: "pointer",
+            transition: `left 280ms ${EASE}`,
+          }}
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2.75}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden
+            style={{ height: 28, width: 28, overflow: "visible" }}
           >
-            <p className="mb-1 px-2.5 font-mono text-[10.5px] uppercase tracking-wider text-muted">
+            <path d={railOpen ? "M14 7l-5 5 5 5" : "M10 7l5 5-5 5"} />
+          </svg>
+        </button>
+
+        <nav
+          aria-label="Categories"
+          style={{
+            width: railOpen ? 208 : 54,
+            flexShrink: 0,
+            overflow: "hidden",
+            borderRight: `1px solid ${railOpen ? "#E5E5E5" : "transparent"}`,
+            background: railOpen ? "#fff" : "transparent",
+            padding: "6px 8px 12px",
+            display: "grid",
+            gap: 3,
+            alignContent: "start",
+            transition: `width 280ms ${EASE}, border-color 280ms ease-in-out, background 280ms ease-in-out`,
+          }}
+        >
+          <div
+            style={{
+              display: "grid",
+              gap: 3,
+              paddingTop: 0,
+              width: 192,
+              opacity: railOpen ? 1 : 0,
+              pointerEvents: railOpen ? "auto" : "none",
+              transition: "opacity 200ms ease-in-out",
+            }}
+          >
+            <p
+              style={{
+                margin: "0 0 2px",
+                padding: "0 10px",
+                height: 26,
+                display: "flex",
+                alignItems: "center",
+                fontSize: 12.5,
+                color: "#6B7280",
+                whiteSpace: "nowrap",
+              }}
+            >
+              Browse
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                setFilter("all");
+                setCatFilter(null);
+              }}
+              onMouseEnter={() => setHotRail("__all")}
+              onMouseLeave={() => setHotRail(null)}
+              style={{ ...railButton(!catFilter, hotRail === "__all"), fontWeight: 500 }}
+            >
+              <span
+                style={{
+                  minWidth: 0,
+                  flex: 1,
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                All Categories
+              </span>
+              <span style={railCount(!catFilter, hotRail === "__all")}>{cards.length}</span>
+            </button>
+            <hr style={{ margin: "10px 6px", border: 0, borderTop: "1px solid #E5E5E5" }} />
+            <p
+              style={{
+                margin: "0 0 2px",
+                padding: "0 10px",
+                fontSize: 12.5,
+                color: "#6B7280",
+                whiteSpace: "nowrap",
+              }}
+            >
               Categories
             </p>
-            <RailItem
-              label="All jobs"
-              active={filter === "all"}
-              onClick={() => setFilter("all")}
-            />
-            {categories.map((cat) => (
-              <RailItem
-                key={cat.id}
-                label={cat.label}
-                active={filter === cat.id}
-                onClick={() => setFilter(cat.id)}
-              />
-            ))}
-            <span className="mt-auto px-2.5 pt-3 font-mono text-[10.5px] uppercase tracking-wider text-muted">
-              BadLabs
-            </span>
-          </nav>
-        ) : null}
-
-        <main className="min-w-0 flex-1 px-4 py-6 sm:px-6">
-          <div className="mx-auto max-w-5xl">
-            <div className="rounded-xl border border-hairline bg-paper p-4 shadow-card">
-              <textarea
-                value={describe}
-                onChange={(e) => setDescribe(e.target.value)}
-                rows={3}
-                placeholder="Describe what you need done, e.g. “get 20 people to join my Telegram and prove it”"
-                className="w-full resize-none bg-transparent text-[15px] leading-relaxed text-ink outline-none placeholder:text-muted/80"
-              />
-            </div>
-
-            <label className="mt-3 flex items-center gap-3 rounded-full border border-hairline px-4 py-2.5 transition focus-within:border-ink">
-              <svg
-                viewBox="0 0 16 16"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={1.4}
-                aria-hidden
-                className="h-[15px] w-[15px] shrink-0 text-muted"
-              >
-                <circle cx="7" cy="7" r="4.5" />
-                <path d="M10.5 10.5L14 14" strokeLinecap="round" />
-              </svg>
-              <input
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder={`Search ${cards.length} prompts…`}
-                className="w-full bg-transparent text-[14px] text-ink outline-none placeholder:text-muted/70"
-              />
-            </label>
-
-            <nav
-              aria-label="Filter by category"
-              className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-1 border-b border-hairline"
-            >
-              <CatLink
-                label="All"
-                active={filter === "all"}
-                onClick={() => setFilter("all")}
-              />
-              {categories.map((cat) => (
-                <CatLink
+            {categories.map((cat) => {
+              const on = catFilter === cat.id;
+              const hot = hotRail === cat.id;
+              return (
+                <button
                   key={cat.id}
-                  label={cat.label}
-                  active={filter === cat.id}
-                  onClick={() => setFilter(cat.id)}
-                />
-              ))}
-            </nav>
+                  type="button"
+                  onClick={() => setCatFilter(cat.id)}
+                  onMouseEnter={() => setHotRail(cat.id)}
+                  onMouseLeave={() => setHotRail(null)}
+                  style={railButton(on, hot)}
+                >
+                  <span
+                    style={{
+                      minWidth: 0,
+                      flex: 1,
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {cat.label}
+                  </span>
+                  <span style={railCount(on, hot)}>
+                    {cards.filter((c) => c.category === cat.id).length}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </nav>
 
-            <div className="mt-8">
-              {visible.length === 0 ? (
-                <p className="text-[13px] text-muted">
-                  Nothing matches. Try engagement, research, testing, leads, or
-                  on-chain.
-                </p>
-              ) : ranking ? (
-                <section>
-                  <h2 className="font-serif text-[19px] italic text-ink">
-                    Best match first
-                  </h2>
-                  <ul className="mt-3 grid grid-cols-1 gap-y-0.5 sm:grid-cols-2 lg:grid-cols-3">
-                    {visible.map((c) => (
-                      <JobRow key={c.id} name={c.name} onClick={() => show(c.id)} />
-                    ))}
-                  </ul>
-                </section>
-              ) : (
-                <div className="gap-x-10 sm:columns-2 lg:columns-3">
-                  {grouped.map(({ cat, items }) => (
-                    <section
-                      key={cat.id}
-                      className="mb-8 break-inside-avoid"
+        <main style={{ minWidth: 0, flex: 1, padding: "20px 18px 0" }}>
+          <div style={{ maxWidth: 1000, margin: "0 auto" }}>
+            {!catPage ? (
+              <>
+                <div
+                  style={{
+                    border: "1px solid #E5E5E5",
+                    borderRadius: 14,
+                    background: "#fff",
+                    padding: "10px 14px 8px",
+                    boxShadow: CARD_SHADOW,
+                  }}
+                >
+                  <textarea
+                    rows={2}
+                    value={describe}
+                    onChange={(e) => setDescribe(e.target.value)}
+                    placeholder="Describe what you need done, e.g. “get 20 people to join my Telegram and prove it”"
+                    style={{
+                      width: "100%",
+                      boxSizing: "border-box",
+                      resize: "none",
+                      border: 0,
+                      background: "transparent",
+                      fontSize: 15.5,
+                      lineHeight: 1.6,
+                      color: "#0A0A0A",
+                    }}
+                  />
+                  <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                    <button
+                      type="button"
+                      onClick={() => setFilter("all")}
+                      className="hv-bright"
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 6,
+                        border: 0,
+                        borderRadius: 999,
+                        background: ACCENT,
+                        padding: "6px 13px",
+                        fontFamily: GEIST,
+                        fontSize: 13.5,
+                        fontWeight: 600,
+                        color: "#fff",
+                        cursor: "pointer",
+                        transition: "background 120ms ease",
+                      }}
                     >
-                      <h2 className="font-serif text-[19px] italic text-ink">
-                        {cat.label}
-                      </h2>
-                      <ul className="mt-2.5 flex flex-col gap-0.5">
-                        {items.map((c) => (
-                          <JobRow
-                            key={c.id}
-                            name={c.name}
-                            onClick={() => show(c.id)}
-                          />
-                        ))}
-                      </ul>
-                    </section>
+                      Run it
+                      <svg
+                        viewBox="0 0 16 16"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth={2.4}
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden
+                        style={{ width: 12.5, height: 12.5 }}
+                      >
+                        <path d="M8 13V3" />
+                        <path d="M3.5 7.5L8 3l4.5 4.5" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+
+                <label
+                  style={{
+                    marginTop: 14,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 12,
+                    border: "1px solid #E5E5E5",
+                    borderRadius: 14,
+                    background: "#fff",
+                    padding: "14px 18px",
+                    boxShadow: CARD_SHADOW,
+                  }}
+                >
+                  <svg
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    stroke="#6B7280"
+                    strokeWidth={1.4}
+                    aria-hidden
+                    style={{ width: 18, height: 18, flexShrink: 0 }}
+                  >
+                    <circle cx="7" cy="7" r="4.5" />
+                    <path d="M10.5 10.5L14 14" strokeLinecap="round" />
+                  </svg>
+                  <input
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    placeholder="Search prompts…"
+                    style={{
+                      width: "100%",
+                      border: 0,
+                      background: "transparent",
+                      fontSize: 15.5,
+                      color: "#0A0A0A",
+                    }}
+                  />
+                </label>
+
+                <nav
+                  aria-label="Filter by category"
+                  style={{
+                    marginTop: 20,
+                    display: "flex",
+                    flexWrap: "wrap",
+                    alignItems: "center",
+                    gap: "4px 30px",
+                  }}
+                >
+                  {[{ id: "all" as const, label: "All" }, ...categories].map((t) => {
+                    const on = filter === t.id;
+                    const hot = hotTab === t.id;
+                    return (
+                      <button
+                        key={t.id}
+                        type="button"
+                        onClick={() => {
+                          setFilter(t.id);
+                          setCatFilter(null);
+                        }}
+                        onMouseEnter={() => setHotTab(t.id)}
+                        onMouseLeave={() => setHotTab(null)}
+                        style={{
+                          position: "relative",
+                          border: 0,
+                          background: "none",
+                          cursor: "pointer",
+                          whiteSpace: "nowrap",
+                          padding: "12px 0",
+                          fontSize: 15,
+                          fontWeight: on ? 500 : 400,
+                          color: hot ? ACCENT : on ? "#0A0A0A" : "#6B7280",
+                          backgroundImage: on ? TAB_UNDERLINE : "none",
+                          backgroundRepeat: "no-repeat",
+                          backgroundPosition: "left bottom",
+                          backgroundSize: "100% 6px",
+                        }}
+                      >
+                        {t.label}
+                      </button>
+                    );
+                  })}
+                </nav>
+
+                {visible.length === 0 ? (
+                  <p style={{ marginTop: 28, fontSize: 13, color: "#6B7280" }}>
+                    Nothing matches. Try engagement, research, testing, leads, or on chain.
+                  </p>
+                ) : null}
+
+                <div
+                  style={{
+                    marginTop: 26,
+                    display: "flex",
+                    flexWrap: "wrap",
+                    alignItems: "center",
+                    gap: 12,
+                  }}
+                >
+                  <p style={{ margin: 0, fontSize: 13, color: "#6B7280" }}>
+                    {countText}
+                  </p>
+                  <div
+                    role="group"
+                    aria-label="View"
+                    style={{
+                      marginLeft: "auto",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 2,
+                      border: "1px solid #E5E5E5",
+                      borderRadius: 8,
+                      background: "#fff",
+                      padding: 2,
+                    }}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => setView("list")}
+                      onMouseEnter={() => setHotView("list")}
+                      onMouseLeave={() => setHotView(null)}
+                      aria-label="List view"
+                      title="List view"
+                      style={viewButton(view === "list", hotView === "list")}
+                    >
+                      <svg
+                        viewBox="0 0 16 16"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth={1.5}
+                        strokeLinecap="round"
+                        aria-hidden
+                        style={{ width: 15, height: 15 }}
+                      >
+                        <path d="M2 4h1M2 8h1M2 12h1M6 4h8M6 8h8M6 12h8" />
+                      </svg>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setView("grid")}
+                      onMouseEnter={() => setHotView("grid")}
+                      onMouseLeave={() => setHotView(null)}
+                      aria-label="Grid view"
+                      title="Grid view"
+                      style={viewButton(view === "grid", hotView === "grid")}
+                    >
+                      <svg
+                        viewBox="0 0 16 16"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth={1.5}
+                        aria-hidden
+                        style={{ width: 15, height: 15 }}
+                      >
+                        <rect x="2.2" y="2.2" width="4.6" height="4.6" rx="1.2" />
+                        <rect x="9.2" y="2.2" width="4.6" height="4.6" rx="1.2" />
+                        <rect x="2.2" y="9.2" width="4.6" height="4.6" rx="1.2" />
+                        <rect x="9.2" y="9.2" width="4.6" height="4.6" rx="1.2" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </>
+            ) : null}
+
+            {catPage ? (
+              <section style={{ marginTop: 26 }}>
+                <h1
+                  style={{
+                    margin: 0,
+                    fontFamily: GEIST,
+                    fontSize: 30,
+                    fontWeight: 600,
+                    letterSpacing: "-0.025em",
+                    color: "#0A0A0A",
+                  }}
+                >
+                  {labelFor(catFilter!)}
+                </h1>
+                <p style={{ margin: "6px 0 0", fontSize: 13.5, color: "#6B7280" }}>{countText}</p>
+                <div
+                  style={{
+                    marginTop: 22,
+                    display: "grid",
+                    gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))",
+                    gap: 12,
+                  }}
+                >
+                  {visible.map((c) => (
+                    <button
+                      key={c.id}
+                      type="button"
+                      onClick={() => open(c.id)}
+                      className="hv-border-orange"
+                      style={{
+                        display: "block",
+                        width: "100%",
+                        cursor: "pointer",
+                        border: "1px solid #E5E5E5",
+                        borderRadius: 12,
+                        background: "#fff",
+                        padding: 14,
+                        transition: "border-color 120ms ease",
+                      }}
+                    >
+                      <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                        <span aria-hidden style={initialBadge(22, 6, 11)}>
+                          {c.name.charAt(0).toUpperCase()}
+                        </span>
+                        <span
+                          style={{
+                            minWidth: 0,
+                            flex: 1,
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                            textAlign: "left",
+                            fontSize: 14.5,
+                            fontWeight: 600,
+                            letterSpacing: "-0.01em",
+                            color: "#0A0A0A",
+                          }}
+                        >
+                          {c.name}
+                        </span>
+                      </span>
+                      <span
+                        style={{
+                          display: "block",
+                          marginTop: 10,
+                          textAlign: "left",
+                          fontSize: 13,
+                          lineHeight: 1.45,
+                          color: "#6B7280",
+                        }}
+                      >
+                        {c.blurb}
+                      </span>
+                      <span
+                        style={{
+                          display: "block",
+                          marginTop: 12,
+                          textAlign: "left",
+                          fontFamily: GEIST_MONO,
+                          fontSize: 11.5,
+                          letterSpacing: "0.06em",
+                          textTransform: "uppercase",
+                          color: "#6B7280",
+                        }}
+                      >
+                        Remote
+                      </span>
+                    </button>
                   ))}
                 </div>
-              )}
-            </div>
+              </section>
+            ) : null}
+
+            {!catPage && view === "list" ? (
+              <ul
+                style={{
+                  listStyle: "none",
+                  margin: "22px 0 0",
+                  padding: 0,
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 8,
+                }}
+              >
+                {visible.map((c) => (
+                  <li key={c.id}>
+                    <button
+                      type="button"
+                      onClick={() => open(c.id)}
+                      className="hv-border-orange"
+                      style={{
+                        display: "flex",
+                        width: "100%",
+                        alignItems: "center",
+                        gap: 12,
+                        cursor: "pointer",
+                        border: "1px solid #E5E5E5",
+                        borderRadius: 12,
+                        background: "#fff",
+                        padding: "12px 14px",
+                        transition: "border-color 120ms ease",
+                      }}
+                    >
+                      <span aria-hidden style={initialBadge(30, 8, 12)}>
+                        {c.name.charAt(0).toUpperCase()}
+                      </span>
+                      <span
+                        style={{
+                          minWidth: 0,
+                          flex: 1,
+                          display: "grid",
+                          gap: 3,
+                          textAlign: "left",
+                        }}
+                      >
+                        <span
+                          style={{
+                            display: "flex",
+                            flexWrap: "wrap",
+                            alignItems: "baseline",
+                            gap: 8,
+                          }}
+                        >
+                          <span
+                            style={{
+                              fontSize: 15,
+                              fontWeight: 600,
+                              letterSpacing: "-0.01em",
+                              color: "#0A0A0A",
+                            }}
+                          >
+                            {c.name}
+                          </span>
+                          <span style={{ fontSize: 12.5, color: "#6B7280" }}>
+                            {labelFor(c.category)}
+                          </span>
+                        </span>
+                        <span
+                          style={{
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                            fontSize: 13,
+                            lineHeight: 1.4,
+                            color: "#6B7280",
+                          }}
+                        >
+                          {c.blurb}
+                        </span>
+                      </span>
+                      <span
+                        style={{
+                          flexShrink: 0,
+                          borderRadius: 999,
+                          background: "#F0F0F0",
+                          padding: "4px 10px",
+                          fontFamily: GEIST_MONO,
+                          fontSize: 11.5,
+                          letterSpacing: "0.06em",
+                          textTransform: "uppercase",
+                          color: "#4B5563",
+                        }}
+                      >
+                        Remote
+                      </span>
+                      <span aria-hidden style={{ flexShrink: 0, color: "#C2C2C2", fontSize: 15 }}>
+                        ›
+                      </span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+
+            {!catPage && view === "grid" ? (
+              <div
+                style={{
+                  marginTop: 28,
+                  columnCount: 3,
+                  columnGap: 36,
+                  columnFill: "balance",
+                  maxWidth: 860,
+                  overflowWrap: "break-word",
+                }}
+              >
+                {groups.map((g) => (
+                  <section
+                    key={g.label}
+                    style={
+                      {
+                        margin: "0 0 24px",
+                        breakInside: "avoid",
+                        WebkitColumnBreakInside: "avoid",
+                        pageBreakInside: "avoid",
+                        breakBefore: "auto",
+                      } as CSSProperties
+                    }
+                  >
+                    <h2
+                      style={{
+                        margin: 0,
+                        fontFamily: GEIST,
+                        fontWeight: 500,
+                        fontSize: 12,
+                        letterSpacing: "0.07em",
+                        textTransform: "uppercase",
+                        color: "#6B7280",
+                        lineHeight: 1.4,
+                        paddingBottom: 8,
+                        borderBottom: "1px solid #EDEDED",
+                      }}
+                    >
+                      {g.label}
+                    </h2>
+                    <ul
+                      style={{
+                        listStyle: "none",
+                        margin: "8px 0 0",
+                        padding: 0,
+                        display: "grid",
+                        gap: 1,
+                      }}
+                    >
+                      {g.items.map((c) => (
+                        <li key={c.id}>
+                          <button
+                            type="button"
+                            onClick={() => open(c.id)}
+                            className="hv-orange"
+                            style={{
+                              display: "flex",
+                              width: "100%",
+                              alignItems: "baseline",
+                              gap: 10,
+                              border: 0,
+                              background: "none",
+                              cursor: "pointer",
+                              borderRadius: 6,
+                              padding: "4px 8px",
+                              margin: "0 -8px",
+                              textAlign: "left",
+                              fontSize: 14,
+                              lineHeight: 1.45,
+                              color: "#0A0A0A",
+                              transition: "color 120ms ease",
+                            }}
+                          >
+                            <span
+                              style={{
+                                minWidth: 0,
+                                flex: 1,
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                whiteSpace: "nowrap",
+                              }}
+                            >
+                              {c.name}
+                            </span>
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
+                ))}
+              </div>
+            ) : null}
           </div>
         </main>
       </div>
 
-      <Footer />
+      <SiteFooter />
 
-      {open ? (
-        <>
-          <div
-            aria-hidden
-            onClick={() => show(null)}
-            className="fixed inset-0 z-30 bg-ink/10"
-          />
-          <div className="fixed inset-y-0 right-0 z-40 w-full max-w-[580px] shadow-cardHover">
-            <JobPanel card={open} onClose={() => show(null)} />
-          </div>
-        </>
+      {openCard ? (
+        <JobDrawer key={openCard.id} card={openCard} shown={shown} onClose={close} />
       ) : null}
     </div>
-  );
-}
-
-function JobRow({ name, onClick }: { name: string; onClick: () => void }) {
-  return (
-    <li>
-      <button
-        type="button"
-        onClick={onClick}
-        className="-mx-2 flex w-[calc(100%+1rem)] items-baseline gap-2.5 rounded-md px-2 py-1 text-left text-[14px] text-ink transition hover:bg-subtle"
-      >
-        <span
-          aria-hidden
-          className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-hairline"
-        />
-        <span className="min-w-0 flex-1">{name}</span>
-      </button>
-    </li>
-  );
-}
-
-function CatLink({
-  label,
-  active,
-  onClick,
-}: {
-  label: string;
-  active: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`relative whitespace-nowrap py-2.5 text-[13px] transition ${
-        active ? "font-medium text-ink" : "text-muted hover:text-ink"
-      }`}
-    >
-      {label}
-      {active ? (
-        <span
-          aria-hidden
-          className="absolute inset-x-0 -bottom-px h-0.5 bg-ink"
-        />
-      ) : null}
-    </button>
-  );
-}
-
-function RailItem({
-  label,
-  active,
-  onClick,
-}: {
-  label: string;
-  active: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`flex h-8 w-full items-center rounded-md px-2.5 text-left text-[13px] transition ${
-        active
-          ? "bg-subtle text-ink"
-          : "text-muted hover:bg-subtle hover:text-ink"
-      }`}
-    >
-      <span className="min-w-0 flex-1 truncate">{label}</span>
-    </button>
   );
 }

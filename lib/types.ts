@@ -5,7 +5,8 @@ export type CategoryId =
   | "testing"
   | "sourcing"
   | "content"
-  | "growth";
+  | "growth"
+  | "onboarding";
 
 export type Category = {
   id: CategoryId;
@@ -20,6 +21,7 @@ export const categories: Category[] = [
   { id: "sourcing", label: "Lists & Sourcing" },
   { id: "content", label: "Content" },
   { id: "growth", label: "Growth" },
+  { id: "onboarding", label: "Onboarding" },
 ];
 
 export type FieldType = "text" | "url" | "textarea" | "money" | "int" | "select";

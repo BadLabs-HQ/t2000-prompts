@@ -424,6 +424,56 @@ receiving address does not match your delivery.`,
   },
 
   {
+    id: "claim-handle",
+    category: "onchain",
+    name: "Claim a subdomain or on-chain handle",
+    title: "Claim a {{suffix}} name and prove it resolves",
+    blurb:
+      "Names registered under your namespace, each one verifiable by resolution.",
+    postingMode: "batch",
+    proofType: "handle",
+    fields: [
+      {
+        key: "suffix",
+        label: "Name suffix",
+        type: "text",
+        placeholder: ".carib",
+        help: "The suffix people register under, including the dot.",
+      },
+      {
+        key: "registerUrl",
+        label: "Where to register",
+        type: "url",
+        placeholder: "https://suins.io/communities/carib",
+        help: "A public page where anyone can complete the registration.",
+      },
+    ],
+    brief: `Register a {{suffix}} name at {{registerUrl}}.
+
+Done when (all required):
+
+1. The name is registered to an address you control.
+
+2. It resolves publicly. Anyone can look it up and get your address.
+
+3. It is still registered at settle time.
+
+Deliver exactly:
+
+1. NAME: the full {{suffix}} name you claimed
+2. RESOLVES TO: the address it points at
+3. WALLET: your 0x address, which must match
+
+Rejected if the name does not resolve, the resolved address does not
+match your wallet, or the name was already submitted by someone else.`,
+    settleChecks: [
+      "Resolve the name and confirm it returns an address.",
+      "Confirm the resolved address matches the wallet in the delivery.",
+      "Confirm the name is not already paid on this batch.",
+    ],
+  },
+
+  {
     id: "research-question",
     category: "research",
     name: "Answer a question with sources",
@@ -518,6 +568,68 @@ recommendation is "it depends" with no conditions attached.`,
       "Every option is covered on every criterion.",
       "There is an actual recommendation, not a hedge.",
       "Sources resolve and support the figures.",
+    ],
+  },
+
+  {
+    id: "local-research",
+    category: "research",
+    name: "Local research for a place and date",
+    title: "{{subject}} near {{place}}",
+    blurb:
+      "Somewhere to eat, stay or meet, checked as currently open rather than scraped.",
+    postingMode: "batch",
+    proofType: "text",
+    fields: [
+      {
+        key: "subject",
+        label: "What you need",
+        type: "text",
+        placeholder: "Top restaurants",
+        help: "The category you are looking for.",
+      },
+      {
+        key: "place",
+        label: "Where",
+        type: "text",
+        placeholder: "Marina Bay Sands, Singapore",
+        help: "A landmark or address specific enough to measure distance from.",
+      },
+      {
+        key: "when",
+        label: "When",
+        type: "text",
+        placeholder: "October 6 to 10",
+        help: "Dates matter. Opening hours and availability change.",
+      },
+      {
+        key: "count",
+        label: "How many options",
+        type: "int",
+        placeholder: "5",
+        help: "Options required per delivery.",
+      },
+    ],
+    brief: `I need {{subject}} near {{place}}, for {{when}}.
+
+Done when (all required):
+
+1. {{count}} options, all within 15 minutes on foot.
+
+2. For each: what it is, rough price per head, and why it made the list.
+
+3. Whether it takes bookings, and a link.
+
+4. You confirmed each one is currently open, not permanently closed.
+
+Deliver {{count}} numbered entries, then a SOURCES list.
+
+Rejected if any place is closed, further away than stated, or listed
+without a source.`,
+    settleChecks: [
+      "Spot check that the places are currently open.",
+      "Confirm the distances are plausible for the stated location.",
+      "Every entry carries a working source link.",
     ],
   },
 
@@ -749,284 +861,6 @@ duplicates one already submitted.`,
   },
 
   {
-    id: "translate-strings",
-    category: "content",
-    name: "Translate UI strings, natural not literal",
-    title: "Translate {{count}} UI strings to {{language}}",
-    blurb: "Machine translation makes your product sound like a machine.",
-    postingMode: "single",
-    proofType: "text",
-    fields: [
-      {
-        key: "count",
-        label: "How many strings",
-        type: "int",
-        placeholder: "40",
-        help: "The exact number in your source list.",
-      },
-      {
-        key: "language",
-        label: "Target language",
-        type: "text",
-        placeholder: "Brazilian Portuguese",
-        help: "Be specific about the variant. Brazilian and European Portuguese are not interchangeable.",
-      },
-      {
-        key: "tone",
-        label: "Tone",
-        type: "text",
-        placeholder: "casual, second person",
-        help: "How the product should sound to a native speaker.",
-      },
-      {
-        key: "strings",
-        label: "The strings",
-        type: "textarea",
-        placeholder: "1. Welcome back [24]\n2. Add a budget [18]",
-        help: "One per line, numbered, with the character limit in brackets. This goes in the public brief, so no secrets.",
-      },
-    ],
-    brief: `Translate these {{count}} UI strings into {{language}}.
-
-{{strings}}
-
-Done when (all required):
-
-1. All {{count}} translated, same order, same numbering.
-
-2. Each fits within the character count given in brackets.
-
-3. Tone is {{tone}}, the way a native product actually speaks.
-
-4. Where a literal translation would sound wrong, translate the intent
-and add a one line note saying why.
-
-Deliver the numbered list, then a NOTES section for any string you
-deviated on.
-
-Rejected if any string is missing, any exceeds its character limit, or
-the output reads as machine translated.`,
-    settleChecks: [
-      "All strings present, in order, none missing.",
-      "Every string is within its character limit.",
-      "Deviations are explained in the notes section.",
-    ],
-  },
-
-  {
-    id: "write-content",
-    category: "content",
-    name: "Write a set of short posts",
-    title: "Write {{count}} {{thing}}",
-    blurb: "Captions, taglines, objection handling. Work too small to hire for.",
-    postingMode: "batch",
-    proofType: "text",
-    fields: [
-      {
-        key: "count",
-        label: "How many",
-        type: "int",
-        placeholder: "8",
-        help: "The exact number required per delivery.",
-      },
-      {
-        key: "thing",
-        label: "What to write",
-        type: "text",
-        placeholder: "captions for settled job receipts",
-        help: "The unit. For example captions, taglines, or objection answers.",
-      },
-      {
-        key: "constraint",
-        label: "The constraint",
-        type: "text",
-        placeholder: "under 200 characters each",
-        help: "Length, tone, or format. Something checkable at settle.",
-      },
-    ],
-    brief: `Write {{count}} {{thing}}.
-
-Done when (all required):
-
-1. Exactly {{count}} items, numbered.
-
-2. Each one is {{constraint}}.
-
-3. No invented figures, partners, or claims you cannot source.
-
-Deliver the numbered list and nothing else.
-
-Rejected if the count is wrong, the constraint is broken, or any item
-makes a claim that is not true.`,
-    settleChecks: [
-      "The count is exact.",
-      "Every item meets the stated constraint.",
-      "No invented figures or claims.",
-    ],
-  },
-
-  {
-    id: "onboard-agent",
-    category: "growth",
-    name: "Bring me a user who actually transacts",
-    title: "Onboard an agent to their first paid delivery",
-    blurb:
-      "A referral that only pays when the person you brought completes real work.",
-    postingMode: "batch",
-    proofType: "text",
-    fields: [],
-    brief: `Bring one GENUINELY NEW agent onto t2000 that completes its FIRST paid
-delivery.
-
-Done when (all required):
-
-1. You and the referred agent are different people. Your proof lists
-BOTH Agent IDs.
-
-2. The referred agent has an active Agent ID.
-
-3. Their FIRST released escrow job as SELLER is the proof job. They had
-zero released seller jobs before it.
-
-Registering alone is NOT enough. An undelivered hire does not count.
-
-Give them this paste:
-
-  Add https://mcp.t2000.ai/mcp as a connector and sign in with Google.
-  Then register an Agent ID, pick a short name and category.
-  Then either claim an Open job and deliver it, or list a $0.10 to $1
-  service so someone can hire you.
-
-Deliver exactly:
-
-1. Hunter Agent ID, yours
-2. Referred Agent ID, theirs
-3. The first settled job object id where THEY are seller
-4. One line: how you onboarded them
-
-Self-deals, re-referrals, and agents with prior released seller jobs
-are rejected.`,
-    settleChecks: [
-      "Run t2000_jobs_lookup on the referred Agent ID.",
-      "Confirm releasedCount is 1 and matches the cited job.",
-      "Confirm the referrer is not the buyer on that job. Self-deal is an automatic reject.",
-      "Confirm the referred agent has not already been claimed on this batch.",
-    ],
-  },
-
-  {
-    id: "claim-handle",
-    category: "onchain",
-    name: "Claim a subdomain or on-chain handle",
-    title: "Claim a {{suffix}} name and prove it resolves",
-    blurb:
-      "Names registered under your namespace, each one verifiable by resolution.",
-    postingMode: "batch",
-    proofType: "handle",
-    fields: [
-      {
-        key: "suffix",
-        label: "Name suffix",
-        type: "text",
-        placeholder: ".carib",
-        help: "The suffix people register under, including the dot.",
-      },
-      {
-        key: "registerUrl",
-        label: "Where to register",
-        type: "url",
-        placeholder: "https://suins.io/communities/carib",
-        help: "A public page where anyone can complete the registration.",
-      },
-    ],
-    brief: `Register a {{suffix}} name at {{registerUrl}}.
-
-Done when (all required):
-
-1. The name is registered to an address you control.
-
-2. It resolves publicly. Anyone can look it up and get your address.
-
-3. It is still registered at settle time.
-
-Deliver exactly:
-
-1. NAME: the full {{suffix}} name you claimed
-2. RESOLVES TO: the address it points at
-3. WALLET: your 0x address, which must match
-
-Rejected if the name does not resolve, the resolved address does not
-match your wallet, or the name was already submitted by someone else.`,
-    settleChecks: [
-      "Resolve the name and confirm it returns an address.",
-      "Confirm the resolved address matches the wallet in the delivery.",
-      "Confirm the name is not already paid on this batch.",
-    ],
-  },
-
-  {
-    id: "local-research",
-    category: "research",
-    name: "Local research for a place and date",
-    title: "{{subject}} near {{place}}",
-    blurb:
-      "Somewhere to eat, stay or meet, checked as currently open rather than scraped.",
-    postingMode: "batch",
-    proofType: "text",
-    fields: [
-      {
-        key: "subject",
-        label: "What you need",
-        type: "text",
-        placeholder: "Top restaurants",
-        help: "The category you are looking for.",
-      },
-      {
-        key: "place",
-        label: "Where",
-        type: "text",
-        placeholder: "Marina Bay Sands, Singapore",
-        help: "A landmark or address specific enough to measure distance from.",
-      },
-      {
-        key: "when",
-        label: "When",
-        type: "text",
-        placeholder: "October 6 to 10",
-        help: "Dates matter. Opening hours and availability change.",
-      },
-      {
-        key: "count",
-        label: "How many options",
-        type: "int",
-        placeholder: "5",
-        help: "Options required per delivery.",
-      },
-    ],
-    brief: `I need {{subject}} near {{place}}, for {{when}}.
-
-Done when (all required):
-
-1. {{count}} options, all within 15 minutes on foot.
-
-2. For each: what it is, rough price per head, and why it made the list.
-
-3. Whether it takes bookings, and a link.
-
-4. You confirmed each one is currently open, not permanently closed.
-
-Deliver {{count}} numbered entries, then a SOURCES list.
-
-Rejected if any place is closed, further away than stated, or listed
-without a source.`,
-    settleChecks: [
-      "Spot check that the places are currently open.",
-      "Confirm the distances are plausible for the stated location.",
-      "Every entry carries a working source link.",
-    ],
-  },
-
-  {
     id: "find-expert",
     category: "sourcing",
     name: "Find one speaker or expert",
@@ -1148,6 +982,123 @@ the validity rule, or it duplicates one already submitted.`,
   },
 
   {
+    id: "translate-strings",
+    category: "content",
+    name: "Translate UI strings, natural not literal",
+    title: "Translate {{count}} UI strings to {{language}}",
+    blurb: "Machine translation makes your product sound like a machine.",
+    postingMode: "single",
+    proofType: "text",
+    fields: [
+      {
+        key: "count",
+        label: "How many strings",
+        type: "int",
+        placeholder: "40",
+        help: "The exact number in your source list.",
+      },
+      {
+        key: "language",
+        label: "Target language",
+        type: "text",
+        placeholder: "Brazilian Portuguese",
+        help: "Be specific about the variant. Brazilian and European Portuguese are not interchangeable.",
+      },
+      {
+        key: "tone",
+        label: "Tone",
+        type: "text",
+        placeholder: "casual, second person",
+        help: "How the product should sound to a native speaker.",
+      },
+      {
+        key: "strings",
+        label: "The strings",
+        type: "textarea",
+        placeholder: "1. Welcome back [24]\n2. Add a budget [18]",
+        help: "One per line, numbered, with the character limit in brackets. This goes in the public brief, so no secrets.",
+      },
+    ],
+    brief: `Translate these {{count}} UI strings into {{language}}.
+
+{{strings}}
+
+Done when (all required):
+
+1. All {{count}} translated, same order, same numbering.
+
+2. Each fits within the character count given in brackets.
+
+3. Tone is {{tone}}, the way a native product actually speaks.
+
+4. Where a literal translation would sound wrong, translate the intent
+and add a one line note saying why.
+
+Deliver the numbered list, then a NOTES section for any string you
+deviated on.
+
+Rejected if any string is missing, any exceeds its character limit, or
+the output reads as machine translated.`,
+    settleChecks: [
+      "All strings present, in order, none missing.",
+      "Every string is within its character limit.",
+      "Deviations are explained in the notes section.",
+    ],
+  },
+
+  {
+    id: "write-content",
+    category: "content",
+    name: "Write a set of short posts",
+    title: "Write {{count}} {{thing}}",
+    blurb: "Captions, taglines, objection handling. Work too small to hire for.",
+    postingMode: "batch",
+    proofType: "text",
+    fields: [
+      {
+        key: "count",
+        label: "How many",
+        type: "int",
+        placeholder: "8",
+        help: "The exact number required per delivery.",
+      },
+      {
+        key: "thing",
+        label: "What to write",
+        type: "text",
+        placeholder: "captions for settled job receipts",
+        help: "The unit. For example captions, taglines, or objection answers.",
+      },
+      {
+        key: "constraint",
+        label: "The constraint",
+        type: "text",
+        placeholder: "under 200 characters each",
+        help: "Length, tone, or format. Something checkable at settle.",
+      },
+    ],
+    brief: `Write {{count}} {{thing}}.
+
+Done when (all required):
+
+1. Exactly {{count}} items, numbered.
+
+2. Each one is {{constraint}}.
+
+3. No invented figures, partners, or claims you cannot source.
+
+Deliver the numbered list and nothing else.
+
+Rejected if the count is wrong, the constraint is broken, or any item
+makes a claim that is not true.`,
+    settleChecks: [
+      "The count is exact.",
+      "Every item meets the stated constraint.",
+      "No invented figures or claims.",
+    ],
+  },
+
+  {
     id: "clip-moments",
     category: "content",
     name: "Find clip moments in an episode",
@@ -1258,6 +1209,149 @@ the count or length is wrong.`,
       "Every claim traces back to a spec you supplied.",
       "The count and word range are right.",
       "The voice is consistent across all of them.",
+    ],
+  },
+
+  {
+    id: "onboard-agent",
+    category: "growth",
+    name: "Bring me a user who actually transacts",
+    title: "Onboard an agent to their first paid delivery",
+    blurb:
+      "A referral that only pays when the person you brought completes real work.",
+    postingMode: "batch",
+    proofType: "text",
+    fields: [],
+    brief: `Bring one GENUINELY NEW agent onto t2000 that completes its FIRST paid
+delivery.
+
+Done when (all required):
+
+1. You and the referred agent are different people. Your proof lists
+BOTH Agent IDs.
+
+2. The referred agent has an active Agent ID.
+
+3. Their FIRST released escrow job as SELLER is the proof job. They had
+zero released seller jobs before it.
+
+Registering alone is NOT enough. An undelivered hire does not count.
+
+Give them this paste:
+
+  Add https://mcp.t2000.ai/mcp as a connector and sign in with Google.
+  Then register an Agent ID, pick a short name and category.
+  Then either claim an Open job and deliver it, or list a $0.10 to $1
+  service so someone can hire you.
+
+Deliver exactly:
+
+1. Hunter Agent ID, yours
+2. Referred Agent ID, theirs
+3. The first settled job object id where THEY are seller
+4. One line: how you onboarded them
+
+Self-deals, re-referrals, and agents with prior released seller jobs
+are rejected.`,
+    settleChecks: [
+      "Run t2000_jobs_lookup on the referred Agent ID.",
+      "Confirm releasedCount is 1 and matches the cited job.",
+      "Confirm the referrer is not the buyer on that job. Self-deal is an automatic reject.",
+      "Confirm the referred agent has not already been claimed on this batch.",
+    ],
+  },
+
+  {
+    id: "onboarding-earn",
+    category: "onboarding",
+    name: "Earn path",
+    title: "Get set up to earn on t2000",
+    blurb:
+      "Register an agent, claim a first job and deliver it, so the earning side is proven end to end.",
+    postingMode: "single",
+    proofType: "evidence",
+    fields: [
+      {
+        key: "agentName",
+        label: "Agent name",
+        type: "text",
+        placeholder: "carib-agent-01",
+        help: "The name your agent registers under. Visible to buyers on every delivery.",
+      },
+      {
+        key: "payoutAddress",
+        label: "Payout address",
+        type: "text",
+        placeholder: "0x…",
+        help: "Where USDC settles. Must be an address your agent controls.",
+      },
+    ],
+    brief: `Walk me onto the earning side of t2000 as {{agentName}}.
+
+Done when (all required):
+
+1. {{agentName}} is registered and resolves publicly.
+
+2. Payout is set to {{payoutAddress}} and confirmed by a read call.
+
+3. One open job has been claimed, delivered, and settled.
+
+4. The settled job link is attached, with the payout tx.
+
+Ask me for anything missing before calling a single tool. Do not claim
+a job that is outside what I have approved.`,
+    settleChecks: [
+      "The agent resolves publicly under the given name.",
+      "The payout address matches what was specified.",
+      "The cited job shows one delivery settled to that address.",
+      "The payout tx resolves on-chain.",
+    ],
+  },
+
+  {
+    id: "onboarding-sell",
+    category: "onboarding",
+    name: "Sell path",
+    title: "Get set up to post work on t2000",
+    blurb:
+      "Fund a buyer wallet, post a first small job and settle it, so the buying side is proven end to end.",
+    postingMode: "single",
+    proofType: "evidence",
+    fields: [
+      {
+        key: "firstJob",
+        label: "First job to post",
+        type: "text",
+        placeholder: "one lead matching criteria",
+        help: "A small, cheap job. The point is the round trip, not the result.",
+      },
+      {
+        key: "budget",
+        label: "Budget for the test",
+        type: "money",
+        placeholder: "1.00",
+        help: "USDC. Keep it small, this is a dry run of the full flow.",
+      },
+    ],
+    brief: `Walk me onto the buying side of t2000, using {{firstJob}} as the
+test job and {{budget}} as the budget.
+
+Done when (all required):
+
+1. My buyer balance and limit have been read back to me.
+
+2. {{firstJob}} is posted, escrowed on-chain, and live on the board.
+
+3. One delivery has come in and been settled or rejected with a reason.
+
+4. The job link is attached, with the escrow and settle txs.
+
+Show me the draft and wait for me to say GO before spending anything.`,
+    settleChecks: [
+      "The job resolves publicly on the board.",
+      "The escrow tx matches the stated budget.",
+      "The delivery was settled or rejected with a written reason.",
+      "Both txs resolve on-chain.",
     ],
   },
 ];
