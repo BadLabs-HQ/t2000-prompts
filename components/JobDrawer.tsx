@@ -83,13 +83,13 @@ export function JobDrawer({
     copyTimer.current = setTimeout(() => setCopied(false), 1600);
   }
 
+  // ?draft= fills the Audric chat box without sending. Unlike ?q= it is not cut at 2000 chars.
   function openAudric() {
-    try {
-      navigator.clipboard.writeText(text);
-    } catch {
-      // clipboard unavailable
-    }
-    window.open("https://audric.ai", "_blank", "noopener,noreferrer");
+    window.open(
+      `https://audric.ai/?draft=${encodeURIComponent(text)}`,
+      "_blank",
+      "noopener,noreferrer",
+    );
   }
 
   const tabButton: CSSProperties = {
