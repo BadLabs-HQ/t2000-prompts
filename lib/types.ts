@@ -6,7 +6,11 @@ export type CategoryId =
   | "sourcing"
   | "content"
   | "growth"
-  | "onboarding";
+  | "onboarding"
+  | "meme-social"
+  | "meme-community"
+  | "meme-creative"
+  | "meme-token";
 
 export type Category = {
   id: CategoryId;
@@ -23,6 +27,16 @@ export const categories: Category[] = [
   { id: "growth", label: "Growth" },
   { id: "onboarding", label: "Onboarding" },
 ];
+
+export const memeCategories: Category[] = [
+  { id: "meme-social", label: "Social" },
+  { id: "meme-community", label: "Community" },
+  { id: "meme-creative", label: "Creative" },
+  { id: "meme-token", label: "Token" },
+];
+
+export const categoryLabel = (id: CategoryId): string =>
+  [...categories, ...memeCategories].find((c) => c.id === id)?.label ?? id;
 
 export type FieldType = "text" | "url" | "textarea" | "money" | "int" | "select";
 

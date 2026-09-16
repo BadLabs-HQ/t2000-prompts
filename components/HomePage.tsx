@@ -5,26 +5,15 @@ import { useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { cardById, cards } from "@/lib/cards";
 import { compilePost, missingFields } from "@/lib/compile";
-import type { Values } from "@/lib/types";
+import { categoryLabel, proofLabels, type Values } from "@/lib/types";
 import { SiteHeader } from "./SiteHeader";
 import { SiteFooter } from "./SiteFooter";
-import { ACCENT, GEIST_MONO, SYS_SANS } from "./fonts";
-
-const CATS = [
-  { label: "Social & Community", items: ["Like, RT and comment on a post", "Join a community or group", "Public comment about your project"] },
-  { label: "On-chain", items: ["Buy a token, proven by transaction", "Bridge or migrate tokens", "Claim a subdomain or on-chain handle"] },
-  { label: "Research", items: ["Answer a question with sources", "Compare two or three options", "Local research for a place and date"] },
-  { label: "Testing & QA", items: ["Test a product end to end", "Sign up and report where you nearly quit", "Find docs that disagree with the product"] },
-  { label: "Lists & Sourcing", items: ["Find one lead matching criteria", "Find one speaker or expert", "Collect one verified data row"] },
-  { label: "Content", items: ["Translate UI strings, natural not literal", "Write product descriptions from specs", "Find clip moments in an episode"] },
-  { label: "Growth", items: ["Bring me a user who actually transacts"] },
-  { label: "Onboarding", items: ["Earn path", "Sell path"] },
-];
+import { ACCENT, MONO, PANEL_SHADOW, SANS } from "./fonts";
 
 const STATES = [
-  { id: "none", label: "Nothing filled", note: "The ask block names every unknown." },
-  { id: "part", label: "Partly filled", note: "The ask block shrinks to only what is still missing." },
-  { id: "full", label: "Fully filled", note: "Nothing left to ask, so the ask block disappears." },
+  { id: "none", label: "Nothing filled", note: "the ask block names every unknown" },
+  { id: "part", label: "Partly filled", note: "the ask block shrinks to what is missing" },
+  { id: "full", label: "Fully filled", note: "nothing left to ask" },
 ] as const;
 
 type StateId = (typeof STATES)[number]["id"];
@@ -45,243 +34,257 @@ const VALS: Record<StateId, Values> = {
   },
 };
 
-const card = cardById("like-rt-comment")!;
+const demoCard = cardById("like-rt-comment")!;
 
-const cardBox: CSSProperties = {
-  border: "1px solid #E5E5E5",
-  borderRadius: 14,
-  background: "#fff",
+const FEATURED = ["like-rt-comment", "buy-token", "research-question"].map(
+  (id) => cardById(id)!
+);
+
+const CLIENTS = ["Claude", "ChatGPT", "Cursor", "Grok", "Audric", "+ MCP"];
+
+const panel: CSSProperties = {
+  margin: "72px 0",
+  border: "1px solid var(--ink)",
+  borderRadius: 18,
+  background: "var(--surface)",
+  padding: 40,
+  boxShadow: PANEL_SHADOW,
 };
 
-function Eyebrow({ children }: { children: ReactNode }) {
+const h2: CSSProperties = {
+  margin: 0,
+  fontSize: "clamp(30px, 4.2vw, 46px)",
+  fontWeight: 700,
+  lineHeight: 1.02,
+  letterSpacing: "-0.035em",
+};
+
+const lead: CSSProperties = {
+  margin: "16px 0 0",
+  maxWidth: "52ch",
+  fontSize: 16,
+  lineHeight: 1.6,
+};
+
+const kicker: CSSProperties = {
+  margin: 0,
+  fontFamily: MONO,
+  fontSize: 11,
+  letterSpacing: "0.18em",
+  textTransform: "uppercase",
+  color: ACCENT,
+};
+
+const primaryButton: CSSProperties = {
+  border: "1px solid var(--ink)",
+  borderRadius: 999,
+  background: ACCENT,
+  padding: "11px 22px",
+  fontSize: 14.5,
+  fontWeight: 600,
+  color: "var(--on-ember)",
+  textDecoration: "none",
+  whiteSpace: "nowrap",
+  transition: "border-color 120ms ease",
+};
+
+const secondaryButton: CSSProperties = {
+  border: "1px solid var(--ink)",
+  borderRadius: 999,
+  padding: "11px 22px",
+  fontSize: 14.5,
+  fontWeight: 600,
+  color: "var(--ink)",
+  textDecoration: "none",
+  whiteSpace: "nowrap",
+  transition: "color 120ms ease, border-color 120ms ease",
+};
+
+const inlineLink: CSSProperties = {
+  color: "var(--ink)",
+  textDecoration: "underline",
+  textDecorationColor: "var(--line)",
+  textUnderlineOffset: 4,
+};
+
+function Step({
+  n,
+  label,
+  title,
+  children,
+}: {
+  n: string;
+  label: string;
+  title: string;
+  children: ReactNode;
+}) {
   return (
-    <p
-      style={{
-        margin: "0 0 18px",
-        display: "inline-flex",
-        alignItems: "center",
-        gap: 9,
-        fontFamily: GEIST_MONO,
-        fontSize: 11,
-        letterSpacing: "0.12em",
-        textTransform: "uppercase",
-        color: "#6B7280",
-      }}
-    >
-      <span
-        aria-hidden
-        style={{ width: 5, height: 5, borderRadius: 999, background: ACCENT }}
-      />
-      {children}
-    </p>
+    <li style={{ border: "1px solid var(--ink)", borderRadius: 14, padding: 20 }}>
+      <p
+        style={{
+          margin: 0,
+          display: "inline-flex",
+          alignItems: "center",
+          border: `1px solid ${ACCENT}`,
+          borderRadius: 999,
+          padding: "5px 12px",
+          fontFamily: MONO,
+          fontSize: 10.5,
+          letterSpacing: "0.16em",
+          textTransform: "uppercase",
+          color: ACCENT,
+        }}
+      >
+        {n} · {label}
+      </p>
+      <h3 style={{ margin: "12px 0 0", fontSize: 19, fontWeight: 600, letterSpacing: "-0.02em" }}>
+        {title}
+      </h3>
+      <p style={{ margin: "8px 0 0", fontSize: 14, lineHeight: 1.6 }}>{children}</p>
+    </li>
   );
 }
 
-const sectionHeading: CSSProperties = {
-  margin: 0,
-  fontSize: 30,
-  fontWeight: 500,
-  letterSpacing: "-0.03em",
-};
-
-const STEPS = [
-  {
-    n: "01",
-    h: "Pick a job",
-    sub: "Every shape already settled.",
-    p: `${cards.length} shapes, every one modelled on a posting that actually settled on the board. Engagement, research, product testing, lead sourcing, on chain proof.`,
-  },
-  {
-    n: "02",
-    h: "Fill in what you know",
-    sub: "Blanks are safe.",
-    p: "Or nothing at all. Blanks are safe here, which turns out to be the whole point.",
-  },
-  {
-    n: "03",
-    h: "Paste it into your AI",
-    sub: "Nothing moves without your go.",
-    p: "It runs the reads, shows you the total, and waits for your go before a cent moves.",
-  },
-];
-
-const MONEY: [string, string][] = [
-  ["Nobody claims it", "full refund, no fee"],
-  ["Delivery is junk", "reject, and 100% comes back to you"],
-  ["Delivery is good", "settle, and they are paid"],
-  ["The fee", "5%, taken from their payout, never your budget"],
-];
-
 export function HomePage() {
-  const [active, setActive] = useState<StateId>("part");
-  const state = STATES.find((s) => s.id === active) ?? STATES[1];
+  const [active, setActive] = useState<StateId>("none");
+  const state = STATES.find((s) => s.id === active) ?? STATES[0];
   const values = VALS[state.id];
-  const missing = missingFields(card, values);
-  const promptText = compilePost(card, values);
+  const missing = missingFields(demoCard, values);
+  const promptText = compilePost(demoCard, values);
   const blanksLabel =
     missing.length === 0
       ? "no blanks"
       : `${missing.length} blank${missing.length === 1 ? "" : "s"}`;
 
-  const chip = (on: boolean): CSSProperties => ({
-    appearance: "none",
-    cursor: "pointer",
-    borderRadius: 6,
-    border: `1px solid ${on ? "#0A0A0A" : "#E5E5E5"}`,
-    background: on ? "#0A0A0A" : "#fff",
-    color: on ? "#fff" : "#6B7280",
-    padding: "5px 11px",
-    fontSize: 12.5,
-    whiteSpace: "nowrap",
-    lineHeight: 1.4,
-    fontFamily: "ui-sans-serif, system-ui, sans-serif",
-  });
-
-  const primaryButton: CSSProperties = {
-    borderRadius: 999,
-    background: ACCENT,
-    fontWeight: 500,
-    color: "#2B1006",
-    textDecoration: "none",
-    whiteSpace: "nowrap",
-    transition: "background 120ms ease",
-  };
-
   return (
     <div
       className="t2k-home"
-      style={{
-        fontFamily: SYS_SANS,
-        color: "#0A0A0A",
-        background: "#fff",
-        minHeight: "100vh",
-      }}
+      style={{ fontFamily: SANS, color: "var(--ink)", background: "var(--bg)", minHeight: "100vh" }}
     >
-      <SiteHeader variant="home" />
+      <SiteHeader page="home" />
 
-      <main style={{ maxWidth: 1024, margin: "0 auto", padding: "0 24px" }}>
+      <main style={{ maxWidth: 1100, margin: "0 auto", padding: "0 24px" }}>
         <section
-          style={{
-            borderBottom: "1px solid #E5E5E5",
-            height: "calc(100vh - 90px)",
-            minHeight: 470,
-            overflow: "hidden",
-            boxSizing: "border-box",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            padding: "28px 0",
-          }}
+          style={{ ...panel, margin: "48px 0 0", padding: "56px 40px 64px", textAlign: "center" }}
         >
-          <p
+          <p style={{ ...kicker, marginBottom: 22 }}>Prompt library</p>
+          <h1
             style={{
-              margin: "0 0 16px",
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 9,
-              fontFamily: GEIST_MONO,
-              fontSize: 11.5,
-              letterSpacing: "0.04em",
-              color: "#6B7280",
+              margin: 0,
+              fontSize: "clamp(46px, 8.4vw, 96px)",
+              fontWeight: 700,
+              lineHeight: 0.92,
+              letterSpacing: "-0.045em",
+              textTransform: "uppercase",
             }}
           >
-            <span
-              aria-hidden
-              style={{ width: 6, height: 6, borderRadius: 999, background: ACCENT }}
-            />
-            Nothing here touches your wallet.
+            Get work posted
+          </h1>
+          <p style={{ margin: "24px auto 0", fontSize: 16.5, lineHeight: 1.6 }}>
+            Ready made prompts for hiring on{" "}
+            <a
+              href="https://t2000.ai"
+              target="_blank"
+              rel="noreferrer"
+              className="hv-deco-orange"
+              style={inlineLink}
+            >
+              t2000
+            </a>
+            . Fill the blanks, paste into your own AI,
+            <br />
+            it posts the job and locks your budget in USDC.
           </p>
           <div
             style={{
-              minHeight: 0,
+              marginTop: 30,
+              display: "flex",
+              flexWrap: "wrap",
+              justifyContent: "center",
+              gap: 10,
+            }}
+          >
+            <Link href="/prompts" className="hv-border-orange" style={primaryButton}>
+              Browse {cards.length} prompts
+            </Link>
+            <a href="#how" className="hv-both-orange" style={secondaryButton}>
+              How it works
+            </a>
+          </div>
+        </section>
+
+        <section id="how" style={panel}>
+          <h2 style={{ ...h2, maxWidth: "22ch" }}>Fill, paste, approve.</h2>
+          <p style={lead}>
+            The prompt does the posting. You keep the last word, and nothing settles without your go.
+          </p>
+          <ol
+            style={{
+              listStyle: "none",
+              margin: "34px 0 0",
+              padding: 0,
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(330px, 1fr))",
-              gap: "24px 48px",
+              gridTemplateColumns: "repeat(auto-fit, minmax(min(240px, 100%), 1fr))",
+              gap: "22px 34px",
+            }}
+          >
+            <Step n="01" label="Fill" title="Pick a shape, fill what you know.">
+              {cards.length} job shapes, each modelled on a posting that actually settled. Blanks
+              are safe, the prompt asks for whatever you leave out.
+            </Step>
+            <Step n="02" label="Paste" title="Your AI posts and locks the budget.">
+              Claude, ChatGPT, Cursor, Grok or Audric, anything on MCP. The USDC locks in the job,
+              not with us.
+            </Step>
+            <Step n="03" label="Approve" title="You settle. Then they get paid.">
+              Grade the delivery and release, or reject and take it all back. The 5% fee comes from
+              their payout, never your budget.
+            </Step>
+          </ol>
+        </section>
+
+        <section style={panel}>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(min(320px, 100%), 1fr))",
+              gap: "30px 44px",
               alignItems: "center",
             }}
           >
             <div>
-              <h1
-                style={{
-                  margin: 0,
-                  maxWidth: "15ch",
-                  fontSize: "clamp(36px, 4.4vw, 50px)",
-                  fontWeight: 500,
-                  lineHeight: 1.06,
-                  letterSpacing: "-0.032em",
-                  textWrap: "balance",
-                }}
-              >
-                Post a job. Someone&rsquo;s AI does it. You approve before anyone is paid.
-              </h1>
-              <p
-                style={{
-                  margin: "22px 0 0",
-                  maxWidth: "46ch",
-                  fontSize: 16,
-                  lineHeight: 1.6,
-                  color: "#4B5563",
-                }}
-              >
-                Ready made prompts for hiring through{" "}
-                <a
-                  href="https://t2000.ai"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="hv-deco-orange"
+              <h2 style={{ ...h2, marginBottom: 24 }}>Blanks are safe.</h2>
+              <p style={{ margin: 0, fontSize: 15.5, lineHeight: 1.65 }}>
+                A template full of angle brackets is a liability. Hand one to an AI and it will
+                escrow real money against a brief that literally reads{" "}
+                <code
                   style={{
-                    color: "#0A0A0A",
-                    textDecoration: "underline",
-                    textDecorationColor: "#E5E5E5",
-                    textUnderlineOffset: 4,
+                    borderRadius: 3,
+                    background: "var(--well)",
+                    padding: "2px 5px",
+                    fontFamily: MONO,
+                    fontSize: 12.5,
                   }}
                 >
-                  t2000
-                </a>
-                , the agent marketplace on Sui. Pick a job, fill in your specifics, paste the
-                prompt into your own AI. It posts the work and escrows your budget.
+                  &lt;POST URL&gt;
+                </code>
+                .
               </p>
-              <div
-                style={{
-                  marginTop: 28,
-                  display: "flex",
-                  flexWrap: "wrap",
-                  alignItems: "center",
-                  gap: 10,
-                }}
-              >
-                <Link
-                  href="/prompts"
-                  className="hv-peach"
-                  style={{ ...primaryButton, padding: "10px 20px", fontSize: 14 }}
-                >
-                  Browse {cards.length} prompts →
-                </Link>
-                <a
-                  href="#how"
-                  className="hv-border-ink"
-                  style={{
-                    borderRadius: 999,
-                    border: "1px solid #E5E5E5",
-                    padding: "10px 20px",
-                    fontSize: 14,
-                    color: "#0A0A0A",
-                    textDecoration: "none",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  How it works
-                </a>
-              </div>
+              <p style={{ margin: "14px 0 0", fontSize: 15.5, lineHeight: 1.65 }}>
+                So this is a compiler, not a template library. Every value is either filled in, or
+                named in a block telling your AI to ask you for it. Never neither.
+              </p>
+              <p style={{ margin: "22px 0 0", fontFamily: MONO, fontSize: 12, color: ACCENT }}>
+                {blanksLabel} · {state.note}
+              </p>
             </div>
 
             <div
               style={{
-                border: "1px solid #E5E5E5",
+                minWidth: 0,
+                border: "1px solid var(--ink)",
                 borderRadius: 16,
-                background: "#fff",
-                boxShadow:
-                  "0 18px 40px -28px rgba(0,0,0,0.35), 0 2px 6px rgba(0,0,0,0.04)",
+                background: "var(--surface)",
                 overflow: "hidden",
               }}
             >
@@ -290,67 +293,75 @@ export function HomePage() {
                   display: "flex",
                   alignItems: "center",
                   gap: 10,
-                  borderBottom: "1px solid #F0F0F0",
+                  borderBottom: "1px solid var(--ink)",
                   padding: "12px 14px",
                 }}
               >
                 <span aria-hidden style={{ display: "flex", gap: 5 }}>
-                  <span style={{ width: 9, height: 9, borderRadius: 999, background: ACCENT }} />
-                  <span style={{ width: 9, height: 9, borderRadius: 999, background: "#EDEDED" }} />
-                  <span style={{ width: 9, height: 9, borderRadius: 999, background: "#EDEDED" }} />
+                  {STATES.map((s) => (
+                    <span
+                      key={s.id}
+                      style={{
+                        width: 9,
+                        height: 9,
+                        borderRadius: 999,
+                        background: s.id === state.id ? ACCENT : "var(--line)",
+                        transition: "background 120ms ease",
+                      }}
+                    />
+                  ))}
                 </span>
-                <span style={{ fontFamily: GEIST_MONO, fontSize: 11, color: "#6B7280" }}>
-                  like-rt-comment
-                </span>
-                <span
-                  style={{
-                    marginLeft: "auto",
-                    fontFamily: GEIST_MONO,
-                    fontSize: 10.5,
-                    color: "#6B7280",
-                  }}
-                >
+                <span style={{ fontFamily: MONO, fontSize: 11 }}>like-rt-comment</span>
+                <span style={{ marginLeft: "auto", fontFamily: MONO, fontSize: 10.5 }}>
                   {blanksLabel}
                 </span>
               </div>
-              <div
-                style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  alignItems: "center",
-                  gap: 8,
-                  padding: "12px 14px 0",
-                }}
-              >
-                {STATES.map((s) => (
-                  <button
-                    key={s.id}
-                    type="button"
-                    onClick={() => setActive(s.id)}
-                    style={chip(s.id === state.id)}
-                  >
-                    {s.label}
-                  </button>
-                ))}
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 8, padding: "12px 14px 0" }}>
+                {STATES.map((s) => {
+                  const on = s.id === state.id;
+                  return (
+                    <button
+                      key={s.id}
+                      type="button"
+                      onClick={() => setActive(s.id)}
+                      className={on ? undefined : "hv-both-orange"}
+                      style={{
+                        cursor: "pointer",
+                        borderRadius: 999,
+                        border: "1px solid var(--ink)",
+                        background: on ? ACCENT : "var(--surface)",
+                        color: on ? "var(--on-ember)" : "var(--ink)",
+                        padding: "5px 12px",
+                        fontSize: 12.5,
+                        whiteSpace: "nowrap",
+                        lineHeight: 1.4,
+                        transition:
+                          "background 120ms ease, border-color 120ms ease, color 120ms ease",
+                      }}
+                    >
+                      {s.label}
+                    </button>
+                  );
+                })}
               </div>
               <div
+                className="code-well"
                 style={{
                   margin: "12px 14px 14px",
-                  height: "clamp(120px, 30vh, 300px)",
-                  overflow: "auto",
-                  border: "1px solid #F0F0F0",
+                  height: "clamp(150px, 28vh, 280px)",
+                  overflowY: "auto",
+                  overflowX: "hidden",
+                  border: "1px solid var(--ink)",
                   borderRadius: 10,
-                  background: "#F9F9F9",
                 }}
               >
                 <pre
                   style={{
                     margin: 0,
-                    padding: "12px 14px",
-                    fontFamily: GEIST_MONO,
+                    padding: "12px 16px 14px 14px",
+                    fontFamily: MONO,
                     fontSize: 11.5,
                     lineHeight: 1.55,
-                    color: "#0A0A0A",
                     whiteSpace: "pre-wrap",
                     wordBreak: "break-word",
                   }}
@@ -362,309 +373,186 @@ export function HomePage() {
           </div>
         </section>
 
-        <section id="how" style={{ borderBottom: "1px solid #E5E5E5", padding: "72px 0" }}>
-          <Eyebrow>How it works</Eyebrow>
-          <ol
-            style={{
-              listStyle: "none",
-              margin: 0,
-              padding: 0,
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(230px, 1fr))",
-              gap: 14,
-            }}
-          >
-            {STEPS.map((s) => (
-              <li key={s.n} style={{ ...cardBox, padding: 22 }}>
-                <span
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    width: 26,
-                    height: 26,
-                    borderRadius: 999,
-                    background: "#FFF0E9",
-                    fontFamily: GEIST_MONO,
-                    fontSize: 11,
-                    color: "#B5451C",
-                  }}
-                >
-                  {s.n}
-                </span>
-                <h2
-                  style={{
-                    margin: "14px 0 0",
-                    fontSize: 16,
-                    fontWeight: 600,
-                    letterSpacing: "-0.015em",
-                  }}
-                >
-                  {s.h}
-                </h2>
-                <p style={{ margin: "6px 0 0", fontSize: 14, fontWeight: 500, color: "#0A0A0A" }}>
-                  {s.sub}
-                </p>
-                <p
-                  style={{
-                    margin: "10px 0 0",
-                    fontSize: 13.5,
-                    lineHeight: 1.6,
-                    color: "#6B7280",
-                  }}
-                >
-                  {s.p}
-                </p>
-              </li>
-            ))}
-          </ol>
-        </section>
-
-        <section style={{ borderBottom: "1px solid #E5E5E5", padding: "72px 0" }}>
-          <Eyebrow>The compiler</Eyebrow>
-          <h2 style={sectionHeading}>Why the blanks are safe</h2>
+        <section style={panel}>
           <div
             style={{
-              marginTop: 26,
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
-              gap: "32px 40px",
-              alignItems: "start",
+              display: "flex",
+              flexWrap: "wrap",
+              alignItems: "baseline",
+              justifyContent: "space-between",
+              gap: "12px 24px",
             }}
           >
-            <div>
-              <p style={{ margin: 0, fontSize: 14.5, lineHeight: 1.65, color: "#4B5563" }}>
-                A template with angle brackets in it is a liability. Hand one to an AI and it
-                will cheerfully post a job whose brief reads, literally,{" "}
-                <code
-                  style={{
-                    borderRadius: 3,
-                    background: "#F7F7F7",
-                    padding: "2px 4px",
-                    fontFamily: GEIST_MONO,
-                    fontSize: 12,
-                    color: "#0A0A0A",
-                  }}
-                >
-                  &lt;POST URL&gt;
-                </code>
-                , and escrow real money against nonsense.
-              </p>
-              <p style={{ margin: "14px 0 0", fontSize: 14.5, lineHeight: 1.65, color: "#4B5563" }}>
-                So this is a compiler, not a template library. A value is either filled in, or it
-                is named in a block instructing your AI to ask you for it. Never neither.
-              </p>
-              <p style={{ margin: "14px 0 0", fontSize: 14.5, lineHeight: 1.65, color: "#4B5563" }}>
-                The panel here is the real compiler, running the same code the catalog runs.
-                Switch between the three states and watch the prompt rewrite itself.
-              </p>
-            </div>
-            <div style={{ ...cardBox, padding: 20 }}>
-              <p
-                style={{
-                  margin: 0,
-                  fontFamily: GEIST_MONO,
-                  fontSize: 10.5,
-                  letterSpacing: "0.1em",
-                  textTransform: "uppercase",
-                  color: "#6B7280",
-                }}
-              >
-                Current state
-              </p>
-              <p style={{ margin: "12px 0 0", fontSize: 15, lineHeight: 1.55, color: "#0A0A0A" }}>
-                {state.note}
-              </p>
-              <p
-                style={{
-                  margin: "14px 0 0",
-                  fontFamily: GEIST_MONO,
-                  fontSize: 12,
-                  color: "#B5451C",
-                }}
-              >
-                {blanksLabel}
-              </p>
-            </div>
+            <h2 style={h2}>Open prompts right now</h2>
+            <Link
+              href="/prompts"
+              style={{
+                fontFamily: MONO,
+                fontSize: 12.5,
+                color: ACCENT,
+                textDecoration: "none",
+                whiteSpace: "nowrap",
+              }}
+            >
+              Browse all →
+            </Link>
           </div>
-        </section>
-
-        <section style={{ borderBottom: "1px solid #E5E5E5", padding: "72px 0" }}>
-          <Eyebrow>{cards.length} prompts</Eyebrow>
-          <h2 style={sectionHeading}>What you can hire for</h2>
           <ul
             style={{
               listStyle: "none",
-              margin: "26px 0 0",
+              margin: "30px 0 0",
               padding: 0,
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+              gridTemplateColumns: "repeat(auto-fill, minmax(min(280px, 100%), 1fr))",
               gap: 14,
             }}
           >
-            {CATS.map((cat) => (
-              <li key={cat.label} style={{ ...cardBox, padding: "18px 20px" }}>
-                <span
+            {FEATURED.map((c) => (
+              <li key={c.id} style={{ minWidth: 0 }}>
+                <article
+                  className="hv-border-orange"
                   style={{
-                    display: "block",
-                    fontFamily: GEIST_MONO,
-                    fontSize: 10.5,
-                    letterSpacing: "0.1em",
-                    textTransform: "uppercase",
-                    color: "#6B7280",
+                    height: "100%",
+                    boxSizing: "border-box",
+                    border: "1px solid var(--ink)",
+                    borderRadius: 18,
+                    padding: 18,
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 10,
+                    transition: "border-color 120ms ease",
                   }}
                 >
-                  {cat.label}
-                </span>
-                <span style={{ marginTop: 12, display: "grid", gap: 7 }}>
-                  {cat.items.map((it) => (
-                    <Link
-                      key={it}
-                      href="/prompts"
-                      className="hv-orange"
+                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <span
                       style={{
-                        lineHeight: 1.45,
-                        fontSize: 14,
-                        color: "#0A0A0A",
-                        textDecoration: "none",
-                        transition: "color 120ms ease",
+                        fontFamily: MONO,
+                        fontSize: 10.5,
+                        letterSpacing: "0.14em",
+                        textTransform: "uppercase",
+                        color: ACCENT,
                       }}
                     >
-                      {it}
+                      {categoryLabel(c.category)}
+                    </span>
+                    <span
+                      style={{ marginLeft: "auto", fontFamily: MONO, fontSize: 11, whiteSpace: "nowrap" }}
+                    >
+                      {proofLabels[c.proofType]}
+                    </span>
+                  </div>
+                  <h3
+                    style={{
+                      margin: 0,
+                      fontSize: 16,
+                      fontWeight: 600,
+                      letterSpacing: "-0.015em",
+                      lineHeight: 1.25,
+                    }}
+                  >
+                    {c.name}
+                  </h3>
+                  <p style={{ margin: "2px 0 0", fontSize: 13, lineHeight: 1.5, color: "var(--muted)" }}>
+                    {c.blurb}
+                  </p>
+                  <div
+                    style={{
+                      display: "flex",
+                      marginTop: "auto",
+                      borderTop: "1px solid var(--ink)",
+                      paddingTop: 12,
+                    }}
+                  >
+                    <Link
+                      href={`/prompts?open=${c.id}`}
+                      className="hv-border-orange"
+                      style={{
+                        marginLeft: "auto",
+                        border: "1px solid var(--ink)",
+                        padding: "7px 14px",
+                        borderRadius: 999,
+                        background: ACCENT,
+                        fontFamily: MONO,
+                        fontSize: 12,
+                        fontWeight: 500,
+                        color: "var(--on-ember)",
+                        textDecoration: "none",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      open ↗
                     </Link>
-                  ))}
-                </span>
+                  </div>
+                </article>
               </li>
             ))}
           </ul>
         </section>
 
-        <section style={{ borderBottom: "1px solid #E5E5E5", padding: "72px 0" }}>
-          <Eyebrow>Escrow</Eyebrow>
-          <h2 style={sectionHeading}>How the money works</h2>
-          <p
-            style={{
-              margin: "14px 0 0",
-              maxWidth: "58ch",
-              fontSize: 15,
-              lineHeight: 1.6,
-              color: "#4B5563",
-            }}
-          >
-            Your budget escrows on chain the moment you post. Not before.
+        <section style={panel}>
+          <p style={{ ...kicker, marginBottom: 18 }}>In your AI</p>
+          <h2 style={h2}>Put your AI to work.</h2>
+          <p style={lead}>
+            Hire, settle and earn in USDC from the tools you already use. The prompt is the whole
+            integration.
           </p>
-          <dl
-            style={{
-              margin: "26px 0 0",
-              maxWidth: "46rem",
-              ...cardBox,
-              padding: "4px 20px",
-            }}
-          >
-            {MONEY.map(([k, v]) => (
-              <div
-                key={k}
+          <div style={{ marginTop: 28, display: "flex", flexWrap: "wrap", gap: 8 }}>
+            {CLIENTS.map((c) => (
+              <span
+                key={c}
                 style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  alignItems: "baseline",
-                  justifyContent: "space-between",
-                  gap: "4px 24px",
-                  borderBottom: "1px solid #F0F0F0",
-                  padding: "14px 0",
+                  border: "1px solid var(--ink)",
+                  borderRadius: 999,
+                  padding: "7px 15px",
+                  fontFamily: MONO,
+                  fontSize: 12,
+                  whiteSpace: "nowrap",
                 }}
               >
-                <dt style={{ fontSize: 14.5, fontWeight: 500 }}>{k}</dt>
-                <dd style={{ margin: 0, fontFamily: GEIST_MONO, fontSize: 12.5, color: "#4B5563" }}>
-                  {v}
-                </dd>
-              </div>
+                {c}
+              </span>
             ))}
-          </dl>
-          <p
-            style={{
-              margin: "22px 0 0",
-              maxWidth: "62ch",
-              fontSize: 14,
-              lineHeight: 1.65,
-              color: "#6B7280",
-            }}
-          >
-            You get roughly 24 hours to grade a delivery. Let that lapse and it releases to them
-            anyway, which is why every job ships with a settle prompt as well as a post one.
+          </div>
+          <p style={{ margin: "22px 0 0", fontFamily: MONO, fontSize: 12, color: "var(--muted)" }}>
+            Connect at mcp.t2000.ai, or{" "}
+            <a
+              href="https://audric.ai"
+              target="_blank"
+              rel="noreferrer"
+              className="hv-deco-orange"
+              style={inlineLink}
+            >
+              try Audric
+            </a>
+            .
           </p>
         </section>
 
-        <section style={{ padding: "72px 0" }}>
-          <div
+        <section style={{ ...panel, margin: "72px 0 90px" }}>
+          <h2
             style={{
-              border: "1px solid #E5E5E5",
-              borderRadius: 18,
-              background: "#fff",
-              padding: 34,
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-              gap: "28px 40px",
-              alignItems: "center",
+              margin: 0,
+              fontSize: "clamp(40px, 7.4vw, 82px)",
+              fontWeight: 700,
+              lineHeight: 0.94,
+              letterSpacing: "-0.045em",
+              textTransform: "uppercase",
             }}
           >
-            <div>
-              <Eyebrow>Boundaries</Eyebrow>
-              <h2 style={{ margin: 0, fontSize: 26, fontWeight: 500, letterSpacing: "-0.03em" }}>
-                What this site does not do
-              </h2>
-              <ul
-                style={{
-                  listStyle: "none",
-                  margin: "18px 0 0",
-                  padding: 0,
-                  display: "grid",
-                  gap: 9,
-                  fontSize: 14.5,
-                  color: "#4B5563",
-                }}
-              >
-                {[
-                  "It never touches your wallet, your keys, or your Passport.",
-                  "It never posts anything.",
-                  "It holds nothing.",
-                ].map((line) => (
-                  <li key={line} style={{ display: "flex", gap: 10 }}>
-                    <span aria-hidden style={{ flexShrink: 0, alignSelf: "center", width: 5, height: 5, borderRadius: 999, background: ACCENT }} />
-                    {line}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <p
-                style={{
-                  margin: 0,
-                  maxWidth: "24ch",
-                  fontSize: 22,
-                  lineHeight: 1.3,
-                  fontWeight: 500,
-                  letterSpacing: "-0.025em",
-                  color: "#0A0A0A",
-                }}
-              >
-                It turns a form into text. Your AI does the rest.
-              </p>
-              <Link
-                href="/prompts"
-                className="hv-peach"
-                style={{
-                  ...primaryButton,
-                  marginTop: 22,
-                  display: "inline-block",
-                  padding: "11px 22px",
-                  fontSize: 14.5,
-                }}
-              >
-                Browse the prompts →
-              </Link>
-            </div>
+            Get work posted
+          </h2>
+          <div style={{ marginTop: 28, display: "flex", flexWrap: "wrap", gap: 10 }}>
+            <Link href="/prompts" className="hv-border-orange" style={primaryButton}>
+              Browse prompts
+            </Link>
+            <Link href="/memes" className="hv-both-orange" style={secondaryButton}>
+              Memecoin prompts
+            </Link>
           </div>
+          <p style={{ margin: "26px 0 0", maxWidth: "56ch", fontSize: 13.5, lineHeight: 1.65 }}>
+            This site never touches your wallet, your keys or your Passport, never posts anything,
+            and holds nothing. It turns a form into text, and your AI does the rest.
+          </p>
         </section>
       </main>
 

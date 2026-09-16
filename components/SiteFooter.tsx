@@ -1,41 +1,36 @@
-import { ACCENT, GEIST, GEIST_MONO } from "./fonts";
+import { MONO, SANS } from "./fonts";
 
 export function SiteFooter() {
   return (
-    <footer style={{ borderTop: "1px solid #E5E5E5", background: "#fff" }}>
+    <footer style={{ borderTop: "1px solid var(--ink)", background: "var(--chrome)" }}>
       <div
         style={{
-          padding: "0 18px",
-          height: 56,
+          padding: "14px 18px",
+          minHeight: 56,
+          boxSizing: "border-box",
           display: "flex",
+          flexWrap: "wrap",
           alignItems: "center",
-          gap: 24,
-          fontFamily: GEIST_MONO,
+          gap: "8px 24px",
+          fontFamily: MONO,
           fontSize: 11,
-          color: "#6B7280",
+          color: "var(--muted)",
         }}
       >
-        <span style={{ display: "flex", alignItems: "baseline", gap: 7 }}>
+        <span style={{ display: "flex", alignItems: "baseline", gap: 6 }}>
           <span
             style={{
-              fontFamily: GEIST,
+              fontFamily: SANS,
               fontSize: 17,
               fontWeight: 600,
               letterSpacing: "-0.02em",
-              color: "#0A0A0A",
+              color: "var(--ink)",
             }}
           >
             t2000
           </span>
-          <span
-            style={{
-              fontSize: 12,
-              letterSpacing: "0.14em",
-              textTransform: "uppercase",
-              color: ACCENT,
-            }}
-          >
-            prompts
+          <span style={{ fontSize: 12, letterSpacing: "0.02em", color: "var(--mark-suffix)" }}>
+            .prompts
           </span>
         </span>
         <span
@@ -44,7 +39,7 @@ export function SiteFooter() {
             marginLeft: "auto",
             letterSpacing: "0.14em",
             textTransform: "uppercase",
-            fontWeight: 600,
+            color: "var(--ink)",
             cursor: "default",
             transition: "color 120ms ease",
           }}

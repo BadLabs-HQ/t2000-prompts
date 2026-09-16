@@ -3,8 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import { allFields, compile, missingFields } from "@/lib/compile";
-import { categories, type Card, type Tab, type Values } from "@/lib/types";
-import { ACCENT, GEIST, GEIST_MONO, SYS_MONO } from "./fonts";
+import { categoryLabel as labelOf, type Card, type Tab, type Values } from "@/lib/types";
+import { ACCENT, SANS, MONO, SYS_MONO } from "./fonts";
 
 const PANEL_TABS: { id: Tab; label: string }[] = [
   { id: "post", label: "Post" },
@@ -15,12 +15,12 @@ const PANEL_TABS: { id: Tab; label: string }[] = [
 const INPUT: CSSProperties = {
   width: "100%",
   boxSizing: "border-box",
-  border: "1px solid #E5E5E5",
+  border: "1px solid var(--line)",
   borderRadius: 14,
-  background: "#fff",
+  background: "var(--surface)",
   padding: "13px 16px",
   fontSize: 15,
-  color: "#0A0A0A",
+  color: "var(--ink)",
 };
 
 export function JobDrawer({
@@ -60,8 +60,7 @@ export function JobDrawer({
   const fields = allFields(card);
   const missing = missingFields(card, values);
   const text = compile(card, values, tab);
-  const categoryLabel =
-    categories.find((c) => c.id === card.category)?.label ?? card.category;
+  const categoryLabel = labelOf(card.category);
 
   const filled = fields.filter((f) => (values[f.key] || "").trim() !== "").length;
   const pct = fields.length ? Math.round((filled / fields.length) * 100) : 0;
@@ -98,14 +97,14 @@ export function JobDrawer({
     overflow: "hidden",
     cursor: "pointer",
     whiteSpace: "nowrap",
-    border: "1px solid #E5E5E5",
+    border: "1px solid var(--line)",
     borderRadius: 999,
-    background: "#fff",
+    background: "var(--surface)",
     padding: "8px 12px",
-    fontFamily: GEIST,
+    fontFamily: SANS,
     fontSize: 13,
     fontWeight: 500,
-    color: "#0A0A0A",
+    color: "var(--ink)",
   };
 
   return (
@@ -134,8 +133,8 @@ export function JobDrawer({
           maxWidth: 510,
           display: "flex",
           flexDirection: "column",
-          borderLeft: "1px solid #E5E5E5",
-          background: "#fff",
+          borderLeft: "1px solid var(--line)",
+          background: "var(--surface)",
           boxShadow: "0 4px 12px rgba(0,0,0,0.06), 0 2px 4px rgba(0,0,0,0.03)",
           transform: shown ? "translateX(0)" : "translateX(100%)",
           transition: "transform 280ms cubic-bezier(0.4, 0, 0.2, 1)",
@@ -161,7 +160,7 @@ export function JobDrawer({
                 fontSize: 11,
                 letterSpacing: "0.06em",
                 textTransform: "uppercase",
-                color: "#6B7280",
+                color: "var(--muted)",
               }}
             >
               {categoryLabel}
@@ -172,7 +171,7 @@ export function JobDrawer({
                 maxWidth: "46ch",
                 fontSize: 12.5,
                 lineHeight: 1.5,
-                color: "#555D68",
+                color: "var(--muted)",
               }}
             >
               {card.blurb}
@@ -190,13 +189,13 @@ export function JobDrawer({
               justifyContent: "center",
               width: 28,
               height: 28,
-              border: "1px solid #E5E5E5",
+              border: "1px solid var(--line)",
               borderRadius: 999,
-              background: "#fff",
+              background: "var(--surface)",
               fontSize: 26,
               fontWeight: 400,
               lineHeight: 1,
-              color: "#555D68",
+              color: "var(--muted)",
               cursor: "pointer",
               transition: "border-color 120ms ease, color 120ms ease, font-weight 120ms ease",
             }}
@@ -229,7 +228,7 @@ export function JobDrawer({
                     border: on ? `1px solid ${ACCENT}` : 0,
                   }}
                 />
-                <span style={{ position: "relative", color: on ? "#fff" : "inherit" }}>
+                <span style={{ position: "relative", color: on ? "var(--on-ember)" : "inherit" }}>
                   {t.label}
                 </span>
               </button>
@@ -256,7 +255,7 @@ export function JobDrawer({
                 border: "1px solid transparent",
                 borderRadius: 14,
                 padding: "10px 16px",
-                background: `linear-gradient(#fff, #fff) padding-box, conic-gradient(from 180deg at 50% 50%, ${ACCENT} 0%, ${ACCENT} ${pct}%, #E5E5E5 ${pct}%, #E5E5E5 100%) border-box`,
+                background: `linear-gradient(var(--surface), var(--surface)) padding-box, conic-gradient(from 180deg at 50% 50%, ${ACCENT} 0%, ${ACCENT} ${pct}%, var(--line) ${pct}%, var(--line) 100%) border-box`,
                 transition: "background 200ms ease",
               }}
             >
@@ -266,12 +265,12 @@ export function JobDrawer({
                   fontSize: 12.5,
                   letterSpacing: "0.06em",
                   textTransform: "uppercase",
-                  color: "#6B7280",
+                  color: "var(--muted)",
                 }}
               >
                 Inputs
               </span>
-              <span style={{ fontSize: 12.5, color: "#555D68" }}>{fillSummary}</span>
+              <span style={{ fontSize: 12.5, color: "var(--muted)" }}>{fillSummary}</span>
             </div>
             <button
               type="button"
@@ -285,7 +284,7 @@ export function JobDrawer({
                 padding: "7px 16px",
                 fontSize: 12.5,
                 fontWeight: 600,
-                color: "#fff",
+                color: "var(--on-ember)",
                 cursor: "pointer",
                 transition: "filter 120ms ease",
               }}
@@ -319,7 +318,7 @@ export function JobDrawer({
                 alignItems: "baseline",
                 gap: 8,
                 minWidth: 0,
-                border: "1px solid #E5E5E5",
+                border: "1px solid var(--line)",
                 borderRadius: 14,
                 padding: "10px 16px",
               }}
@@ -330,12 +329,12 @@ export function JobDrawer({
                   fontSize: 11,
                   letterSpacing: "0.06em",
                   textTransform: "uppercase",
-                  color: "#6B7280",
+                  color: "var(--muted)",
                 }}
               >
                 Prompt
               </span>
-              <span style={{ fontSize: 12, color: "#6B7280" }}>{blanksNote}</span>
+              <span style={{ fontSize: 12, color: "var(--muted)" }}>{blanksNote}</span>
             </div>
             <button
               type="button"
@@ -347,13 +346,13 @@ export function JobDrawer({
                 alignItems: "center",
                 gap: 6,
                 cursor: "pointer",
-                border: `1px solid ${copied ? "#0A0A0A" : "#E5E5E5"}`,
+                border: `1px solid ${copied ? "var(--ink)" : "var(--line)"}`,
                 borderRadius: 999,
-                background: "#fff",
+                background: "var(--surface)",
                 padding: "6px 16px",
                 fontFamily: SYS_MONO,
                 fontSize: 12,
-                color: "#0A0A0A",
+                color: "var(--ink)",
               }}
             >
               {copied ? "Copied" : "Copy"}
@@ -364,9 +363,9 @@ export function JobDrawer({
               minHeight: 0,
               flex: 1,
               overflow: "auto",
-              border: "1px solid #E5E5E5",
+              border: "1px solid var(--line)",
               borderRadius: 8,
-              background: "#F7F7F7",
+              background: "var(--well)",
             }}
           >
             <pre
@@ -376,7 +375,7 @@ export function JobDrawer({
                 fontFamily: SYS_MONO,
                 fontSize: 12,
                 lineHeight: 1.55,
-                color: "#0A0A0A",
+                color: "var(--ink)",
                 whiteSpace: "pre-wrap",
                 wordBreak: "break-word",
               }}
@@ -401,11 +400,11 @@ export function JobDrawer({
               alignSelf: "center",
               lineHeight: 1,
               textAlign: "left",
-              fontFamily: GEIST_MONO,
+              fontFamily: MONO,
               fontSize: 11.5,
               letterSpacing: "0.14em",
               textTransform: "uppercase",
-              color: "#6B7280",
+              color: "var(--muted)",
             }}
           >
             Remote
@@ -422,7 +421,7 @@ export function JobDrawer({
               padding: "7px 16px",
               fontSize: 12,
               fontWeight: 600,
-              color: "#fff",
+              color: "var(--on-ember)",
               cursor: "pointer",
               transition: "background 120ms ease, border-color 120ms ease",
             }}
@@ -460,9 +459,9 @@ export function JobDrawer({
               width: "calc(100% - 48px)",
               maxWidth: 560,
               maxHeight: "calc(100% - 56px)",
-              border: "1px solid #E5E5E5",
+              border: "1px solid var(--line)",
               borderRadius: 26,
-              background: "#fff",
+              background: "var(--surface)",
               boxShadow: "0 30px 80px rgba(0,0,0,0.18)",
             }}
           >
@@ -478,11 +477,11 @@ export function JobDrawer({
               <h3
                 style={{
                   margin: 0,
-                  fontFamily: GEIST,
+                  fontFamily: SANS,
                   fontSize: 22,
                   fontWeight: 600,
                   letterSpacing: "-0.01em",
-                  color: "#0A0A0A",
+                  color: "var(--ink)",
                 }}
               >
                 Fill inputs
@@ -499,12 +498,12 @@ export function JobDrawer({
                   justifyContent: "center",
                   width: 32,
                   height: 32,
-                  border: "1px solid #E5E5E5",
+                  border: "1px solid var(--line)",
                   borderRadius: 999,
-                  background: "#fff",
+                  background: "var(--surface)",
                   fontSize: 15,
                   lineHeight: 1,
-                  color: "#555D68",
+                  color: "var(--muted)",
                   cursor: "pointer",
                 }}
               >
@@ -521,7 +520,7 @@ export function JobDrawer({
                     flex: 1,
                     borderRadius: 999,
                     background:
-                      (values[f.key] || "").trim() !== "" ? ACCENT : "#E5E5E5",
+                      (values[f.key] || "").trim() !== "" ? ACCENT : "var(--line)",
                   }}
                 />
               ))}
@@ -531,11 +530,11 @@ export function JobDrawer({
               <p
                 style={{
                   margin: 0,
-                  fontFamily: GEIST_MONO,
+                  fontFamily: MONO,
                   fontSize: 11.5,
                   letterSpacing: "0.14em",
                   textTransform: "uppercase",
-                  color: "#6B7280",
+                  color: "var(--muted)",
                 }}
               >
                 {categoryLabel}
@@ -543,12 +542,12 @@ export function JobDrawer({
               <h4
                 style={{
                   margin: "10px 0 0",
-                  fontFamily: GEIST,
+                  fontFamily: SANS,
                   fontSize: 27,
                   fontWeight: 600,
                   lineHeight: 1.15,
                   letterSpacing: "-0.02em",
-                  color: "#0A0A0A",
+                  color: "var(--ink)",
                   textWrap: "pretty",
                 }}
               >
@@ -578,15 +577,15 @@ export function JobDrawer({
                           gap: 12,
                         }}
                       >
-                        <span style={{ fontSize: 15, color: "#555D68" }}>{f.label}</span>
+                        <span style={{ fontSize: 15, color: "var(--muted)" }}>{f.label}</span>
                         {v.trim() === "" ? (
                           <span
                             style={{
-                              fontFamily: GEIST_MONO,
+                              fontFamily: MONO,
                               fontSize: 11,
                               letterSpacing: "0.06em",
                               textTransform: "lowercase",
-                              color: "#6B7280",
+                              color: "var(--muted)",
                             }}
                           >
                             blank
@@ -612,11 +611,11 @@ export function JobDrawer({
                                   borderRadius: 999,
                                   padding: "10px 20px",
                                   fontSize: 14.5,
-                                  fontFamily: GEIST,
-                                  border: `1px solid ${picked || hot ? ACCENT : "#E5E5E5"}`,
-                                  background: picked ? ACCENT : "#fff",
+                                  fontFamily: SANS,
+                                  border: `1px solid ${picked || hot ? ACCENT : "var(--line)"}`,
+                                  background: picked ? ACCENT : "var(--surface)",
                                   filter: picked && hot ? "brightness(1.12)" : "none",
-                                  color: picked ? "#fff" : hot ? ACCENT : "#0A0A0A",
+                                  color: picked ? "var(--on-ember)" : hot ? ACCENT : "var(--ink)",
                                 }}
                               >
                                 {o.label}
@@ -635,7 +634,7 @@ export function JobDrawer({
                             minHeight: 120,
                             resize: "vertical",
                             lineHeight: 1.55,
-                            fontFamily: GEIST,
+                            fontFamily: SANS,
                           }}
                         />
                       ) : (
@@ -651,10 +650,10 @@ export function JobDrawer({
                       {f.help ? (
                         <span
                           style={{
-                            fontFamily: GEIST_MONO,
+                            fontFamily: MONO,
                             fontSize: 11.5,
                             lineHeight: 1.5,
-                            color: "#6B7280",
+                            color: "var(--muted)",
                           }}
                         >
                           {f.help}
@@ -684,17 +683,17 @@ export function JobDrawer({
                   borderRadius: 999,
                   background: ACCENT,
                   padding: "14px 30px",
-                  fontFamily: GEIST,
+                  fontFamily: SANS,
                   fontSize: 16,
                   fontWeight: 600,
-                  color: "#fff",
+                  color: "var(--on-ember)",
                   cursor: "pointer",
                   transition: "filter 120ms ease",
                 }}
               >
                 Done
               </button>
-              <span style={{ fontFamily: GEIST_MONO, fontSize: 12.5, color: "#6B7280" }}>
+              <span style={{ fontFamily: MONO, fontSize: 12.5, color: "var(--muted)" }}>
                 {fillSummary}
               </span>
             </footer>

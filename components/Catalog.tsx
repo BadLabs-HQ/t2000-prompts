@@ -1,13 +1,13 @@
 "use client";
 
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import { cards } from "@/lib/cards";
 import { categories, type Card, type CategoryId } from "@/lib/types";
 import { SiteHeader } from "./SiteHeader";
 import { SiteFooter } from "./SiteFooter";
 import { JobDrawer } from "./JobDrawer";
-import { ACCENT, GEIST, GEIST_MONO } from "./fonts";
+import { ACCENT, MONO, PANEL_SHADOW, SANS } from "./fonts";
 
 const STOPWORDS = new Set([
   "and", "the", "for", "with", "you", "your", "from", "that", "this", "have",
@@ -20,7 +20,7 @@ const TAB_UNDERLINE =
 
 const EASE = "cubic-bezier(0.4, 0, 0.2, 1)";
 
-const CARD_SHADOW = "0 3px 10px -6px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.04)";
+const CARD_SHADOW = PANEL_SHADOW;
 
 const labelFor = (id: string) => categories.find((c) => c.id === id)?.label ?? "";
 
@@ -37,6 +37,13 @@ export function Catalog() {
   const [openId, setOpenId] = useState<string | null>(null);
   const [shown, setShown] = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
+
+  // Deep link: /prompts?open=<card id> opens that card on load.
+  useEffect(() => {
+    const id = new URLSearchParams(window.location.search).get("open");
+    if (id && cards.some((c) => c.id === id)) open(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const visible = useMemo(() => {
     const active = catFilter || filter;
@@ -106,14 +113,14 @@ export function Catalog() {
     textAlign: "left",
     fontSize: 14,
     background: on ? ACCENT : "transparent",
-    color: on ? "#fff" : hot ? ACCENT : "#4B5563",
+    color: on ? "var(--on-ember)" : hot ? ACCENT : "var(--muted)",
     fontWeight: on ? 500 : 400,
   });
 
   const railCount = (on: boolean, hot: boolean): CSSProperties => ({
     flexShrink: 0,
     fontSize: 12.5,
-    color: on ? "#fff" : hot ? ACCENT : "#6B7280",
+    color: on ? "var(--on-ember)" : hot ? ACCENT : "var(--muted)",
   });
 
   const viewButton = (on: boolean, hot: boolean): CSSProperties => ({
@@ -126,7 +133,7 @@ export function Catalog() {
     borderRadius: 6,
     cursor: "pointer",
     background: on ? ACCENT : "transparent",
-    color: on ? "#fff" : hot ? ACCENT : "#6B7280",
+    color: on ? "var(--on-ember)" : hot ? ACCENT : "var(--muted)",
   });
 
   const initialBadge = (size: number, radius: number, fontSize: number): CSSProperties => ({
@@ -137,18 +144,18 @@ export function Catalog() {
     width: size,
     height: size,
     borderRadius: radius,
-    background: "#F0F0F0",
-    fontFamily: GEIST_MONO,
+    background: "var(--well)",
+    fontFamily: MONO,
     fontSize,
-    color: "#6B7280",
+    color: "var(--muted)",
   });
 
   return (
     <div
       className="t2k-catalog"
       style={{
-        fontFamily: GEIST,
-        color: "#0A0A0A",
+        fontFamily: SANS,
+        color: "var(--ink)",
         background: "transparent",
         minHeight: "100vh",
         display: "flex",
@@ -172,7 +179,7 @@ export function Catalog() {
             <path
               d="M34 0H0V34"
               fill="none"
-              stroke="#E0DFDB"
+              style={{ stroke: "var(--grid)" }}
               strokeWidth="1.4"
               strokeLinecap="round"
             />
@@ -204,7 +211,7 @@ export function Catalog() {
         />
       </svg>
 
-      <SiteHeader variant="catalog" />
+      <SiteHeader page="prompts" />
 
       <div style={{ position: "relative", display: "flex", minHeight: 0, flex: 1 }}>
         <button
@@ -226,7 +233,7 @@ export function Catalog() {
             border: 0,
             borderRadius: 6,
             background: "transparent",
-            color: "#0A0A0A",
+            color: "var(--ink)",
             cursor: "pointer",
             transition: `left 280ms ${EASE}`,
           }}
@@ -251,8 +258,8 @@ export function Catalog() {
             width: railOpen ? 208 : 54,
             flexShrink: 0,
             overflow: "hidden",
-            borderRight: `1px solid ${railOpen ? "#E5E5E5" : "transparent"}`,
-            background: railOpen ? "#fff" : "transparent",
+            borderRight: `1px solid ${railOpen ? "var(--line)" : "transparent"}`,
+            background: railOpen ? "var(--surface)" : "transparent",
             padding: "6px 8px 12px",
             display: "grid",
             gap: 3,
@@ -279,7 +286,7 @@ export function Catalog() {
                 display: "flex",
                 alignItems: "center",
                 fontSize: 12.5,
-                color: "#6B7280",
+                color: "var(--muted)",
                 whiteSpace: "nowrap",
               }}
             >
@@ -308,13 +315,13 @@ export function Catalog() {
               </span>
               <span style={railCount(!catFilter, hotRail === "__all")}>{cards.length}</span>
             </button>
-            <hr style={{ margin: "10px 6px", border: 0, borderTop: "1px solid #E5E5E5" }} />
+            <hr style={{ margin: "10px 6px", border: 0, borderTop: "1px solid var(--line)" }} />
             <p
               style={{
                 margin: "0 0 2px",
                 padding: "0 10px",
                 fontSize: 12.5,
-                color: "#6B7280",
+                color: "var(--muted)",
                 whiteSpace: "nowrap",
               }}
             >
@@ -358,15 +365,15 @@ export function Catalog() {
               <>
                 <div
                   style={{
-                    border: "1px solid #E5E5E5",
+                    border: "1px solid var(--ink)",
                     borderRadius: 14,
-                    background: "#fff",
+                    background: "var(--surface)",
                     padding: "10px 14px 8px",
                     boxShadow: CARD_SHADOW,
                   }}
                 >
                   <textarea
-                    rows={2}
+                    rows={3}
                     value={describe}
                     onChange={(e) => setDescribe(e.target.value)}
                     placeholder="Describe what you need done, e.g. “get 20 people to join my Telegram and prove it”"
@@ -378,46 +385,9 @@ export function Catalog() {
                       background: "transparent",
                       fontSize: 15.5,
                       lineHeight: 1.6,
-                      color: "#0A0A0A",
+                      color: "var(--ink)",
                     }}
                   />
-                  <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                    <button
-                      type="button"
-                      onClick={() => setFilter("all")}
-                      className="hv-bright"
-                      style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: 6,
-                        border: 0,
-                        borderRadius: 999,
-                        background: ACCENT,
-                        padding: "6px 13px",
-                        fontFamily: GEIST,
-                        fontSize: 13.5,
-                        fontWeight: 600,
-                        color: "#fff",
-                        cursor: "pointer",
-                        transition: "background 120ms ease",
-                      }}
-                    >
-                      Run it
-                      <svg
-                        viewBox="0 0 16 16"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth={2.4}
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        aria-hidden
-                        style={{ width: 12.5, height: 12.5 }}
-                      >
-                        <path d="M8 13V3" />
-                        <path d="M3.5 7.5L8 3l4.5 4.5" />
-                      </svg>
-                    </button>
-                  </div>
                 </div>
 
                 <label
@@ -426,9 +396,9 @@ export function Catalog() {
                     display: "flex",
                     alignItems: "center",
                     gap: 12,
-                    border: "1px solid #E5E5E5",
+                    border: "1px solid var(--ink)",
                     borderRadius: 14,
-                    background: "#fff",
+                    background: "var(--surface)",
                     padding: "14px 18px",
                     boxShadow: CARD_SHADOW,
                   }}
@@ -436,10 +406,9 @@ export function Catalog() {
                   <svg
                     viewBox="0 0 16 16"
                     fill="none"
-                    stroke="#6B7280"
                     strokeWidth={1.4}
                     aria-hidden
-                    style={{ width: 18, height: 18, flexShrink: 0 }}
+                    style={{ stroke: "var(--muted)", width: 18, height: 18, flexShrink: 0 }}
                   >
                     <circle cx="7" cy="7" r="4.5" />
                     <path d="M10.5 10.5L14 14" strokeLinecap="round" />
@@ -453,7 +422,7 @@ export function Catalog() {
                       border: 0,
                       background: "transparent",
                       fontSize: 15.5,
-                      color: "#0A0A0A",
+                      color: "var(--ink)",
                     }}
                   />
                 </label>
@@ -490,7 +459,7 @@ export function Catalog() {
                           padding: "12px 0",
                           fontSize: 15,
                           fontWeight: on ? 500 : 400,
-                          color: hot ? ACCENT : on ? "#0A0A0A" : "#6B7280",
+                          color: hot ? ACCENT : on ? "var(--ink)" : "var(--muted)",
                           backgroundImage: on ? TAB_UNDERLINE : "none",
                           backgroundRepeat: "no-repeat",
                           backgroundPosition: "left bottom",
@@ -504,7 +473,7 @@ export function Catalog() {
                 </nav>
 
                 {visible.length === 0 ? (
-                  <p style={{ marginTop: 28, fontSize: 13, color: "#6B7280" }}>
+                  <p style={{ marginTop: 28, fontSize: 13, color: "var(--muted)" }}>
                     Nothing matches. Try engagement, research, testing, leads, or on chain.
                   </p>
                 ) : null}
@@ -518,7 +487,7 @@ export function Catalog() {
                     gap: 12,
                   }}
                 >
-                  <p style={{ margin: 0, fontSize: 13, color: "#6B7280" }}>
+                  <p style={{ margin: 0, fontSize: 13, color: "var(--muted)" }}>
                     {countText}
                   </p>
                   <div
@@ -529,9 +498,9 @@ export function Catalog() {
                       display: "flex",
                       alignItems: "center",
                       gap: 2,
-                      border: "1px solid #E5E5E5",
+                      border: "1px solid var(--ink)",
                       borderRadius: 8,
-                      background: "#fff",
+                      background: "var(--surface)",
                       padding: 2,
                     }}
                   >
@@ -589,16 +558,16 @@ export function Catalog() {
                 <h1
                   style={{
                     margin: 0,
-                    fontFamily: GEIST,
+                    fontFamily: SANS,
                     fontSize: 30,
                     fontWeight: 600,
                     letterSpacing: "-0.025em",
-                    color: "#0A0A0A",
+                    color: "var(--ink)",
                   }}
                 >
                   {labelFor(catFilter!)}
                 </h1>
-                <p style={{ margin: "6px 0 0", fontSize: 13.5, color: "#6B7280" }}>{countText}</p>
+                <p style={{ margin: "6px 0 0", fontSize: 13.5, color: "var(--muted)" }}>{countText}</p>
                 <div
                   style={{
                     marginTop: 22,
@@ -617,9 +586,9 @@ export function Catalog() {
                         display: "block",
                         width: "100%",
                         cursor: "pointer",
-                        border: "1px solid #E5E5E5",
+                        border: "1px solid var(--ink)",
                         borderRadius: 12,
-                        background: "#fff",
+                        background: "var(--surface)",
                         padding: 14,
                         transition: "border-color 120ms ease",
                       }}
@@ -639,7 +608,7 @@ export function Catalog() {
                             fontSize: 14.5,
                             fontWeight: 600,
                             letterSpacing: "-0.01em",
-                            color: "#0A0A0A",
+                            color: "var(--ink)",
                           }}
                         >
                           {c.name}
@@ -652,7 +621,7 @@ export function Catalog() {
                           textAlign: "left",
                           fontSize: 13,
                           lineHeight: 1.45,
-                          color: "#6B7280",
+                          color: "var(--muted)",
                         }}
                       >
                         {c.blurb}
@@ -662,11 +631,11 @@ export function Catalog() {
                           display: "block",
                           marginTop: 12,
                           textAlign: "left",
-                          fontFamily: GEIST_MONO,
+                          fontFamily: MONO,
                           fontSize: 11.5,
                           letterSpacing: "0.06em",
                           textTransform: "uppercase",
-                          color: "#6B7280",
+                          color: "var(--muted)",
                         }}
                       >
                         Remote
@@ -700,9 +669,9 @@ export function Catalog() {
                         alignItems: "center",
                         gap: 12,
                         cursor: "pointer",
-                        border: "1px solid #E5E5E5",
+                        border: "1px solid var(--ink)",
                         borderRadius: 12,
-                        background: "#fff",
+                        background: "var(--surface)",
                         padding: "12px 14px",
                         transition: "border-color 120ms ease",
                       }}
@@ -732,12 +701,12 @@ export function Catalog() {
                               fontSize: 15,
                               fontWeight: 600,
                               letterSpacing: "-0.01em",
-                              color: "#0A0A0A",
+                              color: "var(--ink)",
                             }}
                           >
                             {c.name}
                           </span>
-                          <span style={{ fontSize: 12.5, color: "#6B7280" }}>
+                          <span style={{ fontSize: 12.5, color: "var(--muted)" }}>
                             {labelFor(c.category)}
                           </span>
                         </span>
@@ -748,7 +717,7 @@ export function Catalog() {
                             whiteSpace: "nowrap",
                             fontSize: 13,
                             lineHeight: 1.4,
-                            color: "#6B7280",
+                            color: "var(--muted)",
                           }}
                         >
                           {c.blurb}
@@ -758,18 +727,18 @@ export function Catalog() {
                         style={{
                           flexShrink: 0,
                           borderRadius: 999,
-                          background: "#F0F0F0",
+                          background: "var(--well)",
                           padding: "4px 10px",
-                          fontFamily: GEIST_MONO,
+                          fontFamily: MONO,
                           fontSize: 11.5,
                           letterSpacing: "0.06em",
                           textTransform: "uppercase",
-                          color: "#4B5563",
+                          color: "var(--muted)",
                         }}
                       >
                         Remote
                       </span>
-                      <span aria-hidden style={{ flexShrink: 0, color: "#C2C2C2", fontSize: 15 }}>
+                      <span aria-hidden style={{ flexShrink: 0, color: "var(--muted)", fontSize: 15 }}>
                         ›
                       </span>
                     </button>
@@ -780,6 +749,7 @@ export function Catalog() {
 
             {!catPage && view === "grid" ? (
               <div
+                className="catalog-columns"
                 style={{
                   marginTop: 28,
                   columnCount: 3,
@@ -805,15 +775,15 @@ export function Catalog() {
                     <h2
                       style={{
                         margin: 0,
-                        fontFamily: GEIST,
+                        fontFamily: SANS,
                         fontWeight: 500,
                         fontSize: 12,
                         letterSpacing: "0.07em",
                         textTransform: "uppercase",
-                        color: "#6B7280",
+                        color: "var(--muted)",
                         lineHeight: 1.4,
                         paddingBottom: 8,
-                        borderBottom: "1px solid #EDEDED",
+                        borderBottom: "1px solid var(--line)",
                       }}
                     >
                       {g.label}
@@ -847,7 +817,7 @@ export function Catalog() {
                               textAlign: "left",
                               fontSize: 14,
                               lineHeight: 1.45,
-                              color: "#0A0A0A",
+                              color: "var(--ink)",
                               transition: "color 120ms ease",
                             }}
                           >

@@ -4,13 +4,46 @@
 
 :root {
   color-scheme: light;
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --chrome: #ffffff;
+  --well: #f7f7f7;
+  --ink: #0a0a0a;
+  --muted: #6b7280;
+  --line: #e5e5e5;
+  --grid: #e0dfdb;
+  --on-ember: #ffffff;
+  --mark-suffix: #e2601f;
+  --shadow: rgba(0, 0, 0, 0.35);
+}
+
+body[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0c0f12;
+  --surface: #161a1e;
+  --chrome: #0c0f12;
+  --well: #1e242a;
+  --ink: #f2f0ec;
+  --muted: #8b959c;
+  --line: rgba(242, 240, 236, 0.1);
+  --grid: transparent;
+  --on-ember: #0c0f12;
+  --mark-suffix: #ff7a45;
+  --shadow: rgba(0, 0, 0, 0.65);
 }
 
 body {
   margin: 0;
-  background: #f5f4f1;
-  color: #0a0a0a;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
+  transition: background 160ms ease, color 160ms ease;
+}
+
+body[data-theme="dark"] * {
+  scrollbar-color: rgba(242, 240, 236, 0.22) transparent;
+  scrollbar-width: thin;
 }
 
 input,
@@ -20,53 +53,76 @@ button {
   font: inherit;
 }
 
+input,
+textarea {
+  color: var(--ink);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--muted);
+}
+
 input:focus,
 textarea:focus,
 select:focus {
   outline: none;
 }
 
-.t2k-catalog ::selection {
+::selection {
   background: #ff7a45;
-  color: #fff;
+  color: var(--on-ember);
 }
 
-.t2k-home ::selection {
-  background: #ff7a45;
-  color: #2b1006;
+a {
+  color: var(--ink);
 }
 
 .t2k-catalog a {
-  color: #0a0a0a;
-  text-decoration-color: #d8d8d4;
+  text-decoration-color: var(--line);
 }
 
-.t2k-home a {
-  color: #0a0a0a;
+.code-well {
+  scrollbar-width: thin;
+  scrollbar-color: #ff7a45 transparent;
 }
 
-.t2k-catalog ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+@media (max-width: 760px) {
+  .t2k-home main {
+    padding: 0 16px !important;
+  }
+  .t2k-home main > section {
+    margin: 28px 0 !important;
+    padding: 26px 20px !important;
+  }
 }
 
-.t2k-catalog ::-webkit-scrollbar-thumb {
-  background: #e5e5e5;
-  border-radius: 8px;
+@media (max-width: 900px) {
+  .catalog-columns {
+    column-count: 2 !important;
+  }
 }
 
-.t2k-catalog ::-webkit-scrollbar-track {
-  background: transparent;
+@media (max-width: 600px) {
+  .catalog-columns {
+    column-count: 1 !important;
+  }
+}
+
+@media (max-width: 520px) {
+  .site-header .mark-suffix,
+  .site-header .ext-link {
+    display: none !important;
+  }
+  .site-header nav a {
+    padding: 12px 8px !important;
+  }
 }
 
 /* Hover and focus states. Inline styles set the resting look, so these need
    !important to win, the same way the design's style-hover attributes do. */
 .hv-bright:hover {
   filter: brightness(1.12) !important;
-}
-
-.hv-peach:hover {
-  background: #ffb694 !important;
 }
 
 .hv-orange:hover {
@@ -77,8 +133,9 @@ select:focus {
   border-color: #ff7a45 !important;
 }
 
-.hv-border-ink:hover {
-  border-color: #0a0a0a !important;
+.hv-both-orange:hover {
+  color: #ff7a45 !important;
+  border-color: #ff7a45 !important;
 }
 
 .hv-deco-orange:hover {
@@ -86,12 +143,11 @@ select:focus {
 }
 
 .hv-subtle:hover {
-  background: #f7f7f7 !important;
+  background: var(--well) !important;
 }
 
 .hv-close:hover {
   border-color: #ff7a45 !important;
-  color: #0a0a0a !important;
   font-weight: 700 !important;
 }
 
