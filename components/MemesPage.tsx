@@ -193,8 +193,9 @@ export function MemesPage() {
                     target="_blank"
                     rel="noreferrer"
                     onClick={(e) => e.stopPropagation()}
-                    className="hv-bright"
+                    className="audric-pill hv-border-orange"
                     style={{
+                      transition: "border-color 120ms ease",
                       marginLeft: "auto",
                       border: "1px solid var(--ink)",
                       padding: "7px 14px",

@@ -169,6 +169,19 @@ a {
   border-top-color: #ff7a45 !important;
 }
 
+/* Hovering the Audric pill highlights only the pill, not its card. */
+.tile:has(.audric-pill:hover) {
+  border-color: var(--ink) !important;
+}
+
+.tile:has(.audric-pill:hover) .tile-name {
+  color: var(--ink) !important;
+}
+
+.tile:has(.audric-pill:hover) .tile-rule {
+  border-top-color: var(--ink) !important;
+}
+
 .tile:hover .remote-pill,
 .row:hover .remote-pill {
   border-color: #ff7a45 !important;
