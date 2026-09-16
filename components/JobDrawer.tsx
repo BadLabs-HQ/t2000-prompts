@@ -3,8 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import { allFields, compile, missingFields } from "@/lib/compile";
-import { categoryLabel as labelOf, type Card, type Tab, type Values } from "@/lib/types";
-import { ACCENT, SANS, MONO, SYS_MONO } from "./fonts";
+import { categoryLabel, type Card, type Tab, type Values } from "@/lib/types";
+import { ACCENT, MONO, SANS } from "./fonts";
 
 const PANEL_TABS: { id: Tab; label: string }[] = [
   { id: "post", label: "Post" },
@@ -15,11 +15,34 @@ const PANEL_TABS: { id: Tab; label: string }[] = [
 const INPUT: CSSProperties = {
   width: "100%",
   boxSizing: "border-box",
-  border: "1px solid var(--line)",
+  border: "1px solid var(--ink)",
   borderRadius: 14,
   background: "var(--surface)",
   padding: "13px 16px",
   fontSize: 15,
+  color: "var(--ink)",
+};
+
+const PANEL_TAB: CSSProperties = {
+  position: "relative",
+  flex: 1,
+  overflow: "hidden",
+  cursor: "pointer",
+  whiteSpace: "nowrap",
+  border: "1px solid var(--ink)",
+  borderRadius: 999,
+  background: "var(--surface)",
+  padding: "8px 12px",
+  fontFamily: SANS,
+  fontSize: 13,
+  fontWeight: 500,
+  color: "var(--ink)",
+};
+
+const MONO_LABEL: CSSProperties = {
+  fontFamily: MONO,
+  letterSpacing: "0.06em",
+  textTransform: "uppercase",
   color: "var(--ink)",
 };
 
@@ -60,8 +83,6 @@ export function JobDrawer({
   const fields = allFields(card);
   const missing = missingFields(card, values);
   const text = compile(card, values, tab);
-  const categoryLabel = labelOf(card.category);
-
   const filled = fields.filter((f) => (values[f.key] || "").trim() !== "").length;
   const pct = fields.length ? Math.round((filled / fields.length) * 100) : 0;
   const fillSummary = `${filled} of ${fields.length} filled`;
@@ -91,20 +112,14 @@ export function JobDrawer({
     );
   }
 
-  const tabButton: CSSProperties = {
-    position: "relative",
-    flex: 1,
-    overflow: "hidden",
-    cursor: "pointer",
-    whiteSpace: "nowrap",
-    border: "1px solid var(--line)",
+  const orangeButton: CSSProperties = {
+    flexShrink: 0,
+    border: "1px solid var(--ink)",
     borderRadius: 999,
-    background: "var(--surface)",
-    padding: "8px 12px",
-    fontFamily: SANS,
-    fontSize: 13,
-    fontWeight: 500,
-    color: "var(--ink)",
+    background: ACCENT,
+    color: "var(--on-ember)",
+    cursor: "pointer",
+    transition: "border-color 120ms ease",
   };
 
   return (
@@ -130,7 +145,7 @@ export function JobDrawer({
           bottom: 0,
           zIndex: 40,
           width: "100%",
-          maxWidth: 510,
+          maxWidth: "var(--drawer)",
           display: "flex",
           flexDirection: "column",
           borderLeft: "1px solid var(--line)",
@@ -146,24 +161,13 @@ export function JobDrawer({
             alignItems: "flex-start",
             justifyContent: "space-between",
             gap: 16,
-            padding: "20px 32px 16px",
+            padding: "20px var(--pad) 16px",
           }}
         >
           <div style={{ minWidth: 0, paddingTop: 14 }}>
-            <h2 style={{ margin: 0, fontSize: 17, fontWeight: 500, lineHeight: 1.3 }}>
-              {card.name}
-            </h2>
-            <p
-              style={{
-                margin: "5px 0 0",
-                fontFamily: SYS_MONO,
-                fontSize: 11,
-                letterSpacing: "0.06em",
-                textTransform: "uppercase",
-                color: "var(--muted)",
-              }}
-            >
-              {categoryLabel}
+            <h2 style={{ margin: 0, fontSize: 17, fontWeight: 500, lineHeight: 1.3 }}>{card.name}</h2>
+            <p style={{ ...MONO_LABEL, margin: "5px 0 0", fontSize: 11, color: "var(--muted)" }}>
+              {categoryLabel(card.category)}
             </p>
             <p
               style={{
@@ -189,13 +193,13 @@ export function JobDrawer({
               justifyContent: "center",
               width: 28,
               height: 28,
-              border: "1px solid var(--line)",
+              border: "1px solid var(--ink)",
               borderRadius: 999,
               background: "var(--surface)",
               fontSize: 26,
               fontWeight: 400,
               lineHeight: 1,
-              color: "var(--muted)",
+              color: "var(--ink)",
               cursor: "pointer",
               transition: "border-color 120ms ease, color 120ms ease, font-weight 120ms ease",
             }}
@@ -204,7 +208,7 @@ export function JobDrawer({
           </button>
         </header>
 
-        <div role="tablist" style={{ display: "flex", gap: 8, margin: "4px 32px 8px" }}>
+        <div role="tablist" style={{ display: "flex", gap: 8, margin: "4px var(--pad) 8px" }}>
           {PANEL_TABS.map((t) => {
             const on = t.id === tab;
             return (
@@ -215,8 +219,8 @@ export function JobDrawer({
                   setTab(t.id);
                   setCopied(false);
                 }}
-                className="hv-border-orange hv-orange"
-                style={tabButton}
+                className="hv-both-orange"
+                style={PANEL_TAB}
               >
                 <span
                   aria-hidden
@@ -224,8 +228,9 @@ export function JobDrawer({
                     position: "absolute",
                     inset: -1,
                     borderRadius: 999,
+                    boxSizing: "border-box",
                     background: on ? ACCENT : "transparent",
-                    border: on ? `1px solid ${ACCENT}` : 0,
+                    border: on ? "1px solid var(--ink)" : 0,
                   }}
                 />
                 <span style={{ position: "relative", color: on ? "var(--on-ember)" : "inherit" }}>
@@ -244,7 +249,7 @@ export function JobDrawer({
               alignItems: "center",
               justifyContent: "space-between",
               gap: 12,
-              padding: "22px 32px",
+              padding: "22px var(--pad)",
             }}
           >
             <div
@@ -259,34 +264,19 @@ export function JobDrawer({
                 transition: "background 200ms ease",
               }}
             >
-              <span
-                style={{
-                  fontFamily: SYS_MONO,
-                  fontSize: 12.5,
-                  letterSpacing: "0.06em",
-                  textTransform: "uppercase",
-                  color: "var(--muted)",
-                }}
-              >
-                Inputs
-              </span>
-              <span style={{ fontSize: 12.5, color: "var(--muted)" }}>{fillSummary}</span>
+              <span style={{ ...MONO_LABEL, fontSize: 12.5 }}>Inputs</span>
+              <span style={{ fontSize: 12.5, color: "var(--ink)" }}>{fillSummary}</span>
             </div>
             <button
               type="button"
               onClick={() => setFillOpen(true)}
-              className="hv-bright"
+              className="hv-border-orange"
               style={{
-                flexShrink: 0,
-                border: `1px solid ${ACCENT}`,
-                borderRadius: 999,
-                background: ACCENT,
+                ...orangeButton,
                 padding: "7px 16px",
                 fontSize: 12.5,
                 fontWeight: 600,
-                color: "var(--on-ember)",
-                cursor: "pointer",
-                transition: "filter 120ms ease",
+                whiteSpace: "nowrap",
               }}
             >
               Fill inputs
@@ -300,7 +290,7 @@ export function JobDrawer({
             minHeight: 0,
             flex: 1,
             flexDirection: "column",
-            padding: "12px 32px",
+            padding: "12px var(--pad)",
           }}
         >
           <div
@@ -318,39 +308,29 @@ export function JobDrawer({
                 alignItems: "baseline",
                 gap: 8,
                 minWidth: 0,
-                border: "1px solid var(--line)",
+                border: "1px solid var(--ink)",
                 borderRadius: 14,
                 padding: "10px 16px",
               }}
             >
-              <span
-                style={{
-                  fontFamily: SYS_MONO,
-                  fontSize: 11,
-                  letterSpacing: "0.06em",
-                  textTransform: "uppercase",
-                  color: "var(--muted)",
-                }}
-              >
-                Prompt
-              </span>
-              <span style={{ fontSize: 12, color: "var(--muted)" }}>{blanksNote}</span>
+              <span style={{ ...MONO_LABEL, fontSize: 11 }}>Prompt</span>
+              <span style={{ fontSize: 12, color: "var(--ink)" }}>{blanksNote}</span>
             </div>
             <button
               type="button"
               onClick={copy}
-              className="hv-border-orange hv-orange"
+              className="hv-both-orange"
               style={{
                 flexShrink: 0,
                 display: "inline-flex",
                 alignItems: "center",
                 gap: 6,
                 cursor: "pointer",
-                border: `1px solid ${copied ? "var(--ink)" : "var(--line)"}`,
+                border: "1px solid var(--ink)",
                 borderRadius: 999,
                 background: "var(--surface)",
                 padding: "6px 16px",
-                fontFamily: SYS_MONO,
+                fontFamily: MONO,
                 fontSize: 12,
                 color: "var(--ink)",
               }}
@@ -359,20 +339,24 @@ export function JobDrawer({
             </button>
           </div>
           <div
+            className="code-well"
             style={{
               minHeight: 0,
               flex: 1,
-              overflow: "auto",
-              border: "1px solid var(--line)",
-              borderRadius: 8,
-              background: "var(--well)",
+              overflowY: "auto",
+              overflowX: "hidden",
+              border: "1px solid var(--ink)",
+              borderRadius: 10,
+              background: "var(--surface)",
             }}
           >
             <pre
               style={{
                 margin: 0,
-                padding: "12px 16px",
-                fontFamily: SYS_MONO,
+                boxSizing: "border-box",
+                maxWidth: "100%",
+                padding: "12px 18px 14px 16px",
+                fontFamily: MONO,
                 fontSize: 12,
                 lineHeight: 1.55,
                 color: "var(--ink)",
@@ -391,7 +375,7 @@ export function JobDrawer({
             alignItems: "center",
             justifyContent: "space-between",
             gap: 12,
-            padding: "8px 32px 20px",
+            padding: "8px var(--pad) 20px",
           }}
         >
           <span
@@ -404,7 +388,7 @@ export function JobDrawer({
               fontSize: 11.5,
               letterSpacing: "0.14em",
               textTransform: "uppercase",
-              color: "var(--muted)",
+              color: "var(--ink)",
             }}
           >
             Remote
@@ -412,19 +396,8 @@ export function JobDrawer({
           <button
             type="button"
             onClick={openAudric}
-            className="hv-bright"
-            style={{
-              flexShrink: 0,
-              border: `1px solid ${ACCENT}`,
-              borderRadius: 999,
-              background: ACCENT,
-              padding: "7px 16px",
-              fontSize: 12,
-              fontWeight: 600,
-              color: "var(--on-ember)",
-              cursor: "pointer",
-              transition: "background 120ms ease, border-color 120ms ease",
-            }}
+            className="hv-border-orange"
+            style={{ ...orangeButton, padding: "7px 16px", fontSize: 12, fontWeight: 600 }}
           >
             Open in Audric ↗
           </button>
@@ -456,7 +429,7 @@ export function JobDrawer({
               transform: "translate(-50%, -50%)",
               display: "flex",
               flexDirection: "column",
-              width: "calc(100% - 48px)",
+              width: "calc(100% - 28px)",
               maxWidth: 560,
               maxHeight: "calc(100% - 56px)",
               border: "1px solid var(--line)",
@@ -471,7 +444,7 @@ export function JobDrawer({
                 alignItems: "flex-start",
                 justifyContent: "space-between",
                 gap: 16,
-                padding: "28px 32px 0",
+                padding: "28px var(--pad) 0",
               }}
             >
               <h3
@@ -490,28 +463,23 @@ export function JobDrawer({
                 type="button"
                 onClick={() => setFillOpen(false)}
                 aria-label="Close"
-                className="hv-border-orange hv-orange"
+                className="hv-border-orange"
                 style={{
-                  flexShrink: 0,
+                  ...orangeButton,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   width: 32,
                   height: 32,
-                  border: "1px solid var(--line)",
-                  borderRadius: 999,
-                  background: "var(--surface)",
                   fontSize: 15,
                   lineHeight: 1,
-                  color: "var(--muted)",
-                  cursor: "pointer",
                 }}
               >
                 &times;
               </button>
             </header>
 
-            <div style={{ display: "flex", gap: 10, padding: "18px 32px 0" }}>
+            <div style={{ display: "flex", gap: 10, padding: "18px var(--pad) 0" }}>
               {fields.map((f) => (
                 <span
                   key={f.key}
@@ -519,14 +487,13 @@ export function JobDrawer({
                     height: 3,
                     flex: 1,
                     borderRadius: 999,
-                    background:
-                      (values[f.key] || "").trim() !== "" ? ACCENT : "var(--line)",
+                    background: (values[f.key] || "").trim() !== "" ? ACCENT : "var(--line)",
                   }}
                 />
               ))}
             </div>
 
-            <div style={{ padding: "26px 32px 0" }}>
+            <div style={{ padding: "26px var(--pad) 0" }}>
               <p
                 style={{
                   margin: 0,
@@ -537,7 +504,7 @@ export function JobDrawer({
                   color: "var(--muted)",
                 }}
               >
-                {categoryLabel}
+                {categoryLabel(card.category)}
               </p>
               <h4
                 style={{
@@ -556,12 +523,8 @@ export function JobDrawer({
             </div>
 
             <div
-              style={{
-                minHeight: 0,
-                flex: 1,
-                overflowY: "auto",
-                padding: "24px 32px 4px",
-              }}
+              className="code-well"
+              style={{ minHeight: 0, flex: 1, overflowY: "auto", padding: "24px var(--pad) 4px" }}
             >
               <div style={{ display: "grid", gap: 22 }}>
                 {fields.map((f) => {
@@ -577,7 +540,7 @@ export function JobDrawer({
                           gap: 12,
                         }}
                       >
-                        <span style={{ fontSize: 15, color: "var(--muted)" }}>{f.label}</span>
+                        <span style={{ fontSize: 15, color: "var(--ink)" }}>{f.label}</span>
                         {v.trim() === "" ? (
                           <span
                             style={{
@@ -585,7 +548,7 @@ export function JobDrawer({
                               fontSize: 11,
                               letterSpacing: "0.06em",
                               textTransform: "lowercase",
-                              color: "var(--muted)",
+                              color: "var(--ink)",
                             }}
                           >
                             blank
@@ -612,10 +575,10 @@ export function JobDrawer({
                                   padding: "10px 20px",
                                   fontSize: 14.5,
                                   fontFamily: SANS,
-                                  border: `1px solid ${picked || hot ? ACCENT : "var(--line)"}`,
+                                  border: `1px solid ${hot ? ACCENT : "var(--ink)"}`,
                                   background: picked ? ACCENT : "var(--surface)",
                                   filter: picked && hot ? "brightness(1.12)" : "none",
-                                  color: picked ? "var(--on-ember)" : hot ? ACCENT : "var(--ink)",
+                                  color: picked ? "var(--surface)" : hot ? ACCENT : "var(--ink)",
                                 }}
                               >
                                 {o.label}
@@ -643,7 +606,7 @@ export function JobDrawer({
                           onChange={(e) => setValue(f.key, e.target.value)}
                           placeholder={f.placeholder}
                           className="hv-border-orange fc-border-orange"
-                          style={mono ? { ...INPUT, fontFamily: SYS_MONO } : INPUT}
+                          style={mono ? { ...INPUT, fontFamily: MONO } : INPUT}
                         />
                       )}
 
@@ -653,7 +616,7 @@ export function JobDrawer({
                             fontFamily: MONO,
                             fontSize: 11.5,
                             lineHeight: 1.5,
-                            color: "var(--muted)",
+                            color: "var(--ink)",
                           }}
                         >
                           {f.help}
@@ -670,30 +633,31 @@ export function JobDrawer({
                 display: "flex",
                 alignItems: "center",
                 gap: 18,
-                padding: "22px 32px 28px",
+                padding: "22px var(--pad) 28px",
               }}
             >
               <button
                 type="button"
                 onClick={() => setFillOpen(false)}
-                className="hv-bright"
+                className="hv-border-orange"
                 style={{
-                  flexShrink: 0,
-                  border: 0,
-                  borderRadius: 999,
-                  background: ACCENT,
+                  ...orangeButton,
                   padding: "14px 30px",
                   fontFamily: SANS,
                   fontSize: 16,
                   fontWeight: 600,
-                  color: "var(--on-ember)",
-                  cursor: "pointer",
-                  transition: "filter 120ms ease",
                 }}
               >
                 Done
               </button>
-              <span style={{ fontFamily: MONO, fontSize: 12.5, color: "var(--muted)" }}>
+              <span
+                style={{
+                  fontFamily: MONO,
+                  fontSize: 12.5,
+                  whiteSpace: "nowrap",
+                  color: "var(--ink)",
+                }}
+              >
                 {fillSummary}
               </span>
             </footer>

@@ -41,9 +41,71 @@ body {
   transition: background 160ms ease, color 160ms ease;
 }
 
+/* Catalog and Memes use a slim scrollbar; Home keeps the browser default. */
+html:has(.t2k-catalog) ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+html:has(.t2k-catalog) ::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border-radius: 8px;
+}
+
+html:has(.t2k-catalog) ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
 body[data-theme="dark"] * {
   scrollbar-color: rgba(242, 240, 236, 0.22) transparent;
   scrollbar-width: thin;
+}
+
+body[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: rgba(242, 240, 236, 0.18);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+.code-well::-webkit-scrollbar {
+  width: 8px;
+}
+
+.code-well::-webkit-scrollbar-thumb {
+  background: #ff7a45;
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+/* The design renders with browser default line height, not the Tailwind reset. */
+.t2k-catalog,
+.t2k-home {
+  line-height: normal;
+}
+
+/* The design also uses the browser default content box sizing. Inline
+   boxSizing on an element still wins. */
+.t2k-catalog *,
+.t2k-catalog *::before,
+.t2k-catalog *::after,
+.t2k-home *,
+.t2k-home *::before,
+.t2k-home *::after {
+  box-sizing: content-box;
+}
+
+/* Browser defaults the design relies on: buttons are border box, text
+   inputs carry a 1px 2px inset. */
+.t2k-catalog button,
+.t2k-home button {
+  box-sizing: border-box;
+}
+
+.t2k-catalog input,
+.t2k-home input {
+  padding: 1px 2px;
 }
 
 input,
@@ -87,7 +149,42 @@ a {
   scrollbar-color: #ff7a45 transparent;
 }
 
+/* Catalog and Memes layout variables, from the design. */
+.t2k-vars {
+  --pad: 32px;
+  --gutter: 18px;
+  --cols: 3;
+  --colgap: 36px;
+  --drawer: 510px;
+  --sm: inline-flex;
+  --h1: 30px;
+}
+
+.tile:hover .tile-name,
+.row:hover .tile-name {
+  color: #ff7a45 !important;
+}
+
+.tile:hover .tile-rule {
+  border-top-color: #ff7a45 !important;
+}
+
+.tile:hover .remote-pill,
+.row:hover .remote-pill {
+  border-color: #ff7a45 !important;
+}
+
 @media (max-width: 760px) {
+  .t2k-vars {
+    --pad: 18px;
+    --gutter: 14px;
+    --cols: 1;
+    --colgap: 0px;
+    --drawer: 100%;
+    --sm: none;
+    --h1: 24px;
+  }
+
   .t2k-home main {
     padding: 0 16px !important;
   }
@@ -97,25 +194,69 @@ a {
   }
 }
 
-@media (max-width: 900px) {
-  .catalog-columns {
-    column-count: 2 !important;
-  }
-}
-
-@media (max-width: 600px) {
-  .catalog-columns {
-    column-count: 1 !important;
-  }
-}
-
 @media (max-width: 520px) {
+  .t2k-vars {
+    --pad: 16px;
+    --gutter: 14px;
+    --h1: 22px;
+  }
+  a,
+  button {
+    -webkit-tap-highlight-color: transparent;
+  }
+  .site-header > div {
+    gap: 8px !important;
+  }
   .site-header .mark-suffix,
   .site-header .ext-link {
     display: none !important;
   }
   .site-header nav a {
-    padding: 12px 8px !important;
+    padding: 12px 10px !important;
+    font-size: 11px !important;
+  }
+  .site-header button[aria-label="Toggle theme"] {
+    padding: 12px 12px !important;
+  }
+  .t2k-vars nav[aria-label="Categories"] button {
+    height: 44px !important;
+  }
+  .t2k-vars nav[aria-label="Filter by category"] {
+    gap: 4px 18px !important;
+  }
+  .t2k-vars nav[aria-label="Filter by category"] button {
+    padding-block: 14px !important;
+  }
+  aside [role="tablist"] {
+    flex-wrap: wrap !important;
+  }
+  aside [role="tablist"] button {
+    flex: 1 1 auto !important;
+    min-height: 44px !important;
+  }
+  aside footer button {
+    min-height: 44px !important;
+  }
+  [role="dialog"] button {
+    min-height: 44px !important;
+  }
+  [role="dialog"] button[aria-label="Close"] {
+    width: 44px !important;
+    height: 44px !important;
+    min-height: 0 !important;
+    font-size: 18px !important;
+  }
+  aside button[aria-label="Close"] {
+    width: 44px !important;
+    height: 44px !important;
+    font-size: 30px !important;
+  }
+  .t2k-vars main ul li > button {
+    padding-block: 10px !important;
+  }
+  [role="dialog"] input,
+  [role="dialog"] textarea {
+    font-size: 16px !important;
   }
 }
 

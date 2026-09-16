@@ -53,7 +53,7 @@ export function SiteHeader({ page }: { page: Page }) {
     >
       <div
         style={{
-          padding: "0 20px",
+          padding: "0 var(--gutter, 20px)",
           minHeight: 56,
           display: "flex",
           alignItems: "center",
@@ -104,7 +104,7 @@ export function SiteHeader({ page }: { page: Page }) {
             rel="noreferrer"
             className="hv-orange ext-link"
             style={{
-              display: "inline-flex",
+              display: "var(--sm, inline-flex)",
               alignItems: "center",
               gap: 6,
               fontFamily: MONO,

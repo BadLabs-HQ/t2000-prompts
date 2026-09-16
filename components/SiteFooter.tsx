@@ -5,9 +5,8 @@ export function SiteFooter() {
     <footer style={{ borderTop: "1px solid var(--ink)", background: "var(--chrome)" }}>
       <div
         style={{
-          padding: "14px 18px",
+          padding: "14px var(--gutter, 18px)",
           minHeight: 56,
-          boxSizing: "border-box",
           display: "flex",
           flexWrap: "wrap",
           alignItems: "center",

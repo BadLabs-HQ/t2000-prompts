@@ -3,33 +3,44 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import { cards } from "@/lib/cards";
-import { categories, type Card, type CategoryId } from "@/lib/types";
+import { categories, categoryLabel, type Card, type CategoryId } from "@/lib/types";
 import { SiteHeader } from "./SiteHeader";
 import { SiteFooter } from "./SiteFooter";
 import { JobDrawer } from "./JobDrawer";
 import { ACCENT, MONO, PANEL_SHADOW, SANS } from "./fonts";
-
-const STOPWORDS = new Set([
-  "and", "the", "for", "with", "you", "your", "from", "that", "this", "have",
-  "get", "want", "need", "some", "who", "can", "will", "them", "their", "are",
-  "how", "one", "job", "jobs", "please", "would", "someone", "there",
-]);
 
 const TAB_UNDERLINE =
   "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='none' viewBox='0 0 100 6'%3E%3Cpath d='M1 4.4 Q 50 2.4 99 4' fill='none' stroke='%23FF7A45' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E\")";
 
 const EASE = "cubic-bezier(0.4, 0, 0.2, 1)";
 
-const CARD_SHADOW = PANEL_SHADOW;
+const REMOTE_PILL: CSSProperties = {
+  flexShrink: 0,
+  border: "1px solid var(--ink)",
+  borderRadius: 999,
+  background: ACCENT,
+  padding: "4px 10px",
+  fontFamily: MONO,
+  fontSize: 11.5,
+  letterSpacing: "0.06em",
+  textTransform: "uppercase",
+  color: "var(--on-ember)",
+};
 
-const labelFor = (id: string) => categories.find((c) => c.id === id)?.label ?? "";
+const ELLIPSIS: CSSProperties = {
+  minWidth: 0,
+  flex: 1,
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  whiteSpace: "nowrap",
+};
 
 export function Catalog() {
-  const [describe, setDescribe] = useState("");
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<CategoryId | "all">("all");
   const [catFilter, setCatFilter] = useState<CategoryId | null>(null);
   const [railOpen, setRailOpen] = useState(false);
+  const [narrow, setNarrow] = useState(false);
   const [view, setView] = useState<"grid" | "list">("grid");
   const [hotTab, setHotTab] = useState<string | null>(null);
   const [hotRail, setHotRail] = useState<string | null>(null);
@@ -38,47 +49,12 @@ export function Catalog() {
   const [shown, setShown] = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
 
-  // Deep link: /prompts?open=<card id> opens that card on load.
-  useEffect(() => {
-    const id = new URLSearchParams(window.location.search).get("open");
-    if (id && cards.some((c) => c.id === id)) open(id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const visible = useMemo(() => {
-    const active = catFilter || filter;
-    let out = active === "all" ? cards : cards.filter((c) => c.category === active);
-    const words = describe
-      .toLowerCase()
-      .split(/[^a-z0-9]+/)
-      .filter((w) => w.length > 2 && !STOPWORDS.has(w));
-    if (words.length) {
-      out = out
-        .map((c) => {
-          const strong = `${c.name} ${c.blurb} ${labelFor(c.category)}`.toLowerCase();
-          const all = `${strong} ${c.title} ${c.brief}`.toLowerCase();
-          let score = 0;
-          for (const w of words) {
-            if (strong.includes(w)) score += 3;
-            else if (all.includes(w)) score += 1;
-          }
-          return { c, score };
-        })
-        .filter((r) => r.score > 0)
-        .sort((a, b) => b.score - a.score)
-        .map((r) => r.c);
-    }
-    const q = search.trim().toLowerCase();
-    if (q) out = out.filter((c) => c.name.toLowerCase().includes(q));
-    return out;
-  }, [describe, search, filter, catFilter]);
-
-  const open = (id: string) => {
+  const open = useCallback((id: string) => {
     clearTimeout(closeTimer.current);
     setOpenId(id);
     setShown(false);
     requestAnimationFrame(() => requestAnimationFrame(() => setShown(true)));
-  };
+  }, []);
 
   const close = useCallback(() => {
     setShown(false);
@@ -86,19 +62,36 @@ export function Catalog() {
     closeTimer.current = setTimeout(() => setOpenId(null), 280);
   }, []);
 
-  const ranking = describe.trim().length > 0;
-  const catPage = !!catFilter && !ranking;
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 760px)");
+    const onChange = (e: MediaQueryListEvent) => setNarrow(e.matches);
+    setNarrow(mq.matches);
+    mq.addEventListener("change", onChange);
+
+    // Deep link: /prompts?open=<card id> or /prompts#<card id> opens that card.
+    const want =
+      new URLSearchParams(window.location.search).get("open") ||
+      window.location.hash.replace("#", "");
+    if (want && cards.some((c) => c.id === want)) open(want);
+
+    return () => mq.removeEventListener("change", onChange);
+  }, [open]);
+
+  const visible = useMemo(() => {
+    const active = catFilter || filter;
+    let out = active === "all" ? cards : cards.filter((c) => c.category === active);
+    const q = search.trim().toLowerCase();
+    if (q) out = out.filter((c) => c.name.toLowerCase().includes(q));
+    return out;
+  }, [search, filter, catFilter]);
+
+  const catPage = !!catFilter;
   const openCard = cards.find((c) => c.id === openId) ?? null;
   const countText = `${visible.length} ${visible.length === 1 ? "prompt" : "prompts"}`;
 
-  const groups: { label: string; items: Card[] }[] = ranking
-    ? [{ label: "Best match first", items: visible }]
-    : categories
-        .map((cat) => ({
-          label: cat.label,
-          items: visible.filter((c) => c.category === cat.id),
-        }))
-        .filter((g) => g.items.length > 0);
+  const groups: { label: string; items: Card[] }[] = categories
+    .map((cat) => ({ label: cat.label, items: visible.filter((c) => c.category === cat.id) }))
+    .filter((g) => g.items.length > 0);
 
   const railButton = (on: boolean, hot: boolean): CSSProperties => ({
     display: "flex",
@@ -106,21 +99,23 @@ export function Catalog() {
     height: 34,
     alignItems: "center",
     gap: 10,
-    border: 0,
+    boxSizing: "border-box",
+    border: `1px solid ${on ? (hot ? ACCENT : "var(--ink)") : "transparent"}`,
     cursor: "pointer",
-    borderRadius: 6,
-    padding: "0 10px",
+    borderRadius: 999,
+    padding: "0 12px",
     textAlign: "left",
     fontSize: 14,
     background: on ? ACCENT : "transparent",
-    color: on ? "var(--on-ember)" : hot ? ACCENT : "var(--muted)",
+    color: on ? "var(--on-ember)" : hot ? ACCENT : "var(--ink)",
     fontWeight: on ? 500 : 400,
+    transition: "border-color 120ms ease, color 120ms ease, background 120ms ease",
   });
 
   const railCount = (on: boolean, hot: boolean): CSSProperties => ({
     flexShrink: 0,
     fontSize: 12.5,
-    color: on ? "var(--on-ember)" : hot ? ACCENT : "var(--muted)",
+    color: on ? "var(--surface)" : hot ? ACCENT : "var(--muted)",
   });
 
   const viewButton = (on: boolean, hot: boolean): CSSProperties => ({
@@ -129,30 +124,27 @@ export function Catalog() {
     justifyContent: "center",
     width: 28,
     height: 26,
-    border: 0,
+    boxSizing: "border-box",
+    border: `1px solid ${on ? "var(--ink)" : "transparent"}`,
     borderRadius: 6,
     cursor: "pointer",
     background: on ? ACCENT : "transparent",
-    color: on ? "var(--on-ember)" : hot ? ACCENT : "var(--muted)",
+    color: on ? "var(--on-ember)" : hot ? ACCENT : "var(--ink)",
   });
 
-  const initialBadge = (size: number, radius: number, fontSize: number): CSSProperties => ({
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    flexShrink: 0,
-    width: size,
-    height: size,
-    borderRadius: radius,
-    background: "var(--well)",
-    fontFamily: MONO,
-    fontSize,
-    color: "var(--muted)",
-  });
+  const cardBox: CSSProperties = {
+    width: "100%",
+    cursor: "pointer",
+    border: "1px solid var(--ink)",
+    borderRadius: 12,
+    background: "var(--surface)",
+    boxShadow: PANEL_SHADOW,
+    transition: "border-color 120ms ease",
+  };
 
   return (
     <div
-      className="t2k-catalog"
+      className="t2k-catalog t2k-vars"
       style={{
         fontFamily: SANS,
         color: "var(--ink)",
@@ -162,55 +154,6 @@ export function Catalog() {
         flexDirection: "column",
       }}
     >
-      <svg
-        aria-hidden
-        preserveAspectRatio="none"
-        style={{
-          position: "fixed",
-          inset: 0,
-          width: "100%",
-          height: "100%",
-          zIndex: -1,
-          pointerEvents: "none",
-        }}
-      >
-        <defs>
-          <pattern id="t2kGrid" width="34" height="34" patternUnits="userSpaceOnUse">
-            <path
-              d="M34 0H0V34"
-              fill="none"
-              style={{ stroke: "var(--grid)" }}
-              strokeWidth="1.4"
-              strokeLinecap="round"
-            />
-          </pattern>
-          <filter id="t2kWobble" x="-15%" y="-15%" width="130%" height="130%">
-            <feTurbulence
-              type="fractalNoise"
-              baseFrequency="0.0055 0.0085"
-              numOctaves={2}
-              seed={7}
-              result="noise"
-            />
-            <feDisplacementMap
-              in="SourceGraphic"
-              in2="noise"
-              scale={16}
-              xChannelSelector="R"
-              yChannelSelector="G"
-            />
-          </filter>
-        </defs>
-        <rect
-          x="-6%"
-          y="-6%"
-          width="112%"
-          height="112%"
-          fill="url(#t2kGrid)"
-          filter="url(#t2kWobble)"
-        />
-      </svg>
-
       <SiteHeader page="prompts" />
 
       <div style={{ position: "relative", display: "flex", minHeight: 0, flex: 1 }}>
@@ -222,9 +165,9 @@ export function Catalog() {
           className="hv-subtle"
           style={{
             position: "absolute",
-            zIndex: 5,
+            zIndex: 26,
             top: 6,
-            left: railOpen ? 164 : 8,
+            left: railOpen ? 164 : narrow ? 4 : 8,
             display: "flex",
             height: 26,
             width: 26,
@@ -255,23 +198,32 @@ export function Catalog() {
         <nav
           aria-label="Categories"
           style={{
-            width: railOpen ? 208 : 54,
+            width: railOpen ? 208 : narrow ? 40 : 54,
             flexShrink: 0,
             overflow: "hidden",
-            borderRight: `1px solid ${railOpen ? "var(--line)" : "transparent"}`,
-            background: railOpen ? "var(--surface)" : "transparent",
+            borderRight: `1px solid ${railOpen ? "var(--ink)" : "transparent"}`,
+            background: railOpen ? "var(--chrome)" : "transparent",
             padding: "6px 8px 12px",
             display: "grid",
             gap: 3,
             alignContent: "start",
             transition: `width 280ms ${EASE}, border-color 280ms ease-in-out, background 280ms ease-in-out`,
+            ...(narrow && railOpen
+              ? {
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  bottom: 0,
+                  zIndex: 25,
+                  boxShadow: "0 20px 60px rgba(0,0,0,0.18)",
+                }
+              : null),
           }}
         >
           <div
             style={{
               display: "grid",
               gap: 3,
-              paddingTop: 0,
               width: 192,
               opacity: railOpen ? 1 : 0,
               pointerEvents: railOpen ? "auto" : "none",
@@ -302,26 +254,16 @@ export function Catalog() {
               onMouseLeave={() => setHotRail(null)}
               style={{ ...railButton(!catFilter, hotRail === "__all"), fontWeight: 500 }}
             >
-              <span
-                style={{
-                  minWidth: 0,
-                  flex: 1,
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                All Categories
-              </span>
+              <span style={ELLIPSIS}>All Categories</span>
               <span style={railCount(!catFilter, hotRail === "__all")}>{cards.length}</span>
             </button>
-            <hr style={{ margin: "10px 6px", border: 0, borderTop: "1px solid var(--line)" }} />
+            <hr style={{ margin: "10px 6px", border: 0, borderTop: "1px solid var(--ink)" }} />
             <p
               style={{
                 margin: "0 0 2px",
                 padding: "0 10px",
                 fontSize: 12.5,
-                color: "var(--muted)",
+                color: "var(--ink)",
                 whiteSpace: "nowrap",
               }}
             >
@@ -339,17 +281,7 @@ export function Catalog() {
                   onMouseLeave={() => setHotRail(null)}
                   style={railButton(on, hot)}
                 >
-                  <span
-                    style={{
-                      minWidth: 0,
-                      flex: 1,
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    {cat.label}
-                  </span>
+                  <span style={ELLIPSIS}>{cat.label}</span>
                   <span style={railCount(on, hot)}>
                     {cards.filter((c) => c.category === cat.id).length}
                   </span>
@@ -359,40 +291,12 @@ export function Catalog() {
           </div>
         </nav>
 
-        <main style={{ minWidth: 0, flex: 1, padding: "20px 18px 0" }}>
+        <main style={{ minWidth: 0, flex: 1, padding: "20px var(--gutter) 0" }}>
           <div style={{ maxWidth: 1000, margin: "0 auto" }}>
             {!catPage ? (
               <>
-                <div
-                  style={{
-                    border: "1px solid var(--ink)",
-                    borderRadius: 14,
-                    background: "var(--surface)",
-                    padding: "10px 14px 8px",
-                    boxShadow: CARD_SHADOW,
-                  }}
-                >
-                  <textarea
-                    rows={3}
-                    value={describe}
-                    onChange={(e) => setDescribe(e.target.value)}
-                    placeholder="Describe what you need done, e.g. “get 20 people to join my Telegram and prove it”"
-                    style={{
-                      width: "100%",
-                      boxSizing: "border-box",
-                      resize: "none",
-                      border: 0,
-                      background: "transparent",
-                      fontSize: 15.5,
-                      lineHeight: 1.6,
-                      color: "var(--ink)",
-                    }}
-                  />
-                </div>
-
                 <label
                   style={{
-                    marginTop: 14,
                     display: "flex",
                     alignItems: "center",
                     gap: 12,
@@ -400,7 +304,7 @@ export function Catalog() {
                     borderRadius: 14,
                     background: "var(--surface)",
                     padding: "14px 18px",
-                    boxShadow: CARD_SHADOW,
+                    boxShadow: "0 3px 10px -6px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.04)",
                   }}
                 >
                   <svg
@@ -408,7 +312,7 @@ export function Catalog() {
                     fill="none"
                     strokeWidth={1.4}
                     aria-hidden
-                    style={{ stroke: "var(--muted)", width: 18, height: 18, flexShrink: 0 }}
+                    style={{ stroke: "var(--ink)", width: 18, height: 18, flexShrink: 0 }}
                   >
                     <circle cx="7" cy="7" r="4.5" />
                     <path d="M10.5 10.5L14 14" strokeLinecap="round" />
@@ -459,7 +363,7 @@ export function Catalog() {
                           padding: "12px 0",
                           fontSize: 15,
                           fontWeight: on ? 500 : 400,
-                          color: hot ? ACCENT : on ? "var(--ink)" : "var(--muted)",
+                          color: hot ? ACCENT : "var(--ink)",
                           backgroundImage: on ? TAB_UNDERLINE : "none",
                           backgroundRepeat: "no-repeat",
                           backgroundPosition: "left bottom",
@@ -487,9 +391,7 @@ export function Catalog() {
                     gap: 12,
                   }}
                 >
-                  <p style={{ margin: 0, fontSize: 13, color: "var(--muted)" }}>
-                    {countText}
-                  </p>
+                  <p style={{ margin: 0, fontSize: 13, color: "var(--ink)" }}>{countText}</p>
                   <div
                     role="group"
                     aria-label="View"
@@ -559,20 +461,20 @@ export function Catalog() {
                   style={{
                     margin: 0,
                     fontFamily: SANS,
-                    fontSize: 30,
+                    fontSize: "var(--h1)",
                     fontWeight: 600,
                     letterSpacing: "-0.025em",
                     color: "var(--ink)",
                   }}
                 >
-                  {labelFor(catFilter!)}
+                  {categoryLabel(catFilter!)}
                 </h1>
                 <p style={{ margin: "6px 0 0", fontSize: 13.5, color: "var(--muted)" }}>{countText}</p>
                 <div
                   style={{
                     marginTop: 22,
                     display: "grid",
-                    gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))",
+                    gridTemplateColumns: "repeat(auto-fill, minmax(min(240px, 100%), 1fr))",
                     gap: 12,
                   }}
                 >
@@ -581,34 +483,20 @@ export function Catalog() {
                       key={c.id}
                       type="button"
                       onClick={() => open(c.id)}
-                      className="hv-border-orange"
-                      style={{
-                        display: "block",
-                        width: "100%",
-                        cursor: "pointer",
-                        border: "1px solid var(--ink)",
-                        borderRadius: 12,
-                        background: "var(--surface)",
-                        padding: 14,
-                        transition: "border-color 120ms ease",
-                      }}
+                      className="tile hv-border-orange"
+                      style={{ ...cardBox, display: "block", padding: 14 }}
                     >
                       <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                        <span aria-hidden style={initialBadge(22, 6, 11)}>
-                          {c.name.charAt(0).toUpperCase()}
-                        </span>
                         <span
+                          className="tile-name"
                           style={{
-                            minWidth: 0,
-                            flex: 1,
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                            whiteSpace: "nowrap",
+                            ...ELLIPSIS,
                             textAlign: "left",
                             fontSize: 14.5,
                             fontWeight: 600,
                             letterSpacing: "-0.01em",
                             color: "var(--ink)",
+                            transition: "color 120ms ease",
                           }}
                         >
                           {c.name}
@@ -621,24 +509,25 @@ export function Catalog() {
                           textAlign: "left",
                           fontSize: 13,
                           lineHeight: 1.45,
-                          color: "var(--muted)",
+                          color: "var(--ink)",
                         }}
                       >
                         {c.blurb}
                       </span>
                       <span
+                        className="tile-rule"
                         style={{
-                          display: "block",
+                          display: "flex",
+                          justifyContent: "flex-end",
                           marginTop: 12,
-                          textAlign: "left",
-                          fontFamily: MONO,
-                          fontSize: 11.5,
-                          letterSpacing: "0.06em",
-                          textTransform: "uppercase",
-                          color: "var(--muted)",
+                          borderTop: "1px solid var(--ink)",
+                          paddingTop: 12,
+                          transition: "border-color 120ms ease",
                         }}
                       >
-                        Remote
+                        <span className="remote-pill" style={REMOTE_PILL}>
+                          Remote
+                        </span>
                       </span>
                     </button>
                   ))}
@@ -662,52 +551,35 @@ export function Catalog() {
                     <button
                       type="button"
                       onClick={() => open(c.id)}
-                      className="hv-border-orange"
+                      className="row hv-border-orange"
                       style={{
+                        ...cardBox,
                         display: "flex",
-                        width: "100%",
                         alignItems: "center",
                         gap: 12,
-                        cursor: "pointer",
-                        border: "1px solid var(--ink)",
-                        borderRadius: 12,
-                        background: "var(--surface)",
                         padding: "12px 14px",
-                        transition: "border-color 120ms ease",
                       }}
                     >
-                      <span aria-hidden style={initialBadge(30, 8, 12)}>
-                        {c.name.charAt(0).toUpperCase()}
-                      </span>
                       <span
-                        style={{
-                          minWidth: 0,
-                          flex: 1,
-                          display: "grid",
-                          gap: 3,
-                          textAlign: "left",
-                        }}
+                        style={{ minWidth: 0, flex: 1, display: "grid", gap: 3, textAlign: "left" }}
                       >
                         <span
-                          style={{
-                            display: "flex",
-                            flexWrap: "wrap",
-                            alignItems: "baseline",
-                            gap: 8,
-                          }}
+                          style={{ display: "flex", flexWrap: "wrap", alignItems: "baseline", gap: 8 }}
                         >
                           <span
+                            className="tile-name"
                             style={{
                               fontSize: 15,
                               fontWeight: 600,
                               letterSpacing: "-0.01em",
                               color: "var(--ink)",
+                              transition: "color 120ms ease",
                             }}
                           >
                             {c.name}
                           </span>
                           <span style={{ fontSize: 12.5, color: "var(--muted)" }}>
-                            {labelFor(c.category)}
+                            {categoryLabel(c.category)}
                           </span>
                         </span>
                         <span
@@ -717,28 +589,16 @@ export function Catalog() {
                             whiteSpace: "nowrap",
                             fontSize: 13,
                             lineHeight: 1.4,
-                            color: "var(--muted)",
+                            color: "var(--ink)",
                           }}
                         >
                           {c.blurb}
                         </span>
                       </span>
-                      <span
-                        style={{
-                          flexShrink: 0,
-                          borderRadius: 999,
-                          background: "var(--well)",
-                          padding: "4px 10px",
-                          fontFamily: MONO,
-                          fontSize: 11.5,
-                          letterSpacing: "0.06em",
-                          textTransform: "uppercase",
-                          color: "var(--muted)",
-                        }}
-                      >
+                      <span className="remote-pill" style={REMOTE_PILL}>
                         Remote
                       </span>
-                      <span aria-hidden style={{ flexShrink: 0, color: "var(--muted)", fontSize: 15 }}>
+                      <span aria-hidden style={{ flexShrink: 0, color: "var(--ink)", fontSize: 15 }}>
                         ›
                       </span>
                     </button>
@@ -749,11 +609,10 @@ export function Catalog() {
 
             {!catPage && view === "grid" ? (
               <div
-                className="catalog-columns"
                 style={{
                   marginTop: 28,
-                  columnCount: 3,
-                  columnGap: 36,
+                  columnCount: "var(--cols)" as unknown as number,
+                  columnGap: "var(--colgap)",
                   columnFill: "balance",
                   maxWidth: 860,
                   overflowWrap: "break-word",
@@ -765,6 +624,8 @@ export function Catalog() {
                     style={
                       {
                         margin: "0 0 24px",
+                        minWidth: 0,
+                        overflow: "hidden",
                         breakInside: "avoid",
                         WebkitColumnBreakInside: "avoid",
                         pageBreakInside: "avoid",
@@ -780,10 +641,10 @@ export function Catalog() {
                         fontSize: 12,
                         letterSpacing: "0.07em",
                         textTransform: "uppercase",
-                        color: "var(--muted)",
+                        color: "var(--ink)",
                         lineHeight: 1.4,
                         paddingBottom: 8,
-                        borderBottom: "1px solid var(--line)",
+                        borderBottom: "1px solid var(--ink)",
                       }}
                     >
                       {g.label}
@@ -794,11 +655,12 @@ export function Catalog() {
                         margin: "8px 0 0",
                         padding: 0,
                         display: "grid",
+                        gridTemplateColumns: "minmax(0, 1fr)",
                         gap: 1,
                       }}
                     >
                       {g.items.map((c) => (
-                        <li key={c.id}>
+                        <li key={c.id} style={{ minWidth: 0 }}>
                           <button
                             type="button"
                             onClick={() => open(c.id)}
@@ -812,8 +674,9 @@ export function Catalog() {
                               background: "none",
                               cursor: "pointer",
                               borderRadius: 6,
-                              padding: "4px 8px",
-                              margin: "0 -8px",
+                              padding: "4px 0",
+                              margin: 0,
+                              minWidth: 0,
                               textAlign: "left",
                               fontSize: 14,
                               lineHeight: 1.45,
@@ -821,17 +684,7 @@ export function Catalog() {
                               transition: "color 120ms ease",
                             }}
                           >
-                            <span
-                              style={{
-                                minWidth: 0,
-                                flex: 1,
-                                overflow: "hidden",
-                                textOverflow: "ellipsis",
-                                whiteSpace: "nowrap",
-                              }}
-                            >
-                              {c.name}
-                            </span>
+                            <span style={ELLIPSIS}>{c.name}</span>
                           </button>
                         </li>
                       ))}

@@ -205,7 +205,7 @@ export function HomePage() {
             }}
           >
             <Link href="/prompts" className="hv-border-orange" style={primaryButton}>
-              Browse {cards.length} prompts
+              Browse prompts
             </Link>
             <a href="#how" className="hv-both-orange" style={secondaryButton}>
               How it works
@@ -233,12 +233,12 @@ export function HomePage() {
               are safe, the prompt asks for whatever you leave out.
             </Step>
             <Step n="02" label="Paste" title="Your AI posts and locks the budget.">
-              Claude, ChatGPT, Cursor, Grok or Audric, anything on MCP. The USDC locks in the job,
-              not with us.
+              Claude, ChatGPT, Cursor, Grok or Audric, anything on MCP. Posting is free, the USDC
+              locks in the job, not with us.
             </Step>
             <Step n="03" label="Approve" title="You settle. Then they get paid.">
-              Grade the delivery and release, or reject and take it all back. The 5% fee comes from
-              their payout, never your budget.
+              Grade the delivery and release, or reject and take it all back. The ~5% comes from their
+              payout, never your budget.
             </Step>
           </ol>
         </section>
@@ -452,8 +452,16 @@ export function HomePage() {
                   >
                     {c.name}
                   </h3>
-                  <p style={{ margin: "2px 0 0", fontSize: 13, lineHeight: 1.5, color: "var(--muted)" }}>
-                    {c.blurb}
+                  <p
+                    style={{
+                      margin: "2px 0 0",
+                      fontFamily: MONO,
+                      fontSize: 11,
+                      lineHeight: 1.7,
+                      color: "var(--muted)",
+                    }}
+                  >
+                    remote · {c.postingMode === "batch" ? "many people" : "one person"}
                   </p>
                   <div
                     style={{

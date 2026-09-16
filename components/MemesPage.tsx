@@ -36,7 +36,7 @@ export function MemesPage() {
 
   return (
     <div
-      className="t2k-catalog"
+      className="t2k-catalog t2k-vars"
       style={{
         fontFamily: SANS,
         color: "var(--ink)",
@@ -52,9 +52,8 @@ export function MemesPage() {
           flex: 1,
           width: "100%",
           maxWidth: 1100,
-          margin: "0 auto",
           boxSizing: "border-box",
-          padding: "28px 24px 56px",
+          padding: "var(--pad)",
         }}
       >
         <p
@@ -69,7 +68,7 @@ export function MemesPage() {
         >
           memecoin community
         </p>
-        <h1 style={{ margin: "8px 0 0", fontSize: 30, fontWeight: 600, letterSpacing: "-0.025em", lineHeight: 1.1 }}>
+        <h1 style={{ margin: "8px 0 0", fontSize: "var(--h1)", fontWeight: 600, letterSpacing: "-0.025em", lineHeight: 1.1 }}>
           Memes
         </h1>
         <p style={{ margin: "10px 0 0", maxWidth: 520, fontSize: 13.5, lineHeight: 1.5, color: "var(--muted)" }}>
@@ -97,7 +96,7 @@ export function MemesPage() {
                   padding: "12px 0",
                   fontSize: 15,
                   fontWeight: on ? 500 : 400,
-                  color: on ? "var(--ink)" : "var(--muted)",
+                  color: "var(--ink)",
                   backgroundImage: on ? TAB_UNDERLINE : "none",
                   backgroundRepeat: "no-repeat",
                   backgroundPosition: "left bottom",
@@ -116,15 +115,15 @@ export function MemesPage() {
             margin: "22px 0 0",
             padding: 0,
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(min(280px, 100%), 1fr))",
-            gap: 14,
+            gridTemplateColumns: "repeat(var(--cols), minmax(0, 1fr))",
+            gap: "14px 28px",
           }}
         >
           {visible.map((c) => (
             <li key={c.id} style={{ minWidth: 0 }}>
               <article
                 onClick={() => open(c.id)}
-                className="hv-border-orange"
+                className="tile hv-border-orange"
                 style={{
                   height: "100%",
                   boxSizing: "border-box",
@@ -164,15 +163,25 @@ export function MemesPage() {
                     {proofLabels[c.proofType]}
                   </span>
                 </div>
-                <h2 style={{ margin: 0, fontSize: 16, fontWeight: 600, letterSpacing: "-0.015em", lineHeight: 1.25 }}>
+                <h2 className="tile-name" style={{ transition: "color 120ms ease", margin: 0, fontSize: 16, fontWeight: 600, letterSpacing: "-0.015em", lineHeight: 1.25 }}>
                   {c.name}
                 </h2>
                 <p style={{ margin: 0, fontSize: 13, lineHeight: 1.45 }}>{c.blurb}</p>
-                <p style={{ margin: "2px 0 0", fontFamily: MONO, fontSize: 11, color: "var(--muted)" }}>
-                  remote · many people
+                <p
+                  style={{
+                    margin: "2px 0 0",
+                    fontFamily: MONO,
+                    fontSize: 11,
+                    lineHeight: 1.7,
+                    color: "var(--muted)",
+                  }}
+                >
+                  {c.fields.map((f) => f.label.toLowerCase()).join("  ·  ")}
                 </p>
                 <div
+                  className="tile-rule"
                   style={{
+                    transition: "border-color 120ms ease",
                     display: "flex",
                     marginTop: "auto",
                     borderTop: "1px solid var(--ink)",
