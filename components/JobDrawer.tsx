@@ -5,6 +5,7 @@ import type { CSSProperties } from "react";
 import { allFields, compile, missingFields } from "@/lib/compile";
 import { categoryLabel, type Card, type Tab, type Values } from "@/lib/types";
 import { ACCENT, MONO, SANS } from "./fonts";
+import { PromptLines } from "./PromptLines";
 
 const PANEL_TABS: { id: Tab; label: string }[] = [
   { id: "post", label: "Post" },
@@ -364,7 +365,7 @@ export function JobDrawer({
                 wordBreak: "break-word",
               }}
             >
-              {text}
+              <PromptLines text={text} />
             </pre>
           </div>
         </div>

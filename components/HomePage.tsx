@@ -10,6 +10,7 @@ import { categoryLabel, proofLabels, type Values } from "@/lib/types";
 import { SiteHeader } from "./SiteHeader";
 import { SiteFooter } from "./SiteFooter";
 import { ACCENT, MONO, PANEL_SHADOW, SANS } from "./fonts";
+import { PromptLines } from "./PromptLines";
 
 const STATES = [
   { id: "none", label: "Nothing filled", note: "the ask block names every unknown" },
@@ -367,7 +368,7 @@ export function HomePage() {
                     wordBreak: "break-word",
                   }}
                 >
-                  {promptText}
+                  <PromptLines text={promptText} />
                 </pre>
               </div>
             </div>
