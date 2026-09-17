@@ -696,7 +696,7 @@ export function HomePage() {
         </section>
       </main>
 
-      <SiteFooter compact />
+      <SiteFooter compact centerLogo />
     </div>
   );
 }

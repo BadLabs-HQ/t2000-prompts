@@ -209,7 +209,7 @@ export function MemesPage() {
         </ul>
       </main>
 
-      <SiteFooter compact />
+      <SiteFooter compact centerLogo />
 
       {openCard ? (
         <JobDrawer key={openCard.id} card={openCard} shown={shown} onClose={close} ringTabs />
