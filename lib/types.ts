@@ -7,6 +7,7 @@ export type CategoryId =
   | "content"
   | "design"
   | "dev"
+  | "data"
   | "support"
   | "events"
   | "growth"
@@ -18,6 +19,7 @@ export type CategoryId =
   | "meme-contests"
   | "meme-culture"
   | "meme-listings"
+  | "meme-safety"
   | "meme-token";
 
 export type Category = {
@@ -34,6 +36,7 @@ export const categories: Category[] = [
   { id: "content", label: "Content" },
   { id: "design", label: "Design" },
   { id: "dev", label: "Dev" },
+  { id: "data", label: "Data" },
   { id: "support", label: "Support" },
   { id: "events", label: "Events" },
   { id: "growth", label: "Growth" },
@@ -48,6 +51,7 @@ export const memeCategories: Category[] = [
   { id: "meme-contests", label: "Contests" },
   { id: "meme-culture", label: "Culture" },
   { id: "meme-listings", label: "Listings" },
+  { id: "meme-safety", label: "Safety" },
   { id: "meme-token", label: "Token" },
 ];
 

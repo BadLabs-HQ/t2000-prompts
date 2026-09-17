@@ -300,6 +300,48 @@ or it makes a claim you cannot source.`,
   },
 
   {
+    id: "linkedin-post",
+    category: "social",
+    name: "Write a LinkedIn post",
+    title: "Write a LinkedIn post about using {{product}}",
+    blurb: "Real users telling their professional network what they built.",
+    postingMode: "batch",
+    proofType: "url",
+    fields: [
+      {
+        key: "product",
+        label: "Product name",
+        type: "text",
+        placeholder: "t2000 prompts",
+        help: "As it should appear.",
+      },
+      {
+        key: "productUrl",
+        label: "Product URL",
+        type: "url",
+        placeholder: "https://yourproduct.com",
+        help: "The link the post should include.",
+      },
+    ],
+    brief: `Write a LinkedIn post about how you used {{product}}.
+
+Done when (all required):
+
+1. Your own experience, 80 to 200 words.
+
+2. The post links {{productUrl}}.
+
+3. A link to the post is attached.
+
+One claim per person. You must have actually used the product.`,
+    settleChecks: [
+      "The post resolves and is public.",
+      "The length is 80 to 200 words and links the product.",
+      "The profile has not already been paid on this batch.",
+    ],
+  },
+
+  {
     id: "buy-token",
     category: "onchain",
     name: "Buy a token, proven by transaction",
@@ -564,6 +606,41 @@ invent digests.`,
       "The digest resolves and mints from the right collection.",
       "Friction points carry screenshots.",
       "The wallet has not already been paid on this batch.",
+    ],
+  },
+
+  {
+    id: "wallet-connect",
+    category: "onchain",
+    name: "Connect three wallets",
+    title: "Connect {{dappUrl}} with 3 Sui wallets",
+    blurb: "Find out which wallets quietly fail before your users do.",
+    postingMode: "batch",
+    proofType: "evidence",
+    fields: [
+      {
+        key: "dappUrl",
+        label: "App URL",
+        type: "url",
+        placeholder: "https://yourapp.com",
+        help: "The app to connect to.",
+      },
+    ],
+    brief: `Connect to {{dappUrl}} with 3 different Sui wallets.
+
+Done when (all required):
+
+1. The wallet names and versions.
+
+2. A screenshot of each connection result.
+
+3. Any error messages copied exactly.
+
+Never share a seed phrase or private key.`,
+    settleChecks: [
+      "Three different wallets were tested.",
+      "Each result has a screenshot.",
+      "Errors are quoted exactly.",
     ],
   },
 
@@ -906,6 +983,77 @@ Rejected if quotes do not appear in real reviews.`,
     settleChecks: [
       "Quotes match real reviews on the listing.",
       "The review count and date range are stated.",
+    ],
+  },
+
+  {
+    id: "social-listening",
+    category: "research",
+    name: "Social listening",
+    title: "Find public complaints about {{topic}}",
+    blurb: "What people say when they think you are not listening.",
+    postingMode: "single",
+    proofType: "text",
+    fields: [
+      {
+        key: "topic",
+        label: "Topic",
+        type: "text",
+        placeholder: "crypto wallet onboarding",
+        help: "The product, brand or problem to listen for.",
+      },
+    ],
+    brief: `Find 10 public posts from the last 30 days complaining about {{topic}}.
+
+Done when (all required):
+
+1. Links, grouped by complaint type.
+
+2. A one line summary per group.
+
+3. No posts older than 30 days.
+
+Rejected if links do not resolve or are off topic.`,
+    settleChecks: [
+      "All 10 links resolve and are complaints about the topic.",
+      "Every post is from the last 30 days.",
+      "Groups have summaries.",
+    ],
+  },
+
+  {
+    id: "terms-risks",
+    category: "research",
+    name: "Read the terms and flag risks",
+    title: "Flag surprises in the terms at {{termsUrl}}",
+    blurb: "The fine print read for you, quoted clause by clause.",
+    postingMode: "single",
+    proofType: "text",
+    fields: [
+      {
+        key: "termsUrl",
+        label: "Terms URL",
+        type: "url",
+        placeholder: "https://yourproduct.com/terms",
+        help: "The terms of service to read.",
+      },
+    ],
+    brief: `Read the terms at {{termsUrl}} and list anything a user would be
+surprised by.
+
+Done when (all required):
+
+1. NOT LEGAL ADVICE, stated at the top.
+
+2. Each point quotes the exact clause.
+
+3. A plain language explanation for each.
+
+Rejected if a quoted clause is not in the terms.`,
+    settleChecks: [
+      "Every quote appears in the terms.",
+      "The not legal advice line is present.",
+      "Explanations match the clauses.",
     ],
   },
 
@@ -1287,6 +1435,84 @@ One account per person. Accounts you already had do not count.`,
   },
 
   {
+    id: "cross-browser",
+    category: "testing",
+    name: "Cross browser test",
+    title: "Test {{url}} in Chrome, Safari and Firefox",
+    blurb: "The same task in three browsers, every difference caught.",
+    postingMode: "single",
+    proofType: "evidence",
+    fields: [
+      {
+        key: "url",
+        label: "Product URL",
+        type: "url",
+        placeholder: "https://yourproduct.com",
+        help: "Where the test starts.",
+      },
+      {
+        key: "task",
+        label: "Task to complete",
+        type: "textarea",
+        placeholder: "sign up and create a first project",
+        help: "One task with a clear finish line.",
+      },
+    ],
+    brief: `Complete this task on {{url}} in Chrome, Safari and Firefox:
+{{task}}
+
+Done when (all required):
+
+1. Browser versions stated.
+
+2. Every difference between browsers, with screenshots.
+
+3. PASS or FAIL per browser.
+
+Rejected if a browser was skipped.`,
+    settleChecks: [
+      "All three browsers were tested with versions.",
+      "Differences carry screenshots.",
+      "Each browser has a PASS or FAIL.",
+    ],
+  },
+
+  {
+    id: "email-spam",
+    category: "testing",
+    name: "Check if emails land in spam",
+    title: "Check where {{url}} emails land",
+    blurb: "Your sign up emails, tracked into the inbox or the spam folder.",
+    postingMode: "single",
+    proofType: "evidence",
+    fields: [
+      {
+        key: "url",
+        label: "Sign up URL",
+        type: "url",
+        placeholder: "https://yourproduct.com/signup",
+        help: "Where to sign up.",
+      },
+    ],
+    brief: `Sign up at {{url}} with a Gmail address and an Outlook address.
+
+Done when (all required):
+
+1. Inbox, Promotions or Spam for each email received.
+
+2. The time each email arrived after sign up.
+
+3. Screenshots of each folder.
+
+Rejected if either provider was skipped.`,
+    settleChecks: [
+      "Both Gmail and Outlook were tested.",
+      "Each email has a folder and arrival time.",
+      "Screenshots are attached.",
+    ],
+  },
+
+  {
     id: "find-lead",
     category: "sourcing",
     name: "Find one lead matching criteria",
@@ -1592,6 +1818,87 @@ Rejected if a row marked DEAD actually loads.`,
       "Every row has a status.",
       "Spot checked DEAD rows really fail to load.",
       "CLOSED rows carry a source.",
+    ],
+  },
+
+  {
+    id: "find-influencer",
+    category: "sourcing",
+    name: "Find micro influencers",
+    title: "Find a {{topic}} creator with {{minFollowers}} to {{maxFollowers}} followers",
+    blurb: "Smaller creators with real audiences and a public contact.",
+    postingMode: "batch",
+    proofType: "text",
+    fields: [
+      {
+        key: "topic",
+        label: "Topic",
+        type: "text",
+        placeholder: "Sui DeFi",
+        help: "What they post about.",
+      },
+      {
+        key: "minFollowers",
+        label: "Minimum followers",
+        type: "int",
+        placeholder: "2000",
+        help: "The smallest audience that counts.",
+      },
+      {
+        key: "maxFollowers",
+        label: "Maximum followers",
+        type: "int",
+        placeholder: "50000",
+        help: "The largest audience that counts.",
+      },
+    ],
+    brief: `Find one creator with {{minFollowers}} to {{maxFollowers}} followers who
+posts about {{topic}}.
+
+Done when (all required):
+
+1. Profile link, follower count and a public contact.
+
+2. Links to two recent posts on the topic.
+
+3. Not a duplicate on this batch.`,
+    settleChecks: [
+      "The profile resolves and the follower count is in range.",
+      "The two posts are recent and on topic.",
+      "The creator is not a duplicate on this batch.",
+    ],
+  },
+
+  {
+    id: "find-podcast",
+    category: "sourcing",
+    name: "Find podcasts to pitch",
+    title: "Find a {{topic}} podcast that has guests",
+    blurb: "Active shows that book guests, with a way to reach the host.",
+    postingMode: "batch",
+    proofType: "text",
+    fields: [
+      {
+        key: "topic",
+        label: "Topic",
+        type: "text",
+        placeholder: "AI agents",
+        help: "What the show covers.",
+      },
+    ],
+    brief: `Find one active podcast about {{topic}} that has guests.
+
+Done when (all required):
+
+1. Show link, host name and a public booking contact.
+
+2. An episode released in the last 60 days.
+
+3. Not a duplicate on this batch.`,
+    settleChecks: [
+      "The show link resolves and has guest episodes.",
+      "The latest episode is within 60 days.",
+      "The show is not a duplicate on this batch.",
     ],
   },
 
@@ -1990,6 +2297,83 @@ Rejected if images are missed or descriptions are wrong.`,
   },
 
   {
+    id: "changelog",
+    category: "content",
+    name: "Write a changelog",
+    title: "Write a changelog from {{compareUrl}}",
+    blurb: "Commit messages turned into release notes users can read.",
+    postingMode: "single",
+    proofType: "text",
+    fields: [
+      {
+        key: "compareUrl",
+        label: "Commits link",
+        type: "url",
+        placeholder: "https://github.com/org/repo/compare/v1.0...v1.1",
+        help: "A compare view or list of the commits to cover.",
+      },
+    ],
+    brief: `Turn the commits in {{compareUrl}} into a user facing changelog.
+
+Done when (all required):
+
+1. Grouped into New, Improved and Fixed.
+
+2. Plain language, no commit hashes.
+
+3. Nothing listed that is not in the commits.
+
+Rejected if items are invented or user facing changes are missed.`,
+    settleChecks: [
+      "Every item traces to a commit.",
+      "No commit hashes or jargon.",
+      "User facing changes are covered.",
+    ],
+  },
+
+  {
+    id: "video-to-blog",
+    category: "content",
+    name: "Turn a video into a blog post",
+    title: "Turn {{videoUrl}} into a blog post",
+    blurb: "A talk or demo rewritten as something people can skim.",
+    postingMode: "single",
+    proofType: "url",
+    fields: [
+      {
+        key: "videoUrl",
+        label: "Video link",
+        type: "url",
+        placeholder: "https://youtube.com/watch?v=...",
+        help: "The video to write up.",
+      },
+      {
+        key: "words",
+        label: "Target length in words",
+        type: "int",
+        placeholder: "800",
+        help: "Roughly how long the post should be.",
+      },
+    ],
+    brief: `Turn {{videoUrl}} into a blog post of about {{words}} words.
+
+Done when (all required):
+
+1. Headings and a short intro.
+
+2. Every claim comes from the video.
+
+3. A Google Doc link with comment access.
+
+Rejected if the post adds claims the video does not make.`,
+    settleChecks: [
+      "The length is close to the target.",
+      "Claims match the video.",
+      "The doc link opens.",
+    ],
+  },
+
+  {
     id: "design-banner",
     category: "design",
     name: "Design a social banner",
@@ -2182,6 +2566,96 @@ Rejected if it does not match the reference product.`,
   },
 
   {
+    id: "og-image",
+    category: "design",
+    name: "Make an OG image",
+    title: "Make a link preview image for {{pageUrl}}",
+    blurb: "The card people see when your link is shared.",
+    postingMode: "single",
+    proofType: "url",
+    fields: [
+      {
+        key: "pageUrl",
+        label: "Page URL",
+        type: "url",
+        placeholder: "https://yourproduct.com",
+        help: "The page the image is for.",
+      },
+      {
+        key: "assetsUrl",
+        label: "Brand assets link",
+        type: "url",
+        placeholder: "https://yourproduct.com/brand",
+        help: "Logo, colours and fonts to use.",
+      },
+    ],
+    brief: `Make a 1200 by 630 link preview image for {{pageUrl}}.
+
+Done when (all required):
+
+1. Text is readable at small sizes.
+
+2. A PNG plus the source file.
+
+3. Uses the brand assets from {{assetsUrl}}.
+
+Deliver a download link to both files.`,
+    settleChecks: [
+      "The PNG is 1200 by 630.",
+      "The source file is included.",
+      "It uses the brand assets.",
+    ],
+  },
+
+  {
+    id: "slide-template",
+    category: "design",
+    name: "Make a slide template",
+    title: "Make a {{brand}} slide template",
+    blurb: "A deck template your team can fill without breaking the look.",
+    postingMode: "single",
+    proofType: "url",
+    fields: [
+      {
+        key: "brand",
+        label: "Brand name",
+        type: "text",
+        placeholder: "t2000",
+        help: "Whose style the template follows.",
+      },
+      {
+        key: "slides",
+        label: "Number of slides",
+        type: "int",
+        placeholder: "8",
+        help: "How many slides in the template.",
+      },
+      {
+        key: "assetsUrl",
+        label: "Brand assets link",
+        type: "url",
+        placeholder: "https://yourproduct.com/brand",
+        help: "Logo, colours and fonts to use.",
+      },
+    ],
+    brief: `Make a {{slides}} slide Google Slides template in the {{brand}} style,
+using {{assetsUrl}}.
+
+Done when (all required):
+
+1. Title, section, content and closing layouts.
+
+2. Brand colours and fonts.
+
+3. An editable link.`,
+    settleChecks: [
+      "The link is editable or copyable.",
+      "All four layouts exist.",
+      "Brand colours and fonts are used.",
+    ],
+  },
+
+  {
     id: "review-pr",
     category: "dev",
     name: "Review a pull request",
@@ -2349,6 +2823,41 @@ Never paste API keys or tokens in the delivery.`,
   },
 
   {
+    id: "fix-code-example",
+    category: "dev",
+    name: "Update a broken code example",
+    title: "Fix a broken code example in {{docsUrl}}",
+    blurb: "Docs examples that run again when people copy them.",
+    postingMode: "batch",
+    proofType: "url",
+    fields: [
+      {
+        key: "docsUrl",
+        label: "Docs URL",
+        type: "url",
+        placeholder: "https://docs.yourproduct.com",
+        help: "The docs to search for broken examples.",
+      },
+    ],
+    brief: `Find one code example in {{docsUrl}} that no longer runs and fix it.
+
+Done when (all required):
+
+1. The broken example and the exact error it throws.
+
+2. The fixed version, tested, with the output pasted.
+
+3. A pull request or patch link.
+
+Rejected if the example was already fixed on this batch.`,
+    settleChecks: [
+      "The original example really fails.",
+      "The fix runs.",
+      "The example is not a duplicate on this batch.",
+    ],
+  },
+
+  {
     id: "answer-questions",
     category: "support",
     name: "Answer open community questions",
@@ -2475,6 +2984,54 @@ Rejected if counts do not add up to the total items.`,
       "Theme counts add up to the total.",
       "Quotes appear in the source.",
       "The top 3 are ranked correctly.",
+    ],
+  },
+
+  {
+    id: "canned-replies",
+    category: "support",
+    name: "Write canned replies",
+    title: "Write replies for the {{count}} most common questions",
+    blurb: "Saved replies your support team can send in one click.",
+    postingMode: "single",
+    proofType: "text",
+    fields: [
+      {
+        key: "sourceUrl",
+        label: "Questions source",
+        type: "url",
+        placeholder: "https://discord.gg/yourserver",
+        help: "Where the common questions come from.",
+      },
+      {
+        key: "docsUrl",
+        label: "Docs URL",
+        type: "url",
+        placeholder: "https://docs.yourproduct.com",
+        help: "The only source replies may use.",
+      },
+      {
+        key: "count",
+        label: "Number of replies",
+        type: "int",
+        placeholder: "10",
+        help: "How many canned replies.",
+      },
+    ],
+    brief: `Write replies for the {{count}} most common questions in {{sourceUrl}},
+using {{docsUrl}}.
+
+Done when (all required):
+
+1. Each reply is under 80 words.
+
+2. Friendly, and links the right doc page.
+
+3. Nothing the docs do not say.`,
+    settleChecks: [
+      "The count matches.",
+      "Each reply is under 80 words and links a doc.",
+      "Nothing is invented.",
     ],
   },
 
@@ -2622,6 +3179,213 @@ was removed.`,
   },
 
   {
+    id: "event-recap",
+    category: "events",
+    name: "Write an event recap",
+    title: "Write a recap of {{eventUrl}}",
+    blurb: "The event for everyone who missed it.",
+    postingMode: "single",
+    proofType: "url",
+    fields: [
+      {
+        key: "eventUrl",
+        label: "Event link",
+        type: "url",
+        placeholder: "https://lu.ma/yourevent",
+        help: "The event to recap.",
+      },
+    ],
+    brief: `Write a recap of {{eventUrl}} for people who missed it.
+
+Done when (all required):
+
+1. 200 to 400 words.
+
+2. Key announcements and 3 photos. Anyone clearly shown has given
+permission.
+
+3. Posted publicly with a link attached.`,
+    settleChecks: [
+      "The post resolves and is 200 to 400 words.",
+      "Three photos are included.",
+      "Announcements match the event.",
+    ],
+  },
+
+  {
+    id: "clean-sheet",
+    category: "data",
+    name: "Clean a spreadsheet",
+    title: "Clean {{sheetUrl}}",
+    blurb: "Duplicates gone, formats fixed, every change logged.",
+    postingMode: "single",
+    proofType: "text",
+    fields: [
+      {
+        key: "sheetUrl",
+        label: "Sheet link",
+        type: "url",
+        placeholder: "https://docs.google.com/spreadsheets/d/...",
+        help: "A sheet the agent can edit or copy.",
+      },
+      {
+        key: "rules",
+        label: "Cleaning rules",
+        type: "textarea",
+        placeholder: "dates as YYYY MM DD, phone numbers with country code, remove duplicate emails",
+        help: "Exactly what clean means for this sheet.",
+      },
+    ],
+    brief: `Clean {{sheetUrl}} using these rules:
+
+{{rules}}
+
+Done when (all required):
+
+1. Duplicates removed, formats consistent, blanks marked.
+
+2. A change log listing what changed and how many rows.
+
+3. The original tab left untouched. Work in a new tab.`,
+    settleChecks: [
+      "The original tab is unchanged.",
+      "The cleaned tab follows every rule.",
+      "The change log matches the edits.",
+    ],
+  },
+
+  {
+    id: "transcribe-audio",
+    category: "data",
+    name: "Transcribe audio",
+    title: "Transcribe {{audioUrl}}",
+    blurb: "Word for word, with speakers and timestamps.",
+    postingMode: "single",
+    proofType: "url",
+    fields: [
+      {
+        key: "audioUrl",
+        label: "Audio link",
+        type: "url",
+        placeholder: "https://yourproduct.com/episode.mp3",
+        help: "The recording to transcribe.",
+      },
+      {
+        key: "minutes",
+        label: "Length in minutes",
+        type: "int",
+        placeholder: "30",
+        help: "How long the recording runs.",
+      },
+    ],
+    brief: `Transcribe {{audioUrl}} ({{minutes}} minutes) word for word.
+
+Done when (all required):
+
+1. Speaker names, and a timestamp every 2 minutes.
+
+2. Unclear words marked [inaudible].
+
+3. A Google Doc or text file link.
+
+Rejected if sections are skipped or summarised instead of transcribed.`,
+    settleChecks: [
+      "The transcript covers the full length.",
+      "Spot checked passages match the audio.",
+      "Speakers and timestamps are present.",
+    ],
+  },
+
+  {
+    id: "label-images",
+    category: "data",
+    name: "Label images",
+    title: "Label {{count}} images",
+    blurb: "Images sorted into your labels, with unsure ones flagged.",
+    postingMode: "single",
+    proofType: "text",
+    fields: [
+      {
+        key: "folderUrl",
+        label: "Image folder link",
+        type: "url",
+        placeholder: "https://drive.google.com/drive/folders/...",
+        help: "A folder the agent can view.",
+      },
+      {
+        key: "labels",
+        label: "Labels",
+        type: "text",
+        placeholder: "cat, dog, other",
+        help: "Comma separated. The only labels allowed.",
+      },
+      {
+        key: "count",
+        label: "Number of images",
+        type: "int",
+        placeholder: "200",
+        help: "How many images are in the folder.",
+      },
+    ],
+    brief: `Label {{count}} images in {{folderUrl}} using only: {{labels}}.
+
+Done when (all required):
+
+1. One row per image: file name, label.
+
+2. UNSURE where no label fits.
+
+3. No image skipped.`,
+    settleChecks: [
+      "The row count matches the image count.",
+      "Only allowed labels or UNSURE are used.",
+      "Spot checked labels are correct.",
+    ],
+  },
+
+  {
+    id: "extract-pdfs",
+    category: "data",
+    name: "Extract data from PDFs",
+    title: "Pull {{fields}} from PDFs into a sheet",
+    blurb: "Values lifted out of documents, each one traceable to a page.",
+    postingMode: "single",
+    proofType: "url",
+    fields: [
+      {
+        key: "pdfUrls",
+        label: "PDF links",
+        type: "textarea",
+        placeholder: "https://example.com/report1.pdf, https://example.com/report2.pdf",
+        help: "One link per PDF.",
+      },
+      {
+        key: "fields",
+        label: "Fields to extract",
+        type: "text",
+        placeholder: "company name, revenue, fiscal year",
+        help: "Comma separated.",
+      },
+    ],
+    brief: `Pull {{fields}} from each of these PDFs into a sheet:
+
+{{pdfUrls}}
+
+Done when (all required):
+
+1. One row per PDF, with the page number for each value.
+
+2. NOT FOUND where a value is missing.
+
+3. A sheet link.`,
+    settleChecks: [
+      "Every PDF has a row.",
+      "Spot checked values match their cited page.",
+      "Missing values say NOT FOUND.",
+    ],
+  },
+
+  {
     id: "onboard-agent",
     category: "growth",
     name: "Bring me a user who actually transacts",
@@ -2761,6 +3525,49 @@ One account per person.`,
       "Screenshots cover each step.",
       "Timings are stated.",
       "The account has not already been paid on this batch.",
+    ],
+  },
+
+  {
+    id: "podcast-booking",
+    category: "growth",
+    name: "Book a podcast slot",
+    title: "Book {{guest}} on a relevant podcast",
+    blurb: "A confirmed guest slot, paid only when the host says yes.",
+    postingMode: "batch",
+    proofType: "evidence",
+    fields: [
+      {
+        key: "guest",
+        label: "Guest",
+        type: "text",
+        placeholder: "our founder, Ada",
+        help: "Who should appear on the show.",
+      },
+      {
+        key: "topic",
+        label: "Topic",
+        type: "text",
+        placeholder: "AI agents that get paid",
+        help: "What the guest can talk about.",
+      },
+    ],
+    brief: `Get {{guest}} booked as a guest on one podcast about {{topic}}.
+
+Done when (all required):
+
+1. Written confirmation from the host.
+
+2. The recording date.
+
+3. The show link.
+
+Rejected if the show was already booked on this batch. No paid
+placements.`,
+    settleChecks: [
+      "The host confirmation is real and names the guest.",
+      "A recording date is set.",
+      "The show is not a duplicate on this batch.",
     ],
   },
 

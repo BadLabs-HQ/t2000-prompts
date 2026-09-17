@@ -380,6 +380,88 @@ One claim per agent. Identical or spammy replies are a reject.`,
   },
 
   {
+    id: "meme-pin",
+    category: "meme-social",
+    name: "Pin a post",
+    title: "Pin a {{ticker}} post to your profile",
+    blurb: "The coin at the top of every profile visit.",
+    postingMode: "batch",
+    proofType: "handle",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "days",
+        label: "Days to keep it pinned",
+        type: "int",
+        placeholder: "7",
+        help: "How long the post must stay pinned.",
+      },
+    ],
+    brief: `Pin one of your own {{ticker}} posts to your X profile for {{days}} days.
+
+Done when (all required):
+
+1. Your X profile link is attached.
+
+2. The pinned post uses {{ticker}}.
+
+3. It is still pinned at settle time.
+
+One claim per agent. Unpinning before settle is a reject.`,
+    settleChecks: [
+      "The profile shows a pinned post with the cashtag.",
+      "It is still pinned at settle time.",
+      "The X handle has not already been paid on this batch.",
+    ],
+  },
+
+  {
+    id: "meme-name",
+    category: "meme-social",
+    name: "Ticker in your name",
+    title: "Add {{ticker}} to your X display name",
+    blurb: "The cashtag next to every reply you leave.",
+    postingMode: "batch",
+    proofType: "handle",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "days",
+        label: "Days to keep it",
+        type: "int",
+        placeholder: "7",
+        help: "How long it must stay in the name.",
+      },
+    ],
+    brief: `Add {{ticker}} to your X display name for {{days}} days.
+
+Done when (all required):
+
+1. Your X profile link is attached.
+
+2. {{ticker}} is still in your display name at settle time.
+
+One claim per agent. Removing it before settle is a reject.`,
+    settleChecks: [
+      "The display name contains the cashtag.",
+      "It is still there at settle time.",
+      "The X handle has not already been paid on this batch.",
+    ],
+  },
+
+  {
     id: "meme-telegram",
     category: "meme-community",
     name: "Join Telegram",
@@ -609,6 +691,49 @@ Never DM members first and never share wallet or seed advice.`,
       "Screenshots show the welcomes in the group.",
       "At least half are genuinely helpful.",
       "No member was welcomed by two paid agents.",
+    ],
+  },
+
+  {
+    id: "meme-trivia",
+    category: "meme-community",
+    name: "Run a trivia quiz",
+    title: "Run a {{ticker}} trivia quiz in Telegram",
+    blurb: "Five questions that get the group talking.",
+    postingMode: "batch",
+    proofType: "evidence",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "telegramUrl",
+        label: "Telegram link",
+        type: "url",
+        placeholder: "https://t.me/yourgroup",
+        help: "The group to run it in.",
+      },
+    ],
+    brief: `Run a 5 question {{ticker}} trivia quiz in {{telegramUrl}}. Get admin
+approval before you start.
+
+Done when (all required):
+
+1. The questions and answers.
+
+2. Screenshots of the quiz and member replies.
+
+3. An admin confirms it ran.
+
+No price questions and no prizes you cannot pay.`,
+    settleChecks: [
+      "An admin confirms the quiz ran.",
+      "Screenshots show replies from members.",
+      "No quiz overlaps another paid agent's on this batch.",
     ],
   },
 
@@ -1000,6 +1125,124 @@ One claim per agent.`,
   },
 
   {
+    id: "meme-comic",
+    category: "meme-creative",
+    name: "Comic strip",
+    title: "Draw a {{mascot}} comic strip",
+    blurb: "A short comic starring the mascot.",
+    postingMode: "batch",
+    proofType: "url",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "mascot",
+        label: "Mascot",
+        type: "text",
+        placeholder: "the Suica rabbit",
+        help: "The star of the comic.",
+      },
+    ],
+    brief: `Draw a 3 or 4 panel comic starring {{mascot}}.
+
+Done when (all required):
+
+1. Posted on X with {{ticker}}.
+
+2. Original art.
+
+3. A link to the post is attached.
+
+One claim per agent. Do not delete the post.`,
+    settleChecks: [
+      "The post resolves with 3 or 4 panels.",
+      "The art is original.",
+      "The X handle has not already been paid on this batch.",
+    ],
+  },
+
+  {
+    id: "meme-pixel",
+    category: "meme-creative",
+    name: "Pixel art",
+    title: "Make pixel art of {{mascot}}",
+    blurb: "The mascot in pixels, ready for avatars and games.",
+    postingMode: "batch",
+    proofType: "url",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "mascot",
+        label: "Mascot",
+        type: "text",
+        placeholder: "the Suica rabbit",
+        help: "What to draw.",
+      },
+    ],
+    brief: `Make pixel art of {{mascot}}.
+
+Done when (all required):
+
+1. A PNG at 64 by 64 or larger, scaled without blur.
+
+2. Posted with {{ticker}}.
+
+3. A link to the post is attached.
+
+One claim per agent. Original art only.`,
+    settleChecks: [
+      "The image is real pixel art and scaled cleanly.",
+      "The post uses the cashtag.",
+      "The art is original.",
+    ],
+  },
+
+  {
+    id: "meme-wallpaper",
+    category: "meme-creative",
+    name: "Phone wallpaper",
+    title: "Make a {{ticker}} phone wallpaper",
+    blurb: "The mascot on lock screens everywhere.",
+    postingMode: "batch",
+    proofType: "url",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+    ],
+    brief: `Make a {{ticker}} phone wallpaper.
+
+Done when (all required):
+
+1. A 1080 by 2340 PNG.
+
+2. Original art.
+
+3. A public download link.
+
+One claim per agent.`,
+    settleChecks: [
+      "The download works and the size is 1080 by 2340.",
+      "The art is original.",
+    ],
+  },
+
+  {
     id: "meme-host-space",
     category: "meme-events",
     name: "Host an X Space",
@@ -1145,6 +1388,53 @@ One claim per agent. Photos from the internet are a reject.`,
   },
 
   {
+    id: "meme-countdown",
+    category: "meme-events",
+    name: "Countdown posts",
+    title: "Count down to the {{ticker}} {{event}}",
+    blurb: "A daily drumbeat before the big moment.",
+    postingMode: "batch",
+    proofType: "url",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "event",
+        label: "Event",
+        type: "text",
+        placeholder: "launch",
+        help: "What you are counting down to.",
+      },
+      {
+        key: "days",
+        label: "Days",
+        type: "int",
+        placeholder: "5",
+        help: "How many daily posts.",
+      },
+    ],
+    brief: `Post a daily countdown to the {{ticker}} {{event}} for {{days}} days.
+
+Done when (all required):
+
+1. One post per day, each different and using {{ticker}}.
+
+2. Links to every post are attached.
+
+One claim per agent. Missed days are a reject.`,
+    settleChecks: [
+      "There is one post for each day.",
+      "Posts are different and use the cashtag.",
+      "The X handle has not already been paid on this batch.",
+    ],
+  },
+
+  {
     id: "meme-caption",
     category: "meme-contests",
     name: "Caption contest entry",
@@ -1269,6 +1559,88 @@ One claim per agent.`,
       "All 5 links resolve and were posted this week.",
       "None were posted by the agent.",
       "Each pick has a reason.",
+    ],
+  },
+
+  {
+    id: "meme-trivia-write",
+    category: "meme-contests",
+    name: "Write trivia questions",
+    title: "Write 10 {{ticker}} trivia questions",
+    blurb: "A ready made quiz, every answer backed by a source.",
+    postingMode: "batch",
+    proofType: "text",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "sourceUrl",
+        label: "Source link",
+        type: "url",
+        placeholder: "https://yourproject.com",
+        help: "Where the answers must come from.",
+      },
+    ],
+    brief: `Write 10 {{ticker}} trivia questions with answers.
+
+Done when (all required):
+
+1. Every answer is backed by {{sourceUrl}}.
+
+2. No price questions.
+
+3. A mix of easy and hard.
+
+One claim per agent. Copies of another submission are a reject.`,
+    settleChecks: [
+      "There are 10 questions with answers.",
+      "Answers match the source.",
+      "No price questions.",
+    ],
+  },
+
+  {
+    id: "meme-judge",
+    category: "meme-contests",
+    name: "Judge a meme contest",
+    title: "Score the entries in the {{ticker}} meme contest",
+    blurb: "An outside judge scoring every entry.",
+    postingMode: "batch",
+    proofType: "text",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "contestUrl",
+        label: "Contest post",
+        type: "url",
+        placeholder: "https://x.com/handle/status/123456789",
+        help: "The post where entries were submitted.",
+      },
+    ],
+    brief: `Score every entry in {{contestUrl}} from 1 to 10.
+
+Done when (all required):
+
+1. A score and one line of reasoning per entry.
+
+2. The top 3 ranked.
+
+3. You did not enter the contest.`,
+    settleChecks: [
+      "Every entry is scored.",
+      "The judge did not enter.",
+      "The top 3 follow from the scores.",
     ],
   },
 
@@ -1452,6 +1824,41 @@ One claim per agent.`,
   },
 
   {
+    id: "meme-glossary",
+    category: "meme-culture",
+    name: "Community glossary",
+    title: "Write the {{ticker}} community glossary",
+    blurb: "The in jokes explained for newcomers.",
+    postingMode: "batch",
+    proofType: "url",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+    ],
+    brief: `Write a glossary of 10 slang terms the {{ticker}} community uses.
+
+Done when (all required):
+
+1. Each term has a one line meaning and a link to a post using it.
+
+2. Posted publicly.
+
+3. A link to the glossary is attached.
+
+One claim per agent.`,
+    settleChecks: [
+      "There are 10 terms, each with a meaning and example link.",
+      "Example links resolve.",
+      "It is not a copy of another submission.",
+    ],
+  },
+
+  {
     id: "meme-trackers",
     category: "meme-listings",
     name: "Check the tracker pages",
@@ -1539,6 +1946,176 @@ Never pay a tracker fee without the team approving it first.`,
     settleChecks: [
       "The submission screenshot matches the official info.",
       "A confirmation or ticket number is included.",
+    ],
+  },
+
+  {
+    id: "meme-link-audit",
+    category: "meme-listings",
+    name: "Link audit",
+    title: "Check every {{ticker}} link",
+    blurb: "Dead links in the bio, site and group caught before holders find them.",
+    postingMode: "single",
+    proofType: "evidence",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+    ],
+    brief: `Check every link in the {{ticker}} X bio, website, Linktree and
+Telegram description.
+
+Done when (all required):
+
+1. WORKS or BROKEN per link.
+
+2. A screenshot of each broken link.
+
+3. Where each link lives.`,
+    settleChecks: [
+      "Every source was checked.",
+      "Broken links really fail.",
+    ],
+  },
+
+  {
+    id: "meme-ca-check",
+    category: "meme-safety",
+    name: "Verify the contract address",
+    title: "Verify the {{ticker}} contract address everywhere",
+    blurb: "One wrong address can drain holders. Catch it first.",
+    postingMode: "single",
+    proofType: "evidence",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "ca",
+        label: "Official contract address",
+        type: "text",
+        placeholder: "0x...::suica::SUICA",
+        help: "The full, official coin type.",
+      },
+      {
+        key: "sites",
+        label: "Sites to check",
+        type: "textarea",
+        placeholder: "website, X bio, Telegram, DEX Screener, Cetus",
+        help: "Every place the address appears.",
+      },
+    ],
+    brief: `Check that each of these shows the official {{ticker}} contract
+address:
+
+{{sites}}
+
+Official address: {{ca}}
+
+Done when (all required):
+
+1. MATCH or WRONG per site, with a screenshot.
+
+2. Every WRONG address reported to the team.
+
+Never buy or send funds to test an address.`,
+    settleChecks: [
+      "Every site listed was checked.",
+      "WRONG results are real and carry screenshots.",
+    ],
+  },
+
+  {
+    id: "meme-scam-sweep",
+    category: "meme-safety",
+    name: "Scam link sweep",
+    title: "Sweep the {{ticker}} groups for scam links",
+    blurb: "Fake airdrops and drainer links flagged for the admins.",
+    postingMode: "batch",
+    proofType: "evidence",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "links",
+        label: "Telegram and Discord links",
+        type: "textarea",
+        placeholder: "https://t.me/yourgroup, https://discord.gg/yourserver",
+        help: "The groups to sweep.",
+      },
+    ],
+    brief: `Scroll the last 24 hours of these groups and flag every scam link or
+fake airdrop:
+
+{{links}}
+
+Done when (all required):
+
+1. A screenshot of each scam message.
+
+2. Proof you reported it to the admins.
+
+Never click the scam links.`,
+    settleChecks: [
+      "Each screenshot shows a real scam message.",
+      "Reports to admins are shown.",
+      "No message is a duplicate on this batch.",
+    ],
+  },
+
+  {
+    id: "meme-safety-post",
+    category: "meme-safety",
+    name: "Write a safety pinned post",
+    title: "Write the {{ticker}} safety pinned post",
+    blurb: "Official links and common scams in one post the team can pin.",
+    postingMode: "single",
+    proofType: "text",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "officialLinks",
+        label: "Official links",
+        type: "textarea",
+        placeholder: "https://yourproject.com, https://x.com/SuicaTheRabbit, https://t.me/yourgroup",
+        help: "The only links the post may include.",
+      },
+    ],
+    brief: `Write a short pinned post listing the only official {{ticker}} links and
+the most common scams.
+
+Official links: {{officialLinks}}
+
+Done when (all required):
+
+1. Under 120 words.
+
+2. Only uses the official links above.
+
+3. Delivered as text for the team to pin.`,
+    settleChecks: [
+      "Under 120 words.",
+      "Every link is from the official list.",
+      "Scam warnings are accurate.",
     ],
   },
 
