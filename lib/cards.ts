@@ -474,6 +474,64 @@ match your wallet, or the name was already submitted by someone else.`,
   },
 
   {
+    id: "stake-report",
+    category: "onchain",
+    name: "Stake and report the flow",
+    title: "Stake {{token}} and report the flow",
+    blurb: "A real stake, plus every step that made someone hesitate.",
+    postingMode: "batch",
+    proofType: "digest",
+    fields: [
+      {
+        key: "token",
+        label: "Token",
+        type: "text",
+        placeholder: "SUI",
+        help: "The token to stake.",
+      },
+      {
+        key: "stakingUrl",
+        label: "Staking page",
+        type: "url",
+        placeholder: "https://yourproduct.com/stake",
+        help: "The exact page where people stake.",
+      },
+      {
+        key: "amount",
+        label: "Amount to stake",
+        type: "text",
+        placeholder: "1",
+        help: "The token amount each person stakes. Paid by them, separate from the bounty.",
+      },
+    ],
+    brief: `Stake {{amount}} {{token}} at {{stakingUrl}} and report the experience.
+
+Done when (all required):
+
+1. The stake transaction digest plus a Suiscan link.
+
+2. Every step that was confusing or slow, with a screenshot.
+
+3. The APY or reward rate shown at the time you staked.
+
+Deliver exactly:
+
+1. DIGEST: the transaction digest
+2. SUISCAN: the link
+3. FRICTION: one line per issue, with its screenshot
+4. APY: the rate shown
+
+Rejected if the digest does not stake at least {{amount}} {{token}} on
+the linked product. Do not invent digests.`,
+    settleChecks: [
+      "The digest resolves and stakes at least the amount asked.",
+      "The stake went through the linked product.",
+      "Friction points carry screenshots.",
+      "The digest has not already been paid on this batch.",
+    ],
+  },
+
+  {
     id: "research-question",
     category: "research",
     name: "Answer a question with sources",
@@ -630,6 +688,147 @@ without a source.`,
       "Spot check that the places are currently open.",
       "Confirm the distances are plausible for the stated location.",
       "Every entry carries a working source link.",
+    ],
+  },
+
+  {
+    id: "fact-check",
+    category: "research",
+    name: "Fact check a claim",
+    title: "Fact check: {{claim}}",
+    blurb: "A verdict with sources, not a vibe.",
+    postingMode: "batch",
+    proofType: "text",
+    fields: [
+      {
+        key: "claim",
+        label: "The claim",
+        type: "textarea",
+        placeholder: "Sui processed more transactions than Solana last week.",
+        help: "One claim, written exactly as it was made.",
+      },
+      {
+        key: "claimUrl",
+        label: "Where it was made",
+        type: "url",
+        placeholder: "https://x.com/handle/status/123456789",
+        help: "A link to where the claim appeared.",
+      },
+    ],
+    brief: `Check whether this claim is true:
+
+{{claim}}
+
+It was made here: {{claimUrl}}
+
+Done when (all required):
+
+1. A verdict: TRUE, FALSE or UNCLEAR.
+
+2. At least two independent sources, linked.
+
+3. One or two sentences on why.
+
+Deliver exactly:
+
+1. VERDICT
+2. WHY
+3. SOURCES, one URL per line
+
+Rejected if there are fewer than two sources or the sources do not
+support the verdict.`,
+    settleChecks: [
+      "Every source URL resolves.",
+      "The sources are independent of each other.",
+      "The sources support the verdict given.",
+    ],
+  },
+
+  {
+    id: "summarise-doc",
+    category: "research",
+    name: "Summarise a long document",
+    title: "Summarise {{docUrl}}",
+    blurb: "The whitepaper, read for you, with nothing made up.",
+    postingMode: "single",
+    proofType: "text",
+    fields: [
+      {
+        key: "docUrl",
+        label: "Document URL",
+        type: "url",
+        placeholder: "https://yourproduct.com/whitepaper.pdf",
+        help: "A public link to the document.",
+      },
+      {
+        key: "audience",
+        label: "Who it is for",
+        type: "text",
+        placeholder: "someone new to crypto",
+        help: "The reader the summary should suit.",
+      },
+    ],
+    brief: `Summarise {{docUrl}} for {{audience}}.
+
+Done when (all required):
+
+1. Five to eight bullet points in plain language.
+
+2. Every figure quoted matches the document, with a page or section
+reference.
+
+3. No opinions added.
+
+Rejected if a figure does not match the document or a point is not in
+it.`,
+    settleChecks: [
+      "Every bullet traces back to the document.",
+      "Figures match the cited page or section.",
+      "The bullet count is five to eight.",
+    ],
+  },
+
+  {
+    id: "competitor-pricing",
+    category: "research",
+    name: "Track competitor pricing",
+    title: "Current pricing for {{item}}",
+    blurb: "Every competitor's public price in one table, dated and sourced.",
+    postingMode: "single",
+    proofType: "text",
+    fields: [
+      {
+        key: "competitors",
+        label: "Competitors",
+        type: "textarea",
+        placeholder: "Vercel, Netlify, Render",
+        help: "Comma separated names.",
+      },
+      {
+        key: "item",
+        label: "What to price",
+        type: "text",
+        placeholder: "the cheapest paid plan",
+        help: "The plan or product to compare.",
+      },
+    ],
+    brief: `Find the current public price of {{item}} for each of:
+{{competitors}}
+
+Done when (all required):
+
+1. One row per competitor: plan name, price, billing period, source
+link.
+
+2. The date you checked.
+
+3. NOT PUBLIC where no price is listed.
+
+Rejected if a price does not match its source page.`,
+    settleChecks: [
+      "Every competitor listed has a row.",
+      "Each price matches its source link.",
+      "The check date is present.",
     ],
   },
 
@@ -799,6 +998,177 @@ fewer than {{count}} findings.`,
       "Each finding quotes a real line from a real doc page.",
       "The live behaviour was tested, not assumed.",
       "The count matches what the brief asked for.",
+    ],
+  },
+
+  {
+    id: "link-check",
+    category: "testing",
+    name: "Check every link on a site",
+    title: "Find broken links on {{siteUrl}}",
+    blurb: "Every dead, wrong or redirected link, with where it lives.",
+    postingMode: "single",
+    proofType: "evidence",
+    fields: [
+      {
+        key: "siteUrl",
+        label: "Site URL",
+        type: "url",
+        placeholder: "https://yourproduct.com",
+        help: "The site to crawl.",
+      },
+      {
+        key: "pages",
+        label: "Pages to cover",
+        type: "text",
+        placeholder: "every page in the top nav and footer",
+        help: "Which pages count. Be specific.",
+      },
+    ],
+    brief: `Open every link on {{siteUrl}} across {{pages}}.
+
+Done when (all required):
+
+1. A list of every broken, redirected or wrong link, with the page it
+sits on.
+
+2. A screenshot for each broken link.
+
+3. NONE FOUND if every link works, plus the list of pages you checked.
+
+Rejected if a reported link actually works or pages in scope were
+skipped.`,
+    settleChecks: [
+      "Each reported link is really broken or wrong.",
+      "Every page in scope was checked.",
+      "Screenshots are attached for broken links.",
+    ],
+  },
+
+  {
+    id: "phone-test",
+    category: "testing",
+    name: "Test on a real phone",
+    title: "Test {{productUrl}} on a real phone",
+    blurb: "Your product on actual phones, not a resized desktop window.",
+    postingMode: "batch",
+    proofType: "evidence",
+    fields: [
+      {
+        key: "productUrl",
+        label: "Product URL",
+        type: "url",
+        placeholder: "https://yourproduct.com",
+        help: "Where the test starts.",
+      },
+      {
+        key: "task",
+        label: "Task to complete",
+        type: "textarea",
+        placeholder: "sign up and make a first deposit",
+        help: "One task with a clear finish line.",
+      },
+      {
+        key: "phone",
+        label: "Phone type",
+        type: "select",
+        help: "Which phones count.",
+        options: [
+          { value: "iPhone", label: "iPhone" },
+          { value: "Android phone", label: "Android" },
+          { value: "iPhone or Android phone", label: "Either" },
+        ],
+      },
+    ],
+    brief: `Complete this task on {{productUrl}} using a real {{phone}}:
+{{task}}
+
+Done when (all required):
+
+1. Your phone model and browser or app version.
+
+2. Every step that broke, overlapped or was hard to tap, with a
+screenshot.
+
+3. Whether you finished the task, YES or NO.
+
+Rejected if screenshots come from a desktop browser or emulator.`,
+    settleChecks: [
+      "Screenshots come from a real phone, not a desktop.",
+      "The phone model is stated.",
+      "The phone model has not already been paid on this batch.",
+    ],
+  },
+
+  {
+    id: "accessibility-pass",
+    category: "testing",
+    name: "Accessibility pass",
+    title: "Accessibility check on {{pageUrl}}",
+    blurb: "Keyboard only and screen reader, by someone actually using them.",
+    postingMode: "single",
+    proofType: "evidence",
+    fields: [
+      {
+        key: "pageUrl",
+        label: "Page URL",
+        type: "url",
+        placeholder: "https://yourproduct.com/signup",
+        help: "The page to check.",
+      },
+    ],
+    brief: `Use {{pageUrl}} with only a keyboard, then with a screen reader.
+
+Done when (all required):
+
+1. Every element you could not reach, operate or that read out wrong.
+
+2. The screen reader you used, for example VoiceOver or NVDA.
+
+3. One screenshot or recording per issue.
+
+Rejected if issues are not reproducible or no screen reader was used.`,
+    settleChecks: [
+      "Each issue reproduces.",
+      "A screen reader is named.",
+      "Every issue carries a screenshot or recording.",
+    ],
+  },
+
+  {
+    id: "break-form",
+    category: "testing",
+    name: "Break a form",
+    title: "Break the form at {{formUrl}}",
+    blurb: "Odd inputs thrown at your form before real users do it.",
+    postingMode: "single",
+    proofType: "evidence",
+    fields: [
+      {
+        key: "formUrl",
+        label: "Form URL",
+        type: "url",
+        placeholder: "https://yourproduct.com/contact",
+        help: "The page with the form.",
+      },
+    ],
+    brief: `Try to break the form at {{formUrl}} with odd inputs: empty fields,
+emoji, very long text, wrong formats and pasted spaces.
+
+Done when (all required):
+
+1. Each input you tried and what happened.
+
+2. A screenshot for anything that saved bad data or showed an error
+page.
+
+Do not submit real personal data.
+
+Rejected if fewer than five input types were tried.`,
+    settleChecks: [
+      "At least five input types were tried.",
+      "Reported failures carry screenshots.",
+      "No real personal data was submitted.",
     ],
   },
 
@@ -978,6 +1348,100 @@ the validity rule, or it duplicates one already submitted.`,
       "The source resolves and supports the row.",
       "The row satisfies the validity rule in the brief.",
       "The row is not a duplicate of one already paid on this batch.",
+    ],
+  },
+
+  {
+    id: "find-grant",
+    category: "sourcing",
+    name: "Find a grant or hackathon",
+    title: "Find a grant or hackathon for {{project}}",
+    blurb: "Open funding that fits, with a deadline that has not passed.",
+    postingMode: "batch",
+    proofType: "text",
+    fields: [
+      {
+        key: "project",
+        label: "What you build",
+        type: "textarea",
+        placeholder: "a prompt compiler for an agent job board",
+        help: "One line on the project.",
+      },
+      {
+        key: "ecosystem",
+        label: "Region or ecosystem",
+        type: "text",
+        placeholder: "Sui",
+        help: "Where the funding should come from.",
+      },
+    ],
+    brief: `Find one open grant, accelerator or hackathon that fits {{project}}
+in {{ecosystem}}.
+
+Done when (all required):
+
+1. Name, link, deadline and amount or prize.
+
+2. One sentence on why it fits.
+
+3. The deadline has not passed.
+
+Rejected if applications are closed or it duplicates another delivery
+on this batch.`,
+    settleChecks: [
+      "The link resolves and applications are open.",
+      "The deadline is in the future.",
+      "It is not a duplicate on this batch.",
+    ],
+  },
+
+  {
+    id: "find-supplier",
+    category: "sourcing",
+    name: "Find a supplier",
+    title: "Find a supplier for {{product}}",
+    blurb: "One supplier that can make it and ship it where you need it.",
+    postingMode: "batch",
+    proofType: "text",
+    fields: [
+      {
+        key: "product",
+        label: "Product",
+        type: "text",
+        placeholder: "embroidered hoodies",
+        help: "What needs making.",
+      },
+      {
+        key: "quantity",
+        label: "Quantity",
+        type: "text",
+        placeholder: "200 units",
+        help: "How many you need.",
+      },
+      {
+        key: "shipTo",
+        label: "Ship to",
+        type: "text",
+        placeholder: "Lagos, Nigeria",
+        help: "The delivery destination.",
+      },
+    ],
+    brief: `Find one supplier that can make {{quantity}} of {{product}} and ship
+to {{shipTo}}.
+
+Done when (all required):
+
+1. Supplier name, link and a public business contact.
+
+2. Price or quote range if listed, and minimum order.
+
+3. They ship to {{shipTo}}.
+
+Rejected if the supplier duplicates another delivery on this batch.`,
+    settleChecks: [
+      "The supplier link resolves.",
+      "The contact is a public business contact.",
+      "It is not a duplicate on this batch.",
     ],
   },
 
@@ -1213,6 +1677,135 @@ the count or length is wrong.`,
   },
 
   {
+    id: "faq-from-docs",
+    category: "content",
+    name: "Write a FAQ from docs",
+    title: "Write {{count}} FAQ entries from {{docsUrl}}",
+    blurb: "Questions new users actually ask, answered only from your docs.",
+    postingMode: "single",
+    proofType: "text",
+    fields: [
+      {
+        key: "docsUrl",
+        label: "Docs URL",
+        type: "url",
+        placeholder: "https://docs.yourproduct.com",
+        help: "The only source answers may use.",
+      },
+      {
+        key: "count",
+        label: "Number of questions",
+        type: "int",
+        placeholder: "10",
+        help: "How many FAQ entries.",
+      },
+    ],
+    brief: `Write {{count}} FAQ entries using only what is in {{docsUrl}}.
+
+Done when (all required):
+
+1. Real questions a new user would ask.
+
+2. Each answer is 1 to 3 sentences and links the doc section it came
+from.
+
+3. Nothing the docs do not say.
+
+Rejected if an answer is not backed by the linked section.`,
+    settleChecks: [
+      "The entry count matches.",
+      "Each answer links a doc section that supports it.",
+      "Nothing is invented.",
+    ],
+  },
+
+  {
+    id: "proofread-page",
+    category: "content",
+    name: "Proofread a page",
+    title: "Proofread {{pageUrl}}",
+    blurb: "Typos and unclear sentences fixed, your voice left alone.",
+    postingMode: "single",
+    proofType: "text",
+    fields: [
+      {
+        key: "pageUrl",
+        label: "Page URL",
+        type: "url",
+        placeholder: "https://yourproduct.com/about",
+        help: "The page to proofread.",
+      },
+    ],
+    brief: `Proofread {{pageUrl}}.
+
+Done when (all required):
+
+1. Every typo, grammar error or unclear sentence.
+
+2. The original text and your fix side by side.
+
+3. No rewrites of tone or meaning.
+
+Rejected if fixes change the meaning or real errors were missed.`,
+    settleChecks: [
+      "Each original quote exists on the page.",
+      "Fixes do not change the meaning.",
+    ],
+  },
+
+  {
+    id: "record-tutorial",
+    category: "content",
+    name: "Record a tutorial",
+    title: "Record a tutorial: {{task}}",
+    blurb: "A short screen recording that shows people how it is done.",
+    postingMode: "single",
+    proofType: "url",
+    fields: [
+      {
+        key: "productUrl",
+        label: "Product URL",
+        type: "url",
+        placeholder: "https://yourproduct.com",
+        help: "Where the recording starts.",
+      },
+      {
+        key: "task",
+        label: "Task to show",
+        type: "text",
+        placeholder: "create an account and send a first payment",
+        help: "One task with a clear finish line.",
+      },
+      {
+        key: "maxMinutes",
+        label: "Max length in minutes",
+        type: "int",
+        placeholder: "3",
+        help: "The longest the video may run.",
+      },
+    ],
+    brief: `Record your screen while doing this on {{productUrl}}:
+{{task}}
+
+Done when (all required):
+
+1. The video is under {{maxMinutes}} minutes.
+
+2. Clear voiceover or captions.
+
+3. A public or unlisted video link.
+
+No private keys, emails or balances on screen.
+
+Rejected if the task is not completed on camera.`,
+    settleChecks: [
+      "The link plays and runs under the limit.",
+      "The task is completed on screen.",
+      "No private data is visible.",
+    ],
+  },
+
+  {
     id: "onboard-agent",
     category: "growth",
     name: "Bring me a user who actually transacts",
@@ -1258,6 +1851,57 @@ are rejected.`,
       "Confirm releasedCount is 1 and matches the cited job.",
       "Confirm the referrer is not the buyer on that job. Self-deal is an automatic reject.",
       "Confirm the referred agent has not already been claimed on this batch.",
+    ],
+  },
+
+  {
+    id: "directory-listing",
+    category: "growth",
+    name: "Get listed in a directory",
+    title: "List {{product}} in a {{directoryType}} directory",
+    blurb: "One new listing per person, never the same directory twice.",
+    postingMode: "batch",
+    proofType: "url",
+    fields: [
+      {
+        key: "product",
+        label: "Product name",
+        type: "text",
+        placeholder: "t2000 prompts",
+        help: "The name as it should appear.",
+      },
+      {
+        key: "productUrl",
+        label: "Product URL",
+        type: "url",
+        placeholder: "https://yourproduct.com",
+        help: "The link the listing should point to.",
+      },
+      {
+        key: "directoryType",
+        label: "Directory type",
+        type: "text",
+        placeholder: "AI tools",
+        help: "The kind of directory that fits.",
+      },
+    ],
+    brief: `Submit {{product}} ({{productUrl}}) to one {{directoryType}} directory
+it is not already listed in.
+
+Done when (all required):
+
+1. The live listing link, or the submission confirmation if it is under
+review.
+
+2. The directory's own rules are followed.
+
+3. No paid listings.
+
+Rejected if the directory was already used on this batch.`,
+    settleChecks: [
+      "The listing or confirmation is real.",
+      "It links to the right product URL.",
+      "The directory is not a duplicate on this batch.",
     ],
   },
 

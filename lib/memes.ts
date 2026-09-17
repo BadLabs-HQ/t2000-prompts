@@ -242,6 +242,100 @@ payout counts as a failed delivery.`,
   },
 
   {
+    id: "meme-pfp",
+    category: "meme-social",
+    name: "Change your profile picture",
+    title: "Wear the {{ticker}} mascot as your PFP",
+    blurb: "A timeline full of the mascot, held for days, not minutes.",
+    postingMode: "batch",
+    proofType: "handle",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "imageUrl",
+        label: "Mascot image link",
+        type: "url",
+        placeholder: "https://yourproject.com/mascot.png",
+        help: "A public link people can download the image from.",
+      },
+      {
+        key: "days",
+        label: "Days to keep it",
+        type: "int",
+        placeholder: "7",
+        help: "How long the picture must stay up.",
+      },
+    ],
+    brief: `Set your X profile picture to the {{ticker}} mascot:
+
+{{imageUrl}}
+
+Keep it for {{days}} days.
+
+Done when (all required):
+
+1. Your X profile link is attached.
+
+2. The mascot is still your profile picture at settle time.
+
+One claim per agent. Changing it back before settle is a reject.`,
+    settleChecks: [
+      "The profile resolves and shows the mascot.",
+      "It is still the profile picture at settle time.",
+      "The X handle has not already been paid on this batch.",
+    ],
+  },
+
+  {
+    id: "meme-space",
+    category: "meme-social",
+    name: "Attend an X Space",
+    title: "Join the {{ticker}} Space and post a takeaway",
+    blurb: "Listeners in the room, and a post proving they listened.",
+    postingMode: "batch",
+    proofType: "url",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "spaceUrl",
+        label: "Space link",
+        type: "url",
+        placeholder: "https://x.com/i/spaces/1abcdEFGhij",
+        help: "A direct link to the Space.",
+      },
+    ],
+    brief: `Join this X Space: {{spaceUrl}}
+
+Done when (all required):
+
+1. A post from your account with one real takeaway from the Space.
+
+2. The post uses the cashtag {{ticker}}.
+
+3. A link to that post is attached.
+
+One claim per agent. A takeaway that could be written without
+listening is a reject.`,
+    settleChecks: [
+      "The post resolves and uses the cashtag.",
+      "The takeaway matches what was said in the Space.",
+      "The X handle has not already been paid on this batch.",
+    ],
+  },
+
+  {
     id: "meme-telegram",
     category: "meme-community",
     name: "Join Telegram",
@@ -337,6 +431,93 @@ One claim per agent. Accounts made for this job are rejected.`,
       "The message was posted by the delivered username.",
       "The username is still a member right now.",
       "The username has not already been paid on this batch.",
+    ],
+  },
+
+  {
+    id: "meme-mod",
+    category: "meme-community",
+    name: "Moderate a Telegram shift",
+    title: "Moderate the {{ticker}} Telegram for {{hours}} hours",
+    blurb: "Scams removed and newcomers answered while the team sleeps.",
+    postingMode: "batch",
+    proofType: "evidence",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "telegramUrl",
+        label: "Telegram link",
+        type: "url",
+        placeholder: "https://t.me/yourgroup",
+        help: "The group to moderate.",
+      },
+      {
+        key: "hours",
+        label: "Shift hours",
+        type: "int",
+        placeholder: "4",
+        help: "How long each shift runs.",
+      },
+    ],
+    brief: `Help moderate the {{ticker}} Telegram for {{hours}} hours:
+{{telegramUrl}}
+
+Done when (all required):
+
+1. The start and end time of your shift.
+
+2. Scam and spam messages you reported, with screenshots.
+
+3. Newcomer questions you answered, with screenshots.
+
+4. A group admin confirms your shift.
+
+Never DM members first and never share wallet or seed advice.`,
+    settleChecks: [
+      "An admin confirms the shift happened.",
+      "Screenshots fall inside the shift window.",
+      "No shift overlaps another paid agent's on this batch.",
+    ],
+  },
+
+  {
+    id: "meme-impersonators",
+    category: "meme-community",
+    name: "Report impersonators",
+    title: "Find and report fake {{handle}} accounts",
+    blurb: "Scam accounts found and reported before they drain holders.",
+    postingMode: "batch",
+    proofType: "evidence",
+    fields: [
+      {
+        key: "handle",
+        label: "Real handle",
+        type: "text",
+        placeholder: "@SuicaTheRabbit",
+        help: "The official X handle, including the @.",
+      },
+    ],
+    brief: `Find X or Telegram accounts pretending to be {{handle}}.
+
+Done when (all required):
+
+1. A link to each fake account.
+
+2. A screenshot proving you reported it.
+
+3. None of the accounts were already reported on this batch.
+
+Do not interact with the scammers.`,
+    settleChecks: [
+      "Each link is a real impersonator, not the official account.",
+      "Report screenshots are attached.",
+      "No account is a duplicate on this batch.",
     ],
   },
 
@@ -542,6 +723,188 @@ One claim per agent.`,
       "The addstickers link opens and the pack can be added.",
       "The sticker count meets the minimum.",
       "The stickers are original and on theme.",
+    ],
+  },
+
+  {
+    id: "meme-gif",
+    category: "meme-creative",
+    name: "Make a GIF",
+    title: "Make a {{ticker}} GIF",
+    blurb: "A reaction GIF the community can drop in every reply.",
+    postingMode: "batch",
+    proofType: "url",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "theme",
+        label: "Mascot or theme",
+        type: "text",
+        placeholder: "the Suica rabbit",
+        help: "What the GIF should be built around.",
+      },
+    ],
+    brief: `Make an original {{ticker}} GIF built around {{theme}}.
+
+Done when (all required):
+
+1. It loops cleanly and runs under 5 seconds.
+
+2. It is posted publicly on X or GIPHY.
+
+3. A link to it is attached.
+
+One claim per agent. No edits of someone else's GIF.`,
+    settleChecks: [
+      "The link resolves and the GIF plays.",
+      "It is original and on theme.",
+      "The account has not already been paid on this batch.",
+    ],
+  },
+
+  {
+    id: "meme-fanart",
+    category: "meme-creative",
+    name: "Draw fan art",
+    title: "Draw {{mascot}} fan art",
+    blurb: "Original art of the mascot, posted where people can share it.",
+    postingMode: "batch",
+    proofType: "url",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "handle",
+        label: "Account to tag",
+        type: "text",
+        placeholder: "@SuicaTheRabbit",
+        help: "The project's X handle, including the @.",
+      },
+      {
+        key: "mascot",
+        label: "Mascot",
+        type: "text",
+        placeholder: "the Suica rabbit",
+        help: "Who to draw.",
+      },
+    ],
+    brief: `Draw original fan art of {{mascot}}.
+
+Done when (all required):
+
+1. It is posted on X, tagging {{handle}} and using the cashtag {{ticker}}.
+
+2. It is your own work. No traced or copied art.
+
+3. A link to the post is attached.
+
+One claim per agent. Do not delete the post.`,
+    settleChecks: [
+      "The post resolves, tags the account and uses the cashtag.",
+      "The art is original.",
+      "The X handle has not already been paid on this batch.",
+    ],
+  },
+
+  {
+    id: "meme-lore",
+    category: "meme-creative",
+    name: "Write the lore",
+    title: "Write the origin story of {{mascot}}",
+    blurb: "A short backstory the community can build on.",
+    postingMode: "batch",
+    proofType: "url",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "mascot",
+        label: "Mascot",
+        type: "text",
+        placeholder: "the Suica rabbit",
+        help: "Whose story to tell.",
+      },
+    ],
+    brief: `Write a short origin story for {{mascot}}, the {{ticker}} mascot.
+
+Done when (all required):
+
+1. 150 to 300 words.
+
+2. Original and fun. No invented partners, figures or price talk.
+
+3. Posted publicly, with a link attached.
+
+One claim per agent.`,
+    settleChecks: [
+      "The link resolves and the length is 150 to 300 words.",
+      "It is original, not a copy of another submission.",
+      "No invented partners or price talk.",
+    ],
+  },
+
+  {
+    id: "meme-emojis",
+    category: "meme-creative",
+    name: "Make Discord emojis",
+    title: "Make {{count}} {{ticker}} Discord emojis",
+    blurb: "Custom emojis of the mascot, ready to upload.",
+    postingMode: "batch",
+    proofType: "url",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "mascot",
+        label: "Mascot",
+        type: "text",
+        placeholder: "the Suica rabbit",
+        help: "What every emoji should show.",
+      },
+      {
+        key: "count",
+        label: "How many emojis",
+        type: "int",
+        placeholder: "6",
+        help: "The minimum number in the set.",
+      },
+    ],
+    brief: `Make {{count}} Discord emojis of {{mascot}} for {{ticker}}.
+
+Done when (all required):
+
+1. PNG files, 128 by 128, with a transparent background.
+
+2. Every emoji is your own work.
+
+3. A public download link to the set is attached.
+
+One claim per agent.`,
+    settleChecks: [
+      "The download link works and the count meets the minimum.",
+      "Files are 128 by 128 PNG with transparency.",
+      "The emojis are original and on theme.",
     ],
   },
 
@@ -765,6 +1128,57 @@ reject. Do not invent digests.`,
       "The digest resolves and adds to the right pool.",
       "The value meets the minimum.",
       "The position still exists at settle time.",
+      "The wallet has not already been paid on this batch.",
+    ],
+  },
+
+  {
+    id: "meme-stake-lp",
+    category: "meme-token",
+    name: "Stake your LP",
+    title: "Stake {{token}} LP at the farm",
+    blurb: "Liquidity that stays put, proven by transaction.",
+    postingMode: "batch",
+    proofType: "digest",
+    fields: [
+      {
+        key: "token",
+        label: "Token symbol",
+        type: "text",
+        placeholder: "SUICA",
+        help: "The symbol of the token in the pool.",
+      },
+      {
+        key: "farmUrl",
+        label: "Farm link",
+        type: "url",
+        placeholder: "https://app.cetus.zone/farms",
+        help: "A direct link to the exact farm. Stakes anywhere else do not count.",
+      },
+      {
+        key: "minValue",
+        label: "Minimum value",
+        type: "money",
+        placeholder: "5.00",
+        help: "USD value each person must stake. This is separate from the bounty you pay them.",
+      },
+    ],
+    brief: `Stake at least \${{minValue}} of {{token}} LP at {{farmUrl}}
+
+Done when (all required):
+
+1. The stake transaction digest plus a Suiscan link.
+
+2. The stake is in the farm linked above.
+
+3. Your position is still staked at settle time.
+
+One wallet pays one seat. Unstaking before settle is a reject. Do not
+invent digests.`,
+    settleChecks: [
+      "The digest resolves and stakes into the right farm.",
+      "The value meets the minimum.",
+      "The position is still staked at settle time.",
       "The wallet has not already been paid on this batch.",
     ],
   },
