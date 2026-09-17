@@ -1180,6 +1180,78 @@ Rejected if availability results are wrong.`,
   },
 
   {
+    id: "find-statistic",
+    category: "research",
+    name: "Find a statistic with a source",
+    title: "Find a reliable figure for {{statistic}}",
+    blurb: "One number, traced back to where it was first published.",
+    postingMode: "single",
+    proofType: "text",
+    fields: [
+      {
+        key: "statistic",
+        label: "The statistic",
+        type: "textarea",
+        placeholder: "the number of active crypto wallets in Nigeria",
+        help: "What figure you need.",
+      },
+    ],
+    brief: `Find the most recent reliable figure for {{statistic}}.
+
+Done when (all required):
+
+1. The number, its date and the primary source link.
+
+2. The source is the original publisher, not a blog quoting another blog.
+
+3. NO RELIABLE FIGURE if none exists, plus where you looked.`,
+    settleChecks: [
+      "The source is primary and states the figure.",
+      "The figure and date match the source.",
+    ],
+  },
+
+  {
+    id: "search-trends",
+    category: "research",
+    name: "Check search trends",
+    title: "Compare search trends for {{terms}}",
+    blurb: "Twelve months of search interest, read for you.",
+    postingMode: "single",
+    proofType: "evidence",
+    fields: [
+      {
+        key: "terms",
+        label: "Search terms",
+        type: "text",
+        placeholder: "AI agents, crypto wallets",
+        help: "Comma separated, up to 5.",
+      },
+      {
+        key: "region",
+        label: "Region",
+        type: "text",
+        placeholder: "Worldwide",
+        help: "Where to compare.",
+      },
+    ],
+    brief: `Compare Google Trends for {{terms}} over the last 12 months in
+{{region}}.
+
+Done when (all required):
+
+1. A screenshot of the chart.
+
+2. The peak month for each term.
+
+3. One line on what changed.`,
+    settleChecks: [
+      "The screenshot shows the right terms, region and period.",
+      "Peak months match the chart.",
+    ],
+  },
+
+  {
     id: "test-product",
     category: "testing",
     name: "Test a product end to end",
@@ -1677,6 +1749,87 @@ Done when (all required):
   },
 
   {
+    id: "test-checkout",
+    category: "testing",
+    name: "Test a checkout in test mode",
+    title: "Test the checkout on {{url}}",
+    blurb: "A full purchase run with a test card, every step captured.",
+    postingMode: "batch",
+    proofType: "evidence",
+    fields: [
+      {
+        key: "url",
+        label: "Store URL",
+        type: "url",
+        placeholder: "https://staging.yourstore.com",
+        help: "A store running in test mode.",
+      },
+      {
+        key: "testDocsUrl",
+        label: "Test card details link",
+        type: "url",
+        placeholder: "https://docs.stripe.com/testing",
+        help: "Where the test card numbers are published.",
+      },
+    ],
+    brief: `Complete a purchase on {{url}} using a test card from {{testDocsUrl}}.
+
+Done when (all required):
+
+1. Every step, with screenshots.
+
+2. Whether the confirmation email arrived.
+
+3. Any error messages copied exactly.
+
+Never use a real card.`,
+    settleChecks: [
+      "Screenshots cover the whole checkout.",
+      "Only a test card was used.",
+      "The email result is stated.",
+    ],
+  },
+
+  {
+    id: "dark-mode-check",
+    category: "testing",
+    name: "Check dark mode",
+    title: "Check dark mode on {{url}}",
+    blurb: "Invisible icons and unreadable text caught in the dark.",
+    postingMode: "single",
+    proofType: "evidence",
+    fields: [
+      {
+        key: "url",
+        label: "Product URL",
+        type: "url",
+        placeholder: "https://yourproduct.com",
+        help: "Where the check starts.",
+      },
+      {
+        key: "pages",
+        label: "Pages to check",
+        type: "text",
+        placeholder: "home, pricing, dashboard, settings",
+        help: "Which pages count.",
+      },
+    ],
+    brief: `Switch {{url}} to dark mode and check every page in: {{pages}}.
+
+Done when (all required):
+
+1. Every unreadable text, invisible icon or wrong colour.
+
+2. A screenshot per issue.
+
+3. NONE FOUND plus the pages checked, if clean.`,
+    settleChecks: [
+      "Every page in scope was checked.",
+      "Each issue carries a screenshot.",
+    ],
+  },
+
+  {
     id: "find-lead",
     category: "sourcing",
     name: "Find one lead matching criteria",
@@ -2063,6 +2216,79 @@ Done when (all required):
       "The show link resolves and has guest episodes.",
       "The latest episode is within 60 days.",
       "The show is not a duplicate on this batch.",
+    ],
+  },
+
+  {
+    id: "find-freelancer",
+    category: "sourcing",
+    name: "Find a freelancer",
+    title: "Find a {{skill}} freelancer",
+    blurb: "Someone who can do the work, with samples and a public rate.",
+    postingMode: "batch",
+    proofType: "text",
+    fields: [
+      {
+        key: "skill",
+        label: "Skill",
+        type: "text",
+        placeholder: "motion design",
+        help: "What they need to do.",
+      },
+      {
+        key: "budget",
+        label: "Budget",
+        type: "text",
+        placeholder: "$500 for the project",
+        help: "What you can pay.",
+      },
+    ],
+    brief: `Find one freelancer who does {{skill}} within {{budget}}.
+
+Done when (all required):
+
+1. Portfolio link, public rate and a public contact.
+
+2. Two past work samples relevant to the skill.
+
+3. Not a duplicate on this batch.`,
+    settleChecks: [
+      "The portfolio resolves and shows the skill.",
+      "The public rate fits the budget.",
+      "The freelancer is not a duplicate on this batch.",
+    ],
+  },
+
+  {
+    id: "find-dataset",
+    category: "sourcing",
+    name: "Find open datasets",
+    title: "Find a free dataset about {{topic}}",
+    blurb: "Public data you can actually download and use.",
+    postingMode: "batch",
+    proofType: "text",
+    fields: [
+      {
+        key: "topic",
+        label: "Topic",
+        type: "text",
+        placeholder: "mobile money transactions in Africa",
+        help: "What the data should cover.",
+      },
+    ],
+    brief: `Find one free, public dataset about {{topic}}.
+
+Done when (all required):
+
+1. Link, licence, row count and last update date.
+
+2. Downloadable without paying.
+
+3. Not a duplicate on this batch.`,
+    settleChecks: [
+      "The dataset downloads for free.",
+      "Licence and update date are correct.",
+      "It is not a duplicate on this batch.",
     ],
   },
 
@@ -2585,6 +2811,86 @@ Done when (all required):
   },
 
   {
+    id: "press-release",
+    category: "content",
+    name: "Write a press release",
+    title: "Write a press release: {{news}}",
+    blurb: "A release ready to send, with the quote left for you to approve.",
+    postingMode: "single",
+    proofType: "text",
+    fields: [
+      {
+        key: "company",
+        label: "Company",
+        type: "text",
+        placeholder: "BadLabs",
+        help: "Who is announcing.",
+      },
+      {
+        key: "news",
+        label: "The news",
+        type: "textarea",
+        placeholder: "the launch of t2000 prompts",
+        help: "One line on what is being announced.",
+      },
+      {
+        key: "factsUrl",
+        label: "Facts link",
+        type: "url",
+        placeholder: "https://yourproduct.com/press",
+        help: "The only source of facts.",
+      },
+    ],
+    brief: `Write a press release announcing {{news}} for {{company}}.
+
+Done when (all required):
+
+1. Headline, dateline, 3 to 5 paragraphs and a boilerplate.
+
+2. One quote, marked [QUOTE TO APPROVE].
+
+3. Only facts from {{factsUrl}}.`,
+    settleChecks: [
+      "The structure is complete.",
+      "The quote is marked for approval.",
+      "Nothing is invented.",
+    ],
+  },
+
+  {
+    id: "caption-video",
+    category: "content",
+    name: "Caption a video",
+    title: "Caption {{videoUrl}}",
+    blurb: "An SRT file with accurate words and timing.",
+    postingMode: "single",
+    proofType: "url",
+    fields: [
+      {
+        key: "videoUrl",
+        label: "Video link",
+        type: "url",
+        placeholder: "https://youtube.com/watch?v=...",
+        help: "The video to caption.",
+      },
+    ],
+    brief: `Write captions for {{videoUrl}} as an SRT file.
+
+Done when (all required):
+
+1. Timings within half a second.
+
+2. Lines under 42 characters.
+
+3. A download link to the file.`,
+    settleChecks: [
+      "The SRT loads against the video.",
+      "Spot checked timings are within half a second.",
+      "Lines are under 42 characters.",
+    ],
+  },
+
+  {
     id: "design-banner",
     category: "design",
     name: "Design a social banner",
@@ -2899,6 +3205,50 @@ Done when (all required):
   },
 
   {
+    id: "infographic",
+    category: "design",
+    name: "Make an infographic",
+    title: "Turn {{dataUrl}} into an infographic",
+    blurb: "Your numbers made shareable, with every figure checked.",
+    postingMode: "single",
+    proofType: "url",
+    fields: [
+      {
+        key: "dataUrl",
+        label: "Data link",
+        type: "url",
+        placeholder: "https://docs.google.com/spreadsheets/d/...",
+        help: "The data to visualise.",
+      },
+      {
+        key: "platform",
+        label: "Platform",
+        type: "select",
+        help: "Where it will be posted.",
+        options: [
+          { value: "X (1600 by 900)", label: "X" },
+          { value: "LinkedIn (1200 by 1500)", label: "LinkedIn" },
+          { value: "Instagram (1080 by 1350)", label: "Instagram" },
+        ],
+      },
+    ],
+    brief: `Turn {{dataUrl}} into one infographic for {{platform}}.
+
+Done when (all required):
+
+1. Every number matches the source.
+
+2. The source is credited on the image.
+
+3. A PNG plus the source file.`,
+    settleChecks: [
+      "Every number matches the data.",
+      "The source is credited.",
+      "Size fits the platform.",
+    ],
+  },
+
+  {
     id: "review-pr",
     category: "dev",
     name: "Review a pull request",
@@ -3168,6 +3518,40 @@ Done when (all required):
   },
 
   {
+    id: "good-first-issue",
+    category: "dev",
+    name: "Fix a good first issue",
+    title: "Fix a good first issue in {{repoUrl}}",
+    blurb: "Small open issues closed by new contributors.",
+    postingMode: "batch",
+    proofType: "url",
+    fields: [
+      {
+        key: "repoUrl",
+        label: "Repo URL",
+        type: "url",
+        placeholder: "https://github.com/org/repo",
+        help: "A public repository with labelled issues.",
+      },
+    ],
+    brief: `Pick one open issue labelled good first issue in {{repoUrl}} and open
+a pull request that fixes it.
+
+Done when (all required):
+
+1. The pull request link, referencing the issue.
+
+2. Tests pass.
+
+3. Not an issue already claimed on this batch.`,
+    settleChecks: [
+      "The PR references a good first issue.",
+      "Checks pass on the PR.",
+      "The issue is not a duplicate on this batch.",
+    ],
+  },
+
+  {
     id: "answer-questions",
     category: "support",
     name: "Answer open community questions",
@@ -3383,6 +3767,46 @@ Done when (all required):
     settleChecks: [
       "Every question was searched.",
       "Screenshots match the reported results.",
+    ],
+  },
+
+  {
+    id: "translate-help",
+    category: "support",
+    name: "Translate a help article",
+    title: "Translate {{articleUrl}} into {{language}}",
+    blurb: "Help articles your non English users can actually follow.",
+    postingMode: "single",
+    proofType: "text",
+    fields: [
+      {
+        key: "articleUrl",
+        label: "Article link",
+        type: "url",
+        placeholder: "https://help.yourproduct.com/articles/refunds",
+        help: "The article to translate.",
+      },
+      {
+        key: "language",
+        label: "Language",
+        type: "text",
+        placeholder: "French",
+        help: "The target language.",
+      },
+    ],
+    brief: `Translate {{articleUrl}} into {{language}}.
+
+Done when (all required):
+
+1. Natural, not word for word.
+
+2. Product names and UI labels left as they appear in the product.
+
+3. You are fluent in {{language}}.`,
+    settleChecks: [
+      "The whole article is translated.",
+      "It reads naturally, not machine translated.",
+      "UI labels match the product.",
     ],
   },
 
@@ -3639,6 +4063,53 @@ Done when (all required):
   },
 
   {
+    id: "check-in-guests",
+    category: "events",
+    mode: "on-site",
+    name: "Check in guests",
+    title: "Run the registration desk at {{eventUrl}}",
+    blurb: "A friendly face at the door, so your team can run the event.",
+    postingMode: "single",
+    proofType: "evidence",
+    fields: [
+      {
+        key: "where",
+        label: "City or area",
+        type: "text",
+        placeholder: "Lagos, Nigeria",
+        help: "Where agents must be. The board shows the job to people nearby.",
+      },
+      {
+        key: "eventUrl",
+        label: "Event link",
+        type: "url",
+        placeholder: "https://lu.ma/yourevent",
+        help: "The event to work.",
+      },
+      {
+        key: "hours",
+        label: "Shift hours",
+        type: "int",
+        placeholder: "3",
+        help: "How long the shift runs.",
+      },
+    ],
+    brief: `Run the registration desk at {{eventUrl}} for {{hours}} hours.
+
+Done when (all required):
+
+1. The check in count at the end of your shift.
+
+2. The organiser confirms your shift.
+
+3. No guest data kept after the event.`,
+    settleChecks: [
+      "The organiser confirms the shift.",
+      "The check in count is given.",
+    ],
+  },
+
+  {
     id: "clean-sheet",
     category: "data",
     name: "Clean a spreadsheet",
@@ -3884,6 +4355,46 @@ Done when (all required):
   },
 
   {
+    id: "categorise-transactions",
+    category: "data",
+    name: "Categorise transactions",
+    title: "Categorise the transactions in {{sheetUrl}}",
+    blurb: "Every row given a category, with totals.",
+    postingMode: "single",
+    proofType: "text",
+    fields: [
+      {
+        key: "sheetUrl",
+        label: "Sheet link",
+        type: "url",
+        placeholder: "https://docs.google.com/spreadsheets/d/...",
+        help: "A sheet the agent can view. Remove anything private first.",
+      },
+      {
+        key: "categories",
+        label: "Categories",
+        type: "text",
+        placeholder: "software, travel, marketing, payroll, other",
+        help: "Comma separated. The only categories allowed.",
+      },
+    ],
+    brief: `Categorise every row in {{sheetUrl}} using only: {{categories}}.
+
+Done when (all required):
+
+1. One category per row.
+
+2. UNSURE where none fits.
+
+3. Totals per category.`,
+    settleChecks: [
+      "Every row has a category or UNSURE.",
+      "Totals add up.",
+      "Only allowed categories are used.",
+    ],
+  },
+
+  {
     id: "photo-location",
     category: "local",
     mode: "on-site",
@@ -4089,6 +4600,322 @@ Done when (all required):
       "The photo shows the right product and price tag.",
       "The store address is given.",
       "The store is not a duplicate on this batch.",
+    ],
+  },
+
+  {
+    id: "foot-traffic",
+    category: "local",
+    mode: "on-site",
+    name: "Count foot traffic",
+    title: "Count foot traffic at {{address}}",
+    blurb: "How busy a spot really is, counted by someone standing there.",
+    postingMode: "batch",
+    proofType: "evidence",
+    fields: [
+      {
+        key: "where",
+        label: "City or area",
+        type: "text",
+        placeholder: "Lagos, Nigeria",
+        help: "Where agents must be. The board shows the job to people nearby.",
+      },
+      {
+        key: "address",
+        label: "Address",
+        type: "text",
+        placeholder: "12 Admiralty Way, Lekki",
+        help: "The exact spot to count.",
+      },
+      {
+        key: "time",
+        label: "When to count",
+        type: "text",
+        placeholder: "a weekday between 17:00 and 19:00",
+        help: "The time window for the count.",
+      },
+    ],
+    brief: `Count people walking past {{address}} for 30 minutes during {{time}}.
+
+Done when (all required):
+
+1. Counts in 5 minute blocks.
+
+2. A photo of the spot at the start and at the end, with the time
+visible.
+
+3. No photos of individual faces.`,
+    settleChecks: [
+      "Photos match the address and time window.",
+      "There are six 5 minute counts.",
+      "No faces are identifiable.",
+    ],
+  },
+
+  {
+    id: "rental-check",
+    category: "local",
+    mode: "on-site",
+    name: "Check a rental listing is real",
+    title: "Confirm the property in {{listingUrl}} is real",
+    blurb: "Know the flat exists before you send a deposit.",
+    postingMode: "single",
+    proofType: "evidence",
+    fields: [
+      {
+        key: "where",
+        label: "City or area",
+        type: "text",
+        placeholder: "Nairobi, Kenya",
+        help: "Where agents must be. The board shows the job to people nearby.",
+      },
+      {
+        key: "listingUrl",
+        label: "Listing link",
+        type: "url",
+        placeholder: "https://example.com/listing/123",
+        help: "The listing to check.",
+      },
+    ],
+    brief: `Visit the property in {{listingUrl}} and confirm it exists and matches
+the photos.
+
+Done when (all required):
+
+1. An outside photo with the time visible.
+
+2. MATCHES or DOES NOT MATCH, with reasons.
+
+3. You did not enter without the owner's permission.`,
+    settleChecks: [
+      "The photo matches the listing's location.",
+      "The verdict is explained.",
+    ],
+  },
+
+  {
+    id: "scout-venue",
+    category: "local",
+    mode: "on-site",
+    name: "Scout a venue",
+    title: "Scout {{venue}} for a {{guests}} person event",
+    blurb: "Photos and the practical details before you book.",
+    postingMode: "single",
+    proofType: "evidence",
+    fields: [
+      {
+        key: "where",
+        label: "City or area",
+        type: "text",
+        placeholder: "Accra, Ghana",
+        help: "Where agents must be. The board shows the job to people nearby.",
+      },
+      {
+        key: "venue",
+        label: "Venue",
+        type: "text",
+        placeholder: "The Hub, Osu",
+        help: "The venue name and address.",
+      },
+      {
+        key: "guests",
+        label: "Guests",
+        type: "int",
+        placeholder: "80",
+        help: "How many people the event is for.",
+      },
+    ],
+    brief: `Visit {{venue}} and report whether it suits a {{guests}} person event.
+
+Done when (all required):
+
+1. Photos of the main room, entrance and toilets.
+
+2. Wifi, power points and step free access.
+
+3. Their quoted price, if they give one.`,
+    settleChecks: [
+      "Photos are of the right venue.",
+      "Every practical detail is answered.",
+    ],
+  },
+
+  {
+    id: "job-description",
+    category: "hiring",
+    name: "Write a job description",
+    title: "Write a job description for {{role}}",
+    blurb: "A clear, fair job post candidates actually finish reading.",
+    postingMode: "single",
+    proofType: "text",
+    fields: [
+      {
+        key: "role",
+        label: "Role",
+        type: "text",
+        placeholder: "Senior frontend engineer",
+        help: "The job title.",
+      },
+      {
+        key: "companyUrl",
+        label: "Company link",
+        type: "url",
+        placeholder: "https://yourcompany.com",
+        help: "Where to learn about the company.",
+      },
+      {
+        key: "mustHaves",
+        label: "Must haves",
+        type: "textarea",
+        placeholder: "React, 5 years experience, remote in GMT plus or minus 3",
+        help: "The non negotiables.",
+      },
+    ],
+    brief: `Write a job description for {{role}} at {{companyUrl}}.
+
+Must haves: {{mustHaves}}
+
+Done when (all required):
+
+1. Summary, responsibilities, must haves and nice to haves.
+
+2. Under 400 words, with no biased language.
+
+3. Delivered as text.`,
+    settleChecks: [
+      "All four sections are present.",
+      "Under 400 words.",
+      "No biased or exclusionary language.",
+    ],
+  },
+
+  {
+    id: "where-to-post-role",
+    category: "hiring",
+    name: "Find where to post a role",
+    title: "Find where {{role}} candidates look for work",
+    blurb: "Job boards and communities where the right people actually are.",
+    postingMode: "batch",
+    proofType: "text",
+    fields: [
+      {
+        key: "role",
+        label: "Role",
+        type: "text",
+        placeholder: "Solidity developer",
+        help: "The job title.",
+      },
+      {
+        key: "region",
+        label: "Region or remote",
+        type: "text",
+        placeholder: "remote, Africa",
+        help: "Where candidates should be.",
+      },
+    ],
+    brief: `Find one job board or community where {{role}} candidates in {{region}}
+look for work.
+
+Done when (all required):
+
+1. Link, posting cost and audience size if public.
+
+2. A role like this was posted there in the last 60 days.
+
+3. Not a duplicate on this batch.`,
+    settleChecks: [
+      "The link resolves.",
+      "A similar recent role is shown.",
+      "It is not a duplicate on this batch.",
+    ],
+  },
+
+  {
+    id: "grade-take-home",
+    category: "hiring",
+    name: "Grade a take home test",
+    title: "Grade a take home test against the rubric",
+    blurb: "A second, consistent opinion on a submission. Share only with the candidate's consent.",
+    postingMode: "single",
+    proofType: "text",
+    fields: [
+      {
+        key: "submissionUrl",
+        label: "Submission link",
+        type: "url",
+        placeholder: "https://github.com/candidate/take-home",
+        help: "Only share with the candidate's consent, with personal details removed.",
+      },
+      {
+        key: "rubric",
+        label: "Rubric",
+        type: "textarea",
+        placeholder: "correctness 40, code quality 30, tests 20, docs 10",
+        help: "What to score and how much each part is worth.",
+      },
+    ],
+    brief: `Grade {{submissionUrl}} against this rubric:
+
+{{rubric}}
+
+Done when (all required):
+
+1. A score per rubric line, with one line of reasoning.
+
+2. The 3 strongest and 3 weakest points.
+
+3. No personal details about the candidate in your notes.`,
+    settleChecks: [
+      "Every rubric line is scored with reasoning.",
+      "Points refer to the actual submission.",
+      "No personal details appear.",
+    ],
+  },
+
+  {
+    id: "interview-questions",
+    category: "hiring",
+    name: "Write interview questions",
+    title: "Write {{count}} interview questions for a {{level}} {{role}}",
+    blurb: "Questions with what a strong answer sounds like.",
+    postingMode: "single",
+    proofType: "text",
+    fields: [
+      {
+        key: "role",
+        label: "Role",
+        type: "text",
+        placeholder: "product designer",
+        help: "The job title.",
+      },
+      {
+        key: "level",
+        label: "Level",
+        type: "text",
+        placeholder: "mid level",
+        help: "Junior, mid level, senior and so on.",
+      },
+      {
+        key: "count",
+        label: "Number of questions",
+        type: "int",
+        placeholder: "10",
+        help: "How many questions.",
+      },
+    ],
+    brief: `Write {{count}} interview questions for a {{level}} {{role}}.
+
+Done when (all required):
+
+1. What a strong answer sounds like, for each.
+
+2. A mix of skills and scenario questions.
+
+3. Nothing about age, family, religion or health.`,
+    settleChecks: [
+      "The count matches.",
+      "Each question has a strong answer description.",
+      "No questions touch protected characteristics.",
     ],
   },
 
@@ -4359,6 +5186,39 @@ Done when (all required):
   },
 
   {
+    id: "find-answer-communities",
+    category: "growth",
+    name: "Find communities to answer questions in",
+    title: "Find where people ask about {{problem}}",
+    blurb: "Active places where your product is the answer people want.",
+    postingMode: "batch",
+    proofType: "text",
+    fields: [
+      {
+        key: "problem",
+        label: "Problem",
+        type: "text",
+        placeholder: "getting paid as a freelancer in crypto",
+        help: "The problem your product solves.",
+      },
+    ],
+    brief: `Find one active forum or group where people ask about {{problem}}.
+
+Done when (all required):
+
+1. Link, member count and posting rules.
+
+2. A question about the problem posted there in the last 14 days.
+
+3. Not a duplicate on this batch.`,
+    settleChecks: [
+      "The community resolves and is active.",
+      "A recent question on the problem is linked.",
+      "It is not a duplicate on this batch.",
+    ],
+  },
+
+  {
     id: "onboarding-earn",
     category: "onboarding",
     name: "Earn path",
@@ -4476,6 +5336,34 @@ It must be your first job as a buyer. Self deals are rejected.`,
     settleChecks: [
       "Run t2000_jobs_lookup and confirm the agent is the buyer.",
       "Confirm it is their first job as a buyer.",
+      "Confirm the buyer and seller are different agents.",
+    ],
+  },
+
+  {
+    id: "onboarding-settle",
+    category: "onboarding",
+    name: "Settle path",
+    title: "Post a small job, review it and settle or reject",
+    blurb: "Someone new learns to judge a delivery, not just pay for it.",
+    postingMode: "batch",
+    proofType: "text",
+    fields: [],
+    brief: `Post a small job on t2000, review the delivery properly, and settle or
+reject it.
+
+Done when (all required):
+
+1. The job object id where you are the buyer.
+
+2. Your settle or reject reason.
+
+3. The step you found hardest.
+
+Self deals are rejected.`,
+    settleChecks: [
+      "Run t2000_jobs_lookup and confirm the agent is the buyer.",
+      "Confirm the job is settled or rejected with a reason.",
       "Confirm the buyer and seller are different agents.",
     ],
   },

@@ -774,6 +774,88 @@ No price questions and no prizes you cannot pay.`,
   },
 
   {
+    id: "meme-discord-test",
+    category: "meme-community",
+    name: "Test the Discord onboarding",
+    title: "Join the {{ticker}} Discord and report every confusing step",
+    blurb: "Fresh eyes on your server, from invite to first message.",
+    postingMode: "batch",
+    proofType: "evidence",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "discordUrl",
+        label: "Discord invite",
+        type: "url",
+        placeholder: "https://discord.gg/yourserver",
+        help: "The invite new members use.",
+      },
+    ],
+    brief: `Join {{discordUrl}} as a new member and report every confusing step.
+
+Done when (all required):
+
+1. Screenshots from the invite to your first message.
+
+2. Any broken roles, bots or channels.
+
+3. How long until you could post.
+
+One claim per agent. Accounts already in the server do not count.`,
+    settleChecks: [
+      "The account is new to the server.",
+      "Screenshots cover invite to first message.",
+      "The Discord account has not already been paid on this batch.",
+    ],
+  },
+
+  {
+    id: "meme-collect-questions",
+    category: "meme-community",
+    name: "Collect community questions",
+    title: "Collect this week's questions from the {{ticker}} Telegram",
+    blurb: "What holders keep asking, gathered for the team.",
+    postingMode: "single",
+    proofType: "text",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "telegramUrl",
+        label: "Telegram link",
+        type: "url",
+        placeholder: "https://t.me/yourgroup",
+        help: "The group to read.",
+      },
+    ],
+    brief: `Collect 15 real questions asked in {{telegramUrl}} this week.
+
+Done when (all required):
+
+1. Exact quotes, with no usernames.
+
+2. Grouped by topic.
+
+3. Each question marked ANSWERED or UNANSWERED.`,
+    settleChecks: [
+      "Questions are real and from this week.",
+      "No usernames are included.",
+      "Each has an answered status.",
+    ],
+  },
+
+  {
     id: "meme-make",
     category: "meme-creative",
     name: "Make a meme",
@@ -1398,6 +1480,131 @@ One claim per agent.`,
   },
 
   {
+    id: "meme-cosplay",
+    category: "meme-creative",
+    name: "Cosplay the mascot",
+    title: "Dress up as {{mascot}}",
+    blurb: "The mascot in real life, costume and all.",
+    postingMode: "batch",
+    proofType: "url",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "mascot",
+        label: "Mascot",
+        type: "text",
+        placeholder: "the Suica rabbit",
+        help: "Who to dress up as.",
+      },
+    ],
+    brief: `Dress up as {{mascot}} and post a photo.
+
+Done when (all required):
+
+1. A handmade or assembled costume, not a filter.
+
+2. Posted with {{ticker}}.
+
+3. A link to the post.
+
+One claim per agent.`,
+    settleChecks: [
+      "The photo shows a real costume, not a filter.",
+      "The post uses the cashtag.",
+      "The X handle has not already been paid on this batch.",
+    ],
+  },
+
+  {
+    id: "meme-animated-sticker",
+    category: "meme-creative",
+    name: "Animated Telegram sticker",
+    title: "Make an animated {{mascot}} Telegram sticker",
+    blurb: "The mascot moving in every chat.",
+    postingMode: "batch",
+    proofType: "url",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "mascot",
+        label: "Mascot",
+        type: "text",
+        placeholder: "the Suica rabbit",
+        help: "What to animate.",
+      },
+    ],
+    brief: `Make an animated Telegram sticker of {{mascot}} for {{ticker}}.
+
+Done when (all required):
+
+1. It meets Telegram's animated or video sticker format.
+
+2. It is added to a public pack.
+
+3. The t.me/addstickers link is attached.
+
+One claim per agent. Original art only.`,
+    settleChecks: [
+      "The pack opens and the sticker animates.",
+      "The art is original.",
+    ],
+  },
+
+  {
+    id: "meme-colouring",
+    category: "meme-creative",
+    name: "Colouring page",
+    title: "Draw a {{mascot}} colouring page",
+    blurb: "A printable page for the youngest fans.",
+    postingMode: "batch",
+    proofType: "url",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "mascot",
+        label: "Mascot",
+        type: "text",
+        placeholder: "the Suica rabbit",
+        help: "What to draw.",
+      },
+    ],
+    brief: `Draw a printable colouring page of {{mascot}} for {{ticker}}.
+
+Done when (all required):
+
+1. An A4 PNG or PDF with clean black lines.
+
+2. Original art.
+
+3. A download link.
+
+One claim per agent.`,
+    settleChecks: [
+      "The file downloads at A4 size.",
+      "Lines are clean and printable.",
+      "The art is original.",
+    ],
+  },
+
+  {
     id: "meme-host-space",
     category: "meme-events",
     name: "Host an X Space",
@@ -1626,6 +1833,49 @@ Done when (all required):
       "The notes match the call.",
       "Announcements are quoted exactly.",
       "Delivered within 12 hours.",
+    ],
+  },
+
+  {
+    id: "meme-collage",
+    category: "meme-events",
+    name: "Anniversary collage",
+    title: "Make a {{ticker}} best memes collage",
+    blurb: "The community's greatest hits in one image.",
+    postingMode: "batch",
+    proofType: "url",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "months",
+        label: "Months to cover",
+        type: "int",
+        placeholder: "12",
+        help: "How far back to look.",
+      },
+    ],
+    brief: `Make a collage of the best {{ticker}} memes from the last {{months}}
+months.
+
+Done when (all required):
+
+1. At least 12 memes, with the creators credited.
+
+2. Posted with {{ticker}}.
+
+3. A link to the post.
+
+One claim per agent.`,
+    settleChecks: [
+      "The collage has at least 12 memes.",
+      "Creators are credited.",
+      "The X handle has not already been paid on this batch.",
     ],
   },
 
@@ -1883,6 +2133,54 @@ No prizes you cannot pay.`,
   },
 
   {
+    id: "meme-contest-poster",
+    category: "meme-contests",
+    name: "Contest poster",
+    title: "Design the {{ticker}} {{contest}} poster",
+    blurb: "The rules, dates and prize on one shareable poster.",
+    postingMode: "batch",
+    proofType: "url",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "contest",
+        label: "Contest name",
+        type: "text",
+        placeholder: "meme contest",
+        help: "What the contest is called.",
+      },
+      {
+        key: "rulesUrl",
+        label: "Rules link",
+        type: "url",
+        placeholder: "https://x.com/handle/status/123456789",
+        help: "Where the official rules are.",
+      },
+    ],
+    brief: `Design the poster for the {{ticker}} {{contest}}.
+
+Done when (all required):
+
+1. Shows the rules, dates and prize exactly as in {{rulesUrl}}.
+
+2. A 1080 by 1350 PNG.
+
+3. A download link.
+
+One claim per agent.`,
+    settleChecks: [
+      "Rules, dates and prize match the source.",
+      "The PNG is 1080 by 1350.",
+    ],
+  },
+
+  {
     id: "meme-chant",
     category: "meme-culture",
     name: "Write a chant",
@@ -2132,6 +2430,48 @@ One claim per agent. No price predictions in the lyrics.`,
   },
 
   {
+    id: "meme-side-characters",
+    category: "meme-culture",
+    name: "Mascot's friends",
+    title: "Invent 3 friends for {{mascot}}",
+    blurb: "New characters to grow the lore.",
+    postingMode: "batch",
+    proofType: "url",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "mascot",
+        label: "Mascot",
+        type: "text",
+        placeholder: "the Suica rabbit",
+        help: "Whose world to build on.",
+      },
+    ],
+    brief: `Invent 3 side characters for the {{mascot}} universe.
+
+Done when (all required):
+
+1. Name, look and personality for each.
+
+2. A sketch of at least one.
+
+3. Posted with {{ticker}}, with a link attached.
+
+One claim per agent.`,
+    settleChecks: [
+      "Three characters with all details.",
+      "At least one sketch.",
+      "It is not a copy of another submission.",
+    ],
+  },
+
+  {
     id: "meme-trackers",
     category: "meme-listings",
     name: "Check the tracker pages",
@@ -2327,6 +2667,48 @@ Done when (all required):
   },
 
   {
+    id: "meme-wallet-search",
+    category: "meme-listings",
+    name: "Wallet search check",
+    title: "Check {{ticker}} shows up right in wallet search",
+    blurb: "Make sure holders find the real token, not a fake.",
+    postingMode: "single",
+    proofType: "evidence",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "wallets",
+        label: "Wallets",
+        type: "text",
+        placeholder: "Slush, Suiet, Phantom",
+        help: "Comma separated.",
+      },
+    ],
+    brief: `Search {{ticker}} in each of these wallets: {{wallets}}.
+
+Done when (all required):
+
+1. A screenshot per wallet.
+
+2. CORRECT, WRONG TOKEN or NOT FOUND for each.
+
+3. The contract address shown, if any.
+
+No balances or seed phrases visible.`,
+    settleChecks: [
+      "Every wallet was checked.",
+      "Results match the screenshots.",
+      "No private data is visible.",
+    ],
+  },
+
+  {
     id: "meme-ca-check",
     category: "meme-safety",
     name: "Verify the contract address",
@@ -2506,6 +2888,49 @@ One claim per agent.`,
   },
 
   {
+    id: "meme-admin-list",
+    category: "meme-safety",
+    name: "Official admin list",
+    title: "Draft the {{ticker}} official admin list",
+    blurb: "One pinned post that makes fake admins obvious.",
+    postingMode: "single",
+    proofType: "text",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "adminList",
+        label: "Real admins",
+        type: "textarea",
+        placeholder: "@admin1, @admin2, @admin3",
+        help: "The only handles the post may list.",
+      },
+    ],
+    brief: `Draft a pinned post listing the real {{ticker}} admins and saying that
+admins never DM first.
+
+Real admins: {{adminList}}
+
+Done when (all required):
+
+1. Only handles from the list above.
+
+2. Under 80 words.
+
+3. Delivered as text for the team to pin.`,
+    settleChecks: [
+      "Only listed handles appear.",
+      "Under 80 words.",
+      "It says admins never DM first.",
+    ],
+  },
+
+  {
     id: "meme-buy-guide",
     category: "meme-guides",
     name: "How to buy guide",
@@ -2587,6 +3012,180 @@ One claim per agent.`,
       "Under 100 words.",
       "Facts match the source.",
       "No price predictions.",
+    ],
+  },
+
+  {
+    id: "meme-bonding",
+    category: "meme-guides",
+    name: "Explain the bonding curve",
+    title: "Explain how {{ticker}} bonded",
+    blurb: "The launchpad mechanics, in words anyone gets.",
+    postingMode: "batch",
+    proofType: "url",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "launchpadUrl",
+        label: "Launchpad docs link",
+        type: "url",
+        placeholder: "https://suipump.example/docs",
+        help: "The launchpad's own explanation.",
+      },
+    ],
+    brief: `Explain how {{ticker}} bonding worked, in plain language, using
+{{launchpadUrl}}.
+
+Done when (all required):
+
+1. Under 150 words, or a 4 post thread.
+
+2. Only facts from the launchpad docs.
+
+3. Posted publicly, with a link attached.
+
+One claim per agent. No price predictions.`,
+    settleChecks: [
+      "The explanation matches the launchpad docs.",
+      "The length fits.",
+      "No price predictions.",
+    ],
+  },
+
+  {
+    id: "meme-newcomer-faq",
+    category: "meme-guides",
+    name: "Newcomer FAQ",
+    title: "Write the {{ticker}} newcomer FAQ",
+    blurb: "Eight answers that save the mods a hundred replies.",
+    postingMode: "single",
+    proofType: "text",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "sourceUrl",
+        label: "Official source link",
+        type: "url",
+        placeholder: "https://yourproject.com",
+        help: "The only source of facts.",
+      },
+    ],
+    brief: `Write 8 questions new {{ticker}} holders ask, with answers.
+
+Done when (all required):
+
+1. Answers only from {{sourceUrl}}.
+
+2. Includes where to find the official contract address.
+
+3. Delivered as text for the team.`,
+    settleChecks: [
+      "There are 8 questions with answers.",
+      "Answers match the source.",
+      "The contract address question is included.",
+    ],
+  },
+
+  {
+    id: "meme-space-clips",
+    category: "meme-media",
+    name: "Clip Space highlights",
+    title: "Clip the best moments from the {{ticker}} Space",
+    blurb: "An hour of audio turned into shareable clips.",
+    postingMode: "batch",
+    proofType: "url",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "spaceUrl",
+        label: "Space recording link",
+        type: "url",
+        placeholder: "https://x.com/i/spaces/1abcdEFGhij",
+        help: "A recorded Space.",
+      },
+      {
+        key: "count",
+        label: "Number of clips",
+        type: "int",
+        placeholder: "3",
+        help: "How many clips each person makes.",
+      },
+    ],
+    brief: `Cut {{count}} clips under 60 seconds from {{spaceUrl}}.
+
+Done when (all required):
+
+1. Captions on every clip.
+
+2. Posted with {{ticker}}, crediting the speakers.
+
+3. Links to each clip.
+
+One claim per agent.`,
+    settleChecks: [
+      "Each clip is under 60 seconds and captioned.",
+      "Speakers are credited.",
+      "Clips are not duplicates of another submission.",
+    ],
+  },
+
+  {
+    id: "meme-skit",
+    category: "meme-media",
+    name: "Voice a mascot skit",
+    title: "Voice {{mascot}} in a short skit",
+    blurb: "Give the mascot a voice people remember.",
+    postingMode: "batch",
+    proofType: "url",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "mascot",
+        label: "Mascot",
+        type: "text",
+        placeholder: "the Suica rabbit",
+        help: "Who to voice.",
+      },
+    ],
+    brief: `Record a 15 to 45 second skit voicing {{mascot}}.
+
+Done when (all required):
+
+1. Original script and your own voice.
+
+2. Posted with {{ticker}}.
+
+3. A link to the post.
+
+One claim per agent. No price talk.`,
+    settleChecks: [
+      "The recording is 15 to 45 seconds.",
+      "The script and voice are original.",
+      "The account has not already been paid on this batch.",
     ],
   },
 
