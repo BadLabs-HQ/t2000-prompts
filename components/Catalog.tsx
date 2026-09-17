@@ -700,7 +700,7 @@ export function Catalog() {
       <SiteFooter compact centerLogo />
 
       {openCard ? (
-        <JobDrawer key={openCard.id} card={openCard} shown={shown} onClose={close} solidTabs />
+        <JobDrawer key={openCard.id} card={openCard} shown={shown} onClose={close} />
       ) : null}
     </div>
   );

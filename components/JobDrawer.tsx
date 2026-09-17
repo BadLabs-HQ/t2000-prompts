@@ -50,16 +50,10 @@ export function JobDrawer({
   card,
   shown,
   onClose,
-  solidTabs = false,
-  ringTabs = false,
 }: {
   card: Card;
   shown: boolean;
   onClose: () => void;
-  /** Catalog design: the active tab drops its outline and wears an orange ring. */
-  solidTabs?: boolean;
-  /** Memes design: the active tab keeps its outline and wears an orange ring. */
-  ringTabs?: boolean;
 }) {
   const [tab, setTab] = useState<Tab>("post");
   const [values, setValues] = useState<Values>({});
@@ -226,11 +220,7 @@ export function JobDrawer({
                   setCopied(false);
                 }}
                 className="hv-both-orange"
-                style={
-                  solidTabs && on
-                    ? { ...PANEL_TAB, border: "none", padding: "9px 13px" }
-                    : PANEL_TAB
-                }
+                style={on ? { ...PANEL_TAB, border: "none", padding: "9px 13px" } : PANEL_TAB}
               >
                 <span
                   aria-hidden
@@ -240,7 +230,7 @@ export function JobDrawer({
                     borderRadius: 999,
                     boxSizing: "border-box",
                     background: on ? ACCENT : "transparent",
-                    border: on ? `1px solid ${solidTabs || ringTabs ? ACCENT : "var(--ink)"}` : 0,
+                    border: on ? `1px solid ${ACCENT}` : 0,
                   }}
                 />
                 <span style={{ position: "relative", color: on ? "var(--on-ember)" : "inherit" }}>

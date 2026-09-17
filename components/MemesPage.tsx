@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { compilePost } from "@/lib/compile";
 import { memeCards } from "@/lib/memes";
 import { categoryLabel, memeCategories, proofLabels, type CategoryId } from "@/lib/types";
@@ -22,18 +22,26 @@ export function MemesPage() {
   const visible = filter === "all" ? memeCards : memeCards.filter((c) => c.category === filter);
   const openCard = memeCards.find((c) => c.id === openId) ?? null;
 
-  const open = (id: string) => {
+  const open = useCallback((id: string) => {
     clearTimeout(closeTimer.current);
     setOpenId(id);
     setShown(false);
     requestAnimationFrame(() => requestAnimationFrame(() => setShown(true)));
-  };
+  }, []);
 
   const close = useCallback(() => {
     setShown(false);
     clearTimeout(closeTimer.current);
     closeTimer.current = setTimeout(() => setOpenId(null), 280);
   }, []);
+
+  // Deep link: /memes?open=<card id> or /memes#<card id> opens that card.
+  useEffect(() => {
+    const want =
+      new URLSearchParams(window.location.search).get("open") ||
+      window.location.hash.replace("#", "");
+    if (want && memeCards.some((c) => c.id === want)) open(want);
+  }, [open]);
 
   return (
     <div
@@ -212,7 +220,7 @@ export function MemesPage() {
       <SiteFooter compact centerLogo />
 
       {openCard ? (
-        <JobDrawer key={openCard.id} card={openCard} shown={shown} onClose={close} ringTabs />
+        <JobDrawer key={openCard.id} card={openCard} shown={shown} onClose={close} />
       ) : null}
     </div>
   );
