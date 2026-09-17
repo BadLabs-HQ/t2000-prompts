@@ -1,7 +1,19 @@
 import { MONO, SANS } from "./fonts";
 
-/** framed: the catalog design closes the page with a 2px rule and no vertical padding. */
-export function SiteFooter({ framed = false }: { framed?: boolean }) {
+/**
+ * framed: Home and Memes close the page with a 2px rule.
+ * compact: no vertical padding (framed pages and the catalog).
+ * centerLogo: the catalog centres the wordmark instead of baseline aligning it.
+ */
+export function SiteFooter({
+  framed = false,
+  compact = framed,
+  centerLogo = false,
+}: {
+  framed?: boolean;
+  compact?: boolean;
+  centerLogo?: boolean;
+}) {
   return (
     <footer
       style={{
@@ -12,7 +24,7 @@ export function SiteFooter({ framed = false }: { framed?: boolean }) {
     >
       <div
         style={{
-          padding: framed ? "0 var(--gutter, 18px)" : "14px var(--gutter, 18px)",
+          padding: compact ? "0 var(--gutter, 18px)" : "14px var(--gutter, 18px)",
           minHeight: 56,
           display: "flex",
           flexWrap: "wrap",
@@ -23,7 +35,7 @@ export function SiteFooter({ framed = false }: { framed?: boolean }) {
           color: "var(--muted)",
         }}
       >
-        <span style={{ display: "flex", alignItems: "baseline", gap: 6 }}>
+        <span style={{ display: "flex", alignItems: centerLogo ? "center" : "baseline", gap: 6 }}>
           <span
             style={{
               fontFamily: SANS,

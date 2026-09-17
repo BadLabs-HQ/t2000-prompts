@@ -154,7 +154,7 @@ export function Catalog() {
         flexDirection: "column",
       }}
     >
-      <SiteHeader page="prompts" framed />
+      <SiteHeader page="prompts" />
 
       <div style={{ position: "relative", display: "flex", minHeight: 0, flex: 1 }}>
         <button
@@ -697,7 +697,7 @@ export function Catalog() {
         </main>
       </div>
 
-      <SiteFooter framed />
+      <SiteFooter compact centerLogo />
 
       {openCard ? (
         <JobDrawer key={openCard.id} card={openCard} shown={shown} onClose={close} solidTabs />

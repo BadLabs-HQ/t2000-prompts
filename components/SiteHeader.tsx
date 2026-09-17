@@ -63,7 +63,7 @@ export function SiteHeader({ page, framed = false }: { page: Page; framed?: bool
       >
         <Link
           href="/"
-          style={{ display: "flex", alignItems: "baseline", gap: 6, textDecoration: "none" }}
+          style={{ display: "flex", alignItems: "center", gap: 6, textDecoration: "none" }}
         >
           <span
             style={{
