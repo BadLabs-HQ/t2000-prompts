@@ -46,7 +46,7 @@ export function MemesPage() {
         flexDirection: "column",
       }}
     >
-      <SiteHeader page="memes" framed />
+      <SiteHeader page="memes" />
 
       <main
         style={{
@@ -209,7 +209,7 @@ export function MemesPage() {
         </ul>
       </main>
 
-      <SiteFooter framed />
+      <SiteFooter compact />
 
       {openCard ? (
         <JobDrawer key={openCard.id} card={openCard} shown={shown} onClose={close} ringTabs />

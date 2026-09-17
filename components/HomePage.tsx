@@ -162,7 +162,7 @@ export function HomePage() {
       className="t2k-home"
       style={{ fontFamily: SANS, color: "var(--ink)", background: "var(--bg)", minHeight: "100vh" }}
     >
-      <SiteHeader page="home" framed />
+      <SiteHeader page="home" />
 
       <main style={{ maxWidth: 1100, margin: "0 auto", padding: "0 24px" }}>
         <section
@@ -696,7 +696,7 @@ export function HomePage() {
         </section>
       </main>
 
-      <SiteFooter framed />
+      <SiteFooter compact />
     </div>
   );
 }
