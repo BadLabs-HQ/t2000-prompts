@@ -1,11 +1,18 @@
 import { MONO, SANS } from "./fonts";
 
-export function SiteFooter() {
+/** framed: the catalog design closes the page with a 2px rule and no vertical padding. */
+export function SiteFooter({ framed = false }: { framed?: boolean }) {
   return (
-    <footer style={{ borderTop: "1px solid var(--ink)", background: "var(--chrome)" }}>
+    <footer
+      style={{
+        borderTop: "1px solid var(--ink)",
+        borderBottom: framed ? "2px solid var(--ink)" : undefined,
+        background: "var(--chrome)",
+      }}
+    >
       <div
         style={{
-          padding: "14px var(--gutter, 18px)",
+          padding: framed ? "0 var(--gutter, 18px)" : "14px var(--gutter, 18px)",
           minHeight: 56,
           display: "flex",
           flexWrap: "wrap",

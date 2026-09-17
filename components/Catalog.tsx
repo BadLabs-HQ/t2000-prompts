@@ -100,7 +100,7 @@ export function Catalog() {
     alignItems: "center",
     gap: 10,
     boxSizing: "border-box",
-    border: `1px solid ${on ? (hot ? ACCENT : "var(--ink)") : "transparent"}`,
+    border: 0,
     cursor: "pointer",
     borderRadius: 999,
     padding: "0 12px",
@@ -154,7 +154,7 @@ export function Catalog() {
         flexDirection: "column",
       }}
     >
-      <SiteHeader page="prompts" />
+      <SiteHeader page="prompts" framed />
 
       <div style={{ position: "relative", display: "flex", minHeight: 0, flex: 1 }}>
         <button
@@ -292,7 +292,13 @@ export function Catalog() {
         </nav>
 
         <main style={{ minWidth: 0, flex: 1, padding: "20px var(--gutter) 0" }}>
-          <div style={{ maxWidth: 1000, margin: "0 auto" }}>
+          <div
+            style={{
+              maxWidth: 1000,
+              margin: "0 auto",
+              transform: railOpen ? "none" : `translateX(${(narrow ? -40 : -54) / 2}px)`,
+            }}
+          >
             {!catPage ? (
               <>
                 <label
@@ -338,7 +344,7 @@ export function Catalog() {
                     display: "flex",
                     flexWrap: "wrap",
                     alignItems: "center",
-                    gap: "4px 30px",
+                    gap: 6,
                   }}
                 >
                   {[{ id: "all" as const, label: "All" }, ...categories].map((t) => {
@@ -356,18 +362,16 @@ export function Catalog() {
                         onMouseLeave={() => setHotTab(null)}
                         style={{
                           position: "relative",
-                          border: 0,
-                          background: "none",
+                          border: on ? "none" : `1px solid ${hot ? ACCENT : "var(--ink)"}`,
+                          borderRadius: 999,
+                          background: on ? ACCENT : "none",
                           cursor: "pointer",
                           whiteSpace: "nowrap",
-                          padding: "12px 0",
-                          fontSize: 15,
-                          fontWeight: on ? 500 : 400,
-                          color: hot ? ACCENT : "var(--ink)",
-                          backgroundImage: on ? TAB_UNDERLINE : "none",
-                          backgroundRepeat: "no-repeat",
-                          backgroundPosition: "left bottom",
-                          backgroundSize: "100% 6px",
+                          padding: on ? "9px 17px" : "8px 16px",
+                          fontSize: 13,
+                          fontWeight: on ? 600 : 400,
+                          color: on ? "var(--on-ember)" : hot ? ACCENT : "var(--ink)",
+                          transition: "color 120ms ease, border-color 120ms ease, background 120ms ease",
                         }}
                       >
                         {t.label}
@@ -612,55 +616,54 @@ export function Catalog() {
                 style={{
                   marginTop: 28,
                   columnCount: "var(--cols)" as unknown as number,
-                  columnGap: "var(--colgap)",
-                  columnFill: "balance",
-                  maxWidth: 860,
-                  overflowWrap: "break-word",
+                  columnGap: 6,
                 }}
               >
                 {groups.map((g) => (
                   <section
                     key={g.label}
-                    style={
-                      {
-                        margin: "0 0 24px",
-                        minWidth: 0,
-                        overflow: "hidden",
-                        breakInside: "avoid",
-                        WebkitColumnBreakInside: "avoid",
-                        pageBreakInside: "avoid",
-                        breakBefore: "auto",
-                      } as CSSProperties
-                    }
+                    style={{
+                      border: "1px solid var(--ink)",
+                      borderRadius: 12,
+                      background: "var(--surface)",
+                      breakInside: "avoid",
+                      marginBottom: 6,
+                    }}
                   >
-                    <h2
+                    <div
                       style={{
-                        margin: 0,
-                        fontFamily: SANS,
-                        fontWeight: 500,
-                        fontSize: 12,
-                        letterSpacing: "0.07em",
-                        textTransform: "uppercase",
-                        color: "var(--ink)",
-                        lineHeight: 1.4,
-                        paddingBottom: 8,
-                        borderBottom: "1px solid var(--ink)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        padding: "13px 16px 11px",
                       }}
                     >
-                      {g.label}
-                    </h2>
-                    <ul
-                      style={{
-                        listStyle: "none",
-                        margin: "8px 0 0",
-                        padding: 0,
-                        display: "grid",
-                        gridTemplateColumns: "minmax(0, 1fr)",
-                        gap: 1,
-                      }}
-                    >
+                      <h2
+                        style={{
+                          margin: 0,
+                          fontFamily: SANS,
+                          fontWeight: 700,
+                          fontSize: 13,
+                          letterSpacing: "-0.02em",
+                          color: "var(--ink)",
+                        }}
+                      >
+                        {g.label}
+                      </h2>
+                      <span
+                        style={{
+                          fontFamily: MONO,
+                          fontSize: 11,
+                          letterSpacing: "0.04em",
+                          color: ACCENT,
+                        }}
+                      >
+                        {g.items.length}
+                      </span>
+                    </div>
+                    <ul style={{ listStyle: "none", margin: 0, padding: "4px 0", display: "grid", gap: 0 }}>
                       {g.items.map((c) => (
-                        <li key={c.id} style={{ minWidth: 0 }}>
+                        <li key={c.id}>
                           <button
                             type="button"
                             onClick={() => open(c.id)}
@@ -673,15 +676,12 @@ export function Catalog() {
                               border: 0,
                               background: "none",
                               cursor: "pointer",
-                              borderRadius: 6,
-                              padding: "4px 0",
-                              margin: 0,
-                              minWidth: 0,
+                              padding: "7px 16px",
                               textAlign: "left",
                               fontSize: 14,
                               lineHeight: 1.45,
                               color: "var(--ink)",
-                              transition: "color 120ms ease",
+                              transition: "color 120ms ease, background 120ms ease",
                             }}
                           >
                             <span style={ELLIPSIS}>{c.name}</span>
@@ -697,10 +697,10 @@ export function Catalog() {
         </main>
       </div>
 
-      <SiteFooter />
+      <SiteFooter framed />
 
       {openCard ? (
-        <JobDrawer key={openCard.id} card={openCard} shown={shown} onClose={close} />
+        <JobDrawer key={openCard.id} card={openCard} shown={shown} onClose={close} solidTabs />
       ) : null}
     </div>
   );

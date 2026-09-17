@@ -21,7 +21,7 @@ const navLink = (on: boolean): CSSProperties => ({
   transition: "color 120ms ease",
 });
 
-export function SiteHeader({ page }: { page: Page }) {
+export function SiteHeader({ page, framed = false }: { page: Page; framed?: boolean }) {
   const [dark, setDark] = useState(false);
 
   useEffect(() => {
@@ -48,6 +48,7 @@ export function SiteHeader({ page }: { page: Page }) {
         top: 0,
         zIndex: 20,
         background: "var(--chrome)",
+        borderTop: framed ? "2px solid var(--ink)" : undefined,
         borderBottom: "1px solid var(--ink)",
       }}
     >
