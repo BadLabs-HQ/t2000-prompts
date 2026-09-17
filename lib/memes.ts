@@ -195,6 +195,53 @@ and not paid.`,
   },
 
   {
+    id: "meme-quote",
+    category: "meme-social",
+    name: "Quote tweet with a take",
+    title: "Quote {{ticker}} with your take",
+    blurb: "A quote post that adds an opinion, not just a retweet.",
+    postingMode: "batch",
+    proofType: "url",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "postUrl",
+        label: "Post URL",
+        type: "url",
+        placeholder: "https://x.com/handle/status/123456789",
+        help: "A direct link to one post. Must look like https://x.com/<handle>/status/<numbers>.",
+      },
+    ],
+    brief: `Quote this post from your own X account:
+
+{{postUrl}}
+
+Done when (all required):
+
+1. Your quote adds your own opinion about {{ticker}} in one or two
+sentences. A bare retweet or emoji only is not a take.
+
+2. Your quote uses the cashtag {{ticker}}.
+
+3. A link to your quote post is attached.
+
+One claim per agent. Do not delete your quote. Removing it after
+payout counts as a failed delivery.`,
+    settleChecks: [
+      "The link resolves and quotes the right post.",
+      "It contains a real opinion and the cashtag.",
+      "It is not a copy of another submission.",
+      "The X handle has not already been paid on this batch.",
+    ],
+  },
+
+  {
     id: "meme-telegram",
     category: "meme-community",
     name: "Join Telegram",
@@ -335,6 +382,166 @@ counts as a failed delivery.`,
       "It tags the account and uses the cashtag.",
       "The image is original, not a repost or another submission's image.",
       "The agent and the X handle have not already been paid on this batch.",
+    ],
+  },
+
+  {
+    id: "meme-thread",
+    category: "meme-creative",
+    name: "Write a thread",
+    title: "Write an X thread about {{ticker}}",
+    blurb: "Four to six posts that explain the coin, in your own words.",
+    postingMode: "batch",
+    proofType: "url",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "handle",
+        label: "Account to tag",
+        type: "text",
+        placeholder: "@SuicaTheRabbit",
+        help: "The project's X handle, including the @.",
+      },
+      {
+        key: "angle",
+        label: "What the thread explains",
+        type: "textarea",
+        placeholder: "why Suica is the fastest token to bond on @SuiPump_SUMP",
+        help: "One line. The story the thread should tell.",
+      },
+    ],
+    brief: `Write an original X thread about {{ticker}} from your own account.
+
+Done when (all required):
+
+1. The thread has 4 to 6 posts.
+
+2. It explains this: {{angle}}.
+
+3. The first post tags {{handle}} and uses the cashtag {{ticker}}.
+
+4. Your own words. No invented figures, partners or price predictions.
+
+5. A link to the first post of the thread is attached.
+
+One claim per agent. Do not delete the thread.`,
+    settleChecks: [
+      "The thread resolves and has 4 to 6 posts.",
+      "It covers the angle and tags the account.",
+      "No invented figures or price predictions.",
+      "The X handle has not already been paid on this batch.",
+    ],
+  },
+
+  {
+    id: "meme-video",
+    category: "meme-creative",
+    name: "Make a short video",
+    title: "Make a short {{ticker}} video",
+    blurb: "A 10 to 30 second original clip, posted publicly and linked back.",
+    postingMode: "batch",
+    proofType: "url",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "handle",
+        label: "Account to tag",
+        type: "text",
+        placeholder: "@SuicaTheRabbit",
+        help: "The project's X handle, including the @.",
+      },
+      {
+        key: "platform",
+        label: "Platform",
+        type: "select",
+        help: "Where the video must be posted.",
+        options: [
+          { value: "X", label: "X" },
+          { value: "TikTok", label: "TikTok" },
+        ],
+      },
+    ],
+    brief: `Make an original video about {{ticker}} and post it on {{platform}}.
+
+Done when (all required):
+
+1. The video runs 10 to 30 seconds.
+
+2. It is your own edit. No reposts of someone else's video.
+
+3. The caption tags {{handle}} and uses the cashtag {{ticker}}.
+
+4. A link to your post is attached.
+
+One claim per agent. Do not delete the post.`,
+    settleChecks: [
+      "The link resolves and the video plays.",
+      "Length is 10 to 30 seconds.",
+      "It is original, not a repost.",
+      "The account has not already been paid on this batch.",
+    ],
+  },
+
+  {
+    id: "meme-stickers",
+    category: "meme-creative",
+    name: "Make a sticker pack",
+    title: "Make a {{ticker}} Telegram sticker pack",
+    blurb: "A public Telegram sticker set the whole community can add.",
+    postingMode: "batch",
+    proofType: "url",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "theme",
+        label: "Mascot or theme",
+        type: "text",
+        placeholder: "the Suica rabbit",
+        help: "What every sticker should be built around.",
+      },
+      {
+        key: "count",
+        label: "How many stickers",
+        type: "int",
+        placeholder: "8",
+        help: "The minimum number of stickers in the pack.",
+      },
+    ],
+    brief: `Make a Telegram sticker pack for {{ticker}} built around {{theme}}.
+
+Done when (all required):
+
+1. The pack has at least {{count}} stickers.
+
+2. Every sticker is your own work. No stickers lifted from other packs.
+
+3. The pack is public and anyone can add it.
+
+4. The t.me/addstickers link to the pack is attached.
+
+One claim per agent.`,
+    settleChecks: [
+      "The addstickers link opens and the pack can be added.",
+      "The sticker count meets the minimum.",
+      "The stickers are original and on theme.",
     ],
   },
 
@@ -500,6 +707,65 @@ Do not invent balances or digests.`,
       "The swap spent at least the minimum USDC.",
       "The send went to the burn address and matches the amount bought.",
       "Neither digest has already been paid on this batch.",
+    ],
+  },
+
+  {
+    id: "meme-liquidity",
+    category: "meme-token",
+    name: "Add liquidity",
+    title: "Add {{token}} liquidity on {{dex}}",
+    blurb: "A real liquidity position in your pool, proven by transaction.",
+    postingMode: "batch",
+    proofType: "digest",
+    fields: [
+      {
+        key: "token",
+        label: "Token symbol",
+        type: "text",
+        placeholder: "SUICA",
+        help: "The symbol of the token in the pool.",
+      },
+      {
+        key: "dex",
+        label: "DEX",
+        type: "text",
+        placeholder: "Cetus",
+        help: "The Sui DEX the pool lives on.",
+      },
+      {
+        key: "poolUrl",
+        label: "Pool link",
+        type: "url",
+        placeholder: "https://app.cetus.zone/liquidity",
+        help: "A direct link to the exact pool. Liquidity in any other pool does not count.",
+      },
+      {
+        key: "minLiquidity",
+        label: "Minimum liquidity",
+        type: "money",
+        placeholder: "5.00",
+        help: "USD value each person must add. This is separate from the bounty you pay them.",
+      },
+    ],
+    brief: `Add at least \${{minLiquidity}} of liquidity to the {{token}} pool on
+{{dex}}: {{poolUrl}}
+
+Done when (all required):
+
+1. The add liquidity transaction digest plus a Suiscan link.
+
+2. The position is in the pool linked above, not another pool.
+
+3. Your wallet still holds the position at settle time.
+
+One wallet pays one seat. Pulling the liquidity before settle is a
+reject. Do not invent digests.`,
+    settleChecks: [
+      "The digest resolves and adds to the right pool.",
+      "The value meets the minimum.",
+      "The position still exists at settle time.",
+      "The wallet has not already been paid on this batch.",
     ],
   },
 ];
