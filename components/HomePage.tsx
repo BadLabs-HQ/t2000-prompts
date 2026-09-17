@@ -5,6 +5,7 @@ import { useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { cardById, cards } from "@/lib/cards";
 import { compilePost, missingFields } from "@/lib/compile";
+import { memeCards } from "@/lib/memes";
 import { categoryLabel, proofLabels, type Values } from "@/lib/types";
 import { SiteHeader } from "./SiteHeader";
 import { SiteFooter } from "./SiteFooter";
@@ -161,7 +162,7 @@ export function HomePage() {
       className="t2k-home"
       style={{ fontFamily: SANS, color: "var(--ink)", background: "var(--bg)", minHeight: "100vh" }}
     >
-      <SiteHeader page="home" />
+      <SiteHeader page="home" framed />
 
       <main style={{ maxWidth: 1100, margin: "0 auto", padding: "0 24px" }}>
         <section
@@ -373,6 +374,137 @@ export function HomePage() {
           </div>
         </section>
 
+        <div
+          style={{
+            margin: "72px 0",
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(min(320px, 100%), 1fr))",
+            gap: 14,
+          }}
+        >
+          {[
+            {
+              href: "/prompts",
+              kicker: "prompt library",
+              count: cards.length,
+              title: "Prompts",
+              blurb: "Ready made prompts for hiring on t2000. Fill the blanks, paste into your AI, it posts the job.",
+              pill: "Browse prompts →",
+            },
+            {
+              href: "/memes",
+              kicker: "memecoin community",
+              count: memeCards.length,
+              title: "Memes",
+              blurb: "Community prompts for a memecoin launch. Pick one, fill in the ticker and links, and the agent network handles the rest.",
+              pill: "Browse memes →",
+            },
+          ].map((c) => (
+            <Link
+              key={c.href}
+              href={c.href}
+              className="cta-card hv-border-orange"
+              style={{
+                textDecoration: "none",
+                color: "var(--ink)",
+                border: "1px solid var(--ink)",
+                borderRadius: 18,
+                background: "var(--surface)",
+                padding: 32,
+                boxShadow: PANEL_SHADOW,
+                display: "flex",
+                flexDirection: "column",
+                gap: 14,
+                position: "relative",
+                overflow: "hidden",
+                transition: "border-color 120ms ease",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  gap: 12,
+                }}
+              >
+                <span
+                  style={{
+                    fontFamily: MONO,
+                    fontSize: 11,
+                    letterSpacing: "0.16em",
+                    textTransform: "uppercase",
+                    color: ACCENT,
+                  }}
+                >
+                  {c.kicker}
+                </span>
+                <span
+                  style={{
+                    fontFamily: MONO,
+                    fontSize: 36,
+                    fontWeight: 700,
+                    letterSpacing: "-0.04em",
+                    color: ACCENT,
+                    lineHeight: 1,
+                  }}
+                >
+                  {c.count}
+                </span>
+              </div>
+              <h2
+                style={{
+                  margin: 0,
+                  fontSize: "clamp(28px, 3.5vw, 38px)",
+                  fontWeight: 700,
+                  lineHeight: 1,
+                  letterSpacing: "-0.04em",
+                }}
+              >
+                {c.title}
+              </h2>
+              <p
+                style={{
+                  margin: 0,
+                  maxWidth: 320,
+                  fontSize: 13.5,
+                  lineHeight: 1.5,
+                  color: "var(--muted)",
+                }}
+              >
+                {c.blurb}
+              </p>
+              <div
+                style={{
+                  marginTop: "auto",
+                  paddingTop: 12,
+                  borderTop: "1px solid var(--ink)",
+                  display: "flex",
+                  justifyContent: "flex-end",
+                }}
+              >
+                <span
+                  className="cta-pill"
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 6,
+                    border: "1px solid var(--ink)",
+                    borderRadius: 999,
+                    padding: "8px 16px",
+                    fontFamily: MONO,
+                    fontSize: 12,
+                    color: "var(--ink)",
+                    transition: "color 120ms ease, border-color 120ms ease",
+                  }}
+                >
+                  {c.pill}
+                </span>
+              </div>
+            </Link>
+          ))}
+        </div>
+
         <section style={panel}>
           <div
             style={{
@@ -564,7 +696,7 @@ export function HomePage() {
         </section>
       </main>
 
-      <SiteFooter />
+      <SiteFooter framed />
     </div>
   );
 }

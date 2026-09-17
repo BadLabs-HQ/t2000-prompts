@@ -14,6 +14,7 @@ const TAB_UNDERLINE =
 
 export function MemesPage() {
   const [filter, setFilter] = useState<CategoryId | "all">("all");
+  const [hotTab, setHotTab] = useState<string | null>(null);
   const [openId, setOpenId] = useState<string | null>(null);
   const [shown, setShown] = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
@@ -36,7 +37,7 @@ export function MemesPage() {
 
   return (
     <div
-      className="t2k-catalog t2k-vars"
+      className="t2k-catalog t2k-vars t2k-memes"
       style={{
         fontFamily: SANS,
         color: "var(--ink)",
@@ -45,62 +46,52 @@ export function MemesPage() {
         flexDirection: "column",
       }}
     >
-      <SiteHeader page="memes" />
+      <SiteHeader page="memes" framed />
 
       <main
         style={{
           flex: 1,
-          width: "100%",
+          minHeight: 0,
+          padding: "var(--pad) var(--gutter)",
           maxWidth: 1100,
+          width: "100%",
           boxSizing: "border-box",
-          padding: "var(--pad)",
+          margin: "0 auto",
         }}
       >
-        <p
-          style={{
-            margin: 0,
-            fontFamily: MONO,
-            fontSize: 11.5,
-            letterSpacing: "0.16em",
-            textTransform: "uppercase",
-            color: ACCENT,
-          }}
-        >
-          memecoin community
-        </p>
-        <h1 style={{ margin: "8px 0 0", fontSize: "var(--h1)", fontWeight: 600, letterSpacing: "-0.025em", lineHeight: 1.1 }}>
-          Memes
-        </h1>
-        <p style={{ margin: "10px 0 0", maxWidth: 520, fontSize: 13.5, lineHeight: 1.5, color: "var(--muted)" }}>
-          Community prompts for a memecoin launch. Pick one, fill in the ticker and links, and the
-          agent network handles the rest.
-        </p>
-
         <nav
           aria-label="Filter by category"
-          style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "4px 30px", marginTop: 18 }}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 6,
+            margin: 0,
+            flexWrap: "wrap",
+          }}
         >
           {[{ id: "all" as const, label: "All" }, ...memeCategories].map((t) => {
             const on = filter === t.id;
+            const hot = hotTab === t.id;
             return (
               <button
                 key={t.id}
                 type="button"
                 onClick={() => setFilter(t.id)}
-                className="hv-orange"
+                onMouseEnter={() => setHotTab(t.id)}
+                onMouseLeave={() => setHotTab(null)}
                 style={{
-                  border: 0,
-                  background: "none",
+                  position: "relative",
+                  border: on ? "none" : `1px solid ${hot ? ACCENT : "var(--ink)"}`,
+                  borderRadius: 999,
+                  background: on ? ACCENT : "none",
                   cursor: "pointer",
                   whiteSpace: "nowrap",
-                  padding: "12px 0",
-                  fontSize: 15,
-                  fontWeight: on ? 500 : 400,
-                  color: "var(--ink)",
-                  backgroundImage: on ? TAB_UNDERLINE : "none",
-                  backgroundRepeat: "no-repeat",
-                  backgroundPosition: "left bottom",
-                  backgroundSize: "100% 6px",
+                  padding: on ? "9px 17px" : "8px 16px",
+                  fontSize: 13,
+                  fontWeight: on ? 600 : 400,
+                  color: on ? "var(--on-ember)" : hot ? ACCENT : "var(--ink)",
+                  transition: "color 120ms ease, border-color 120ms ease, background 120ms ease",
                 }}
               >
                 {t.label}
@@ -116,7 +107,7 @@ export function MemesPage() {
             padding: 0,
             display: "grid",
             gridTemplateColumns: "repeat(var(--cols), minmax(0, 1fr))",
-            gap: "14px 28px",
+            gap: "14px var(--colgap)",
           }}
         >
           {visible.map((c) => (
@@ -218,10 +209,10 @@ export function MemesPage() {
         </ul>
       </main>
 
-      <SiteFooter />
+      <SiteFooter framed />
 
       {openCard ? (
-        <JobDrawer key={openCard.id} card={openCard} shown={shown} onClose={close} />
+        <JobDrawer key={openCard.id} card={openCard} shown={shown} onClose={close} ringTabs />
       ) : null}
     </div>
   );

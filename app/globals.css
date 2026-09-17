@@ -160,6 +160,16 @@ a {
   --h1: 30px;
 }
 
+/* Memes uses a 28px column gap where the catalog uses 36px. */
+.t2k-memes {
+  --colgap: 28px;
+}
+
+.cta-card:hover .cta-pill {
+  border-color: #ff7a45 !important;
+  color: #ff7a45 !important;
+}
+
 .tile:hover .tile-name,
 .row:hover .tile-name {
   color: #ff7a45 !important;
@@ -201,9 +211,22 @@ a {
   .t2k-home main {
     padding: 0 16px !important;
   }
+  .t2k-memes {
+    --colgap: 0px;
+  }
   .t2k-home main > section {
     margin: 28px 0 !important;
     padding: 26px 20px !important;
+  }
+  .t2k-home main > section:first-child {
+    margin-top: 20px !important;
+    padding: 34px 20px 38px !important;
+  }
+  .t2k-home main > section:last-child {
+    margin-bottom: 40px !important;
+  }
+  .t2k-home main > section > div > div > h2 {
+    margin-bottom: 16px !important;
   }
 }
 
@@ -230,6 +253,15 @@ a {
   }
   .site-header button[aria-label="Toggle theme"] {
     padding: 12px 12px !important;
+  }
+  .t2k-home main > section {
+    padding: 22px 16px !important;
+  }
+  .t2k-home main > section ol li {
+    padding: 16px !important;
+  }
+  .t2k-home footer > div {
+    padding-inline: 16px !important;
   }
   .t2k-vars nav[aria-label="Categories"] button {
     height: 44px !important;
