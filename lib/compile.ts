@@ -127,6 +127,35 @@ function paramTable(card: Card, values: Values): string[] {
   return rows.map(([k, v]) => k.padEnd(width) + v);
 }
 
+/**
+ * Joins lines that were hard wrapped for width back into flowing text, so the
+ * prompt box and the pasted prompt wrap at whatever width they are shown.
+ * Blank lines, list items, aligned tables and lines ending in punctuation
+ * keep their breaks.
+ */
+function unwrap(text: string): string {
+  const out: string[] = [];
+  const indent = (l: string) => l.length - l.trimStart().length;
+  const table = /\S {2,}\S/;
+  for (const line of text.split("\n")) {
+    const prev = out[out.length - 1];
+    const body = line.trimStart();
+    const marker = prev?.trimStart().match(/^(\d+\.|-)\s+/)?.[0].length ?? 0;
+    const join =
+      prev !== undefined &&
+      prev.trim().length >= 40 &&
+      body !== "" &&
+      !table.test(prev.trim()) &&
+      !table.test(body) &&
+      !/[.:!?]$/.test(prev.trimEnd()) &&
+      !/^([-•→─_]|\d+\.\s)/.test(body) &&
+      (indent(line) === indent(prev) || (marker > 0 && indent(line) === indent(prev) + marker));
+    if (join) out[out.length - 1] = prev.trimEnd() + " " + body;
+    else out.push(line);
+  }
+  return out.join("\n");
+}
+
 export function compilePost(card: Card, values: Values): string {
   const batch = card.postingMode === "batch";
   const tool = batch ? "t2000_job_batch_open" : "t2000_job_open";
@@ -216,7 +245,7 @@ export function compilePost(card: Card, values: Values): string {
     `  https://t2000.ai/jobs/<${batch ? "batchId" : "openingId"}>`
   );
 
-  return out.join("\n");
+  return unwrap(out.join("\n"));
 }
 
 /** Settling needs no inputs, so this never reads `values`. Anything it
@@ -303,7 +332,7 @@ export function compileSettle(card: Card): string {
     "  anything left in the queue and why"
   );
 
-  return out.join("\n");
+  return unwrap(out.join("\n"));
 }
 
 export function compileBoth(card: Card, values: Values): string {
@@ -335,7 +364,7 @@ export function compileBoth(card: Card, values: Values): string {
     "",
   ].join("\n");
 
-  return header + settle + seam + post;
+  return unwrap(header + settle + seam + post);
 }
 
 export function compile(card: Card, values: Values, tab: Tab): string {
