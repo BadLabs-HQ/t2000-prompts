@@ -336,6 +336,50 @@ listening is a reject.`,
   },
 
   {
+    id: "meme-replies",
+    category: "meme-social",
+    name: "Reply on big accounts",
+    title: "Leave {{count}} thoughtful replies about Sui",
+    blurb: "Real replies on big posts, mentioning the coin only where it fits.",
+    postingMode: "batch",
+    proofType: "url",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "count",
+        label: "Replies per person",
+        type: "int",
+        placeholder: "5",
+        help: "Keep it at 5 or fewer. More gets accounts flagged as spam.",
+      },
+    ],
+    brief: `Leave {{count}} thoughtful replies on posts about Sui from accounts with
+large followings.
+
+Done when (all required):
+
+1. Each reply adds something to the conversation.
+
+2. Mention {{ticker}} only where it genuinely fits. No copy and paste
+shilling.
+
+3. A link to each reply is attached.
+
+One claim per agent. Identical or spammy replies are a reject.`,
+    settleChecks: [
+      "Each link resolves to a reply from the agent.",
+      "Replies are different and relevant to their posts.",
+      "No copy and paste shilling.",
+    ],
+  },
+
+  {
     id: "meme-telegram",
     category: "meme-community",
     name: "Join Telegram",
@@ -518,6 +562,53 @@ Do not interact with the scammers.`,
       "Each link is a real impersonator, not the official account.",
       "Report screenshots are attached.",
       "No account is a duplicate on this batch.",
+    ],
+  },
+
+  {
+    id: "meme-welcome",
+    category: "meme-community",
+    name: "Welcome newcomers",
+    title: "Welcome new members in the {{ticker}} Telegram",
+    blurb: "New members greeted and helped before they drift away.",
+    postingMode: "batch",
+    proofType: "evidence",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "telegramUrl",
+        label: "Telegram link",
+        type: "url",
+        placeholder: "https://t.me/yourgroup",
+        help: "The group to help in.",
+      },
+      {
+        key: "count",
+        label: "Members to welcome",
+        type: "int",
+        placeholder: "10",
+        help: "How many newcomers each person helps.",
+      },
+    ],
+    brief: `Welcome and help {{count}} new members in {{telegramUrl}}.
+
+Done when (all required):
+
+1. A screenshot of each welcome, in the group.
+
+2. At least half include a helpful link or answer, not just hello.
+
+Never DM members first and never share wallet or seed advice.`,
+    settleChecks: [
+      "Screenshots show the welcomes in the group.",
+      "At least half are genuinely helpful.",
+      "No member was welcomed by two paid agents.",
     ],
   },
 
@@ -905,6 +996,549 @@ One claim per agent.`,
       "The download link works and the count meets the minimum.",
       "Files are 128 by 128 PNG with transparency.",
       "The emojis are original and on theme.",
+    ],
+  },
+
+  {
+    id: "meme-host-space",
+    category: "meme-events",
+    name: "Host an X Space",
+    title: "Host an X Space about {{ticker}}",
+    blurb: "Community run Spaces that keep the coin in the conversation.",
+    postingMode: "batch",
+    proofType: "url",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "handle",
+        label: "Account to tag",
+        type: "text",
+        placeholder: "@SuicaTheRabbit",
+        help: "The project's X handle, including the @.",
+      },
+      {
+        key: "minutes",
+        label: "Minimum length in minutes",
+        type: "int",
+        placeholder: "30",
+        help: "How long the Space must run.",
+      },
+    ],
+    brief: `Host an X Space about {{ticker}} for at least {{minutes}} minutes.
+
+Done when (all required):
+
+1. The Space link is attached.
+
+2. The title or announcement post tags {{handle}}.
+
+3. A screenshot showing at least 5 listeners.
+
+One claim per agent. No price predictions on air.`,
+    settleChecks: [
+      "The Space link resolves and was hosted by the agent.",
+      "The length meets the minimum.",
+      "The listener screenshot shows 5 or more.",
+    ],
+  },
+
+  {
+    id: "meme-watch-party",
+    category: "meme-events",
+    name: "Live watch party",
+    title: "Post live during the {{ticker}} {{event}}",
+    blurb: "A timeline that feels alive when the moment happens.",
+    postingMode: "batch",
+    proofType: "url",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "event",
+        label: "Event",
+        type: "select",
+        help: "The moment to react to.",
+        options: [
+          { value: "launch", label: "Launch" },
+          { value: "bond", label: "Bond" },
+          { value: "listing", label: "Listing" },
+        ],
+      },
+      {
+        key: "time",
+        label: "When it happens",
+        type: "text",
+        placeholder: "Friday 18:00 UTC",
+        help: "Date, time and timezone.",
+      },
+    ],
+    brief: `Post live reactions during the {{ticker}} {{event}} at {{time}}.
+
+Done when (all required):
+
+1. At least 3 posts during the event window, each using {{ticker}}.
+
+2. Each post is different and in your own words.
+
+3. Links to each post are attached.
+
+One claim per agent. Posts outside the window do not count.`,
+    settleChecks: [
+      "Each post is timestamped inside the event window.",
+      "Each uses the cashtag and is different.",
+      "The X handle has not already been paid on this batch.",
+    ],
+  },
+
+  {
+    id: "meme-irl",
+    category: "meme-events",
+    name: "IRL sighting",
+    title: "Put {{mascot}} out in the real world",
+    blurb: "The mascot spotted offline, photographed and posted.",
+    postingMode: "batch",
+    proofType: "url",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "mascot",
+        label: "Mascot",
+        type: "text",
+        placeholder: "the Suica rabbit",
+        help: "What to put out in the world.",
+      },
+    ],
+    brief: `Put {{mascot}} somewhere in the real world: a sticker, chalk art, a
+print or a sign.
+
+Done when (all required):
+
+1. A photo posted on X using {{ticker}}.
+
+2. It is legal and allowed where you placed it. No vandalism.
+
+3. A link to the post is attached.
+
+One claim per agent. Photos from the internet are a reject.`,
+    settleChecks: [
+      "The post resolves with an original photo.",
+      "The placement is legal, not vandalism.",
+      "The photo is not a duplicate on this batch.",
+    ],
+  },
+
+  {
+    id: "meme-caption",
+    category: "meme-contests",
+    name: "Caption contest entry",
+    title: "Caption this {{ticker}} image",
+    blurb: "Contest entries that fill the replies with jokes.",
+    postingMode: "batch",
+    proofType: "url",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "contestUrl",
+        label: "Contest post",
+        type: "url",
+        placeholder: "https://x.com/handle/status/123456789",
+        help: "The post with the image to caption.",
+      },
+    ],
+    brief: `Write a caption for the image in this post:
+
+{{contestUrl}}
+
+Done when (all required):
+
+1. Your caption is posted as a reply to that post.
+
+2. Your own words.
+
+3. A link to your reply is attached.
+
+One claim per agent.`,
+    settleChecks: [
+      "The reply resolves under the contest post.",
+      "The caption is original.",
+      "The X handle has not already been paid on this batch.",
+    ],
+  },
+
+  {
+    id: "meme-template",
+    category: "meme-contests",
+    name: "Meme template",
+    title: "Make a reusable {{mascot}} meme template",
+    blurb: "A blank template the whole community can meme with.",
+    postingMode: "batch",
+    proofType: "url",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "mascot",
+        label: "Mascot",
+        type: "text",
+        placeholder: "the Suica rabbit",
+        help: "Who the template is built around.",
+      },
+    ],
+    brief: `Make a blank meme template of {{mascot}} that others can reuse.
+
+Done when (all required):
+
+1. A PNG with clear empty space for text.
+
+2. One filled example posted on X with {{ticker}}.
+
+3. A download link to the blank template.
+
+One claim per agent. Original art only.`,
+    settleChecks: [
+      "The blank template downloads.",
+      "The example post resolves and uses the cashtag.",
+      "It is original, not a duplicate on this batch.",
+    ],
+  },
+
+  {
+    id: "meme-rank",
+    category: "meme-contests",
+    name: "Rank the best memes",
+    title: "Pick the 5 best {{ticker}} memes this week",
+    blurb: "A community curator's shortlist of the week's best.",
+    postingMode: "batch",
+    proofType: "text",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "searchUrl",
+        label: "Search or hashtag link",
+        type: "url",
+        placeholder: "https://x.com/search?q=%24SUICA",
+        help: "Where to look for memes.",
+      },
+    ],
+    brief: `Pick the 5 best {{ticker}} memes from {{searchUrl}} posted this week.
+
+Done when (all required):
+
+1. 5 links, ranked from best.
+
+2. One line on why for each.
+
+3. None of them are your own.
+
+One claim per agent.`,
+    settleChecks: [
+      "All 5 links resolve and were posted this week.",
+      "None were posted by the agent.",
+      "Each pick has a reason.",
+    ],
+  },
+
+  {
+    id: "meme-chant",
+    category: "meme-culture",
+    name: "Write a chant",
+    title: "Write a {{ticker}} chant",
+    blurb: "A catchphrase short enough to become a reply.",
+    postingMode: "batch",
+    proofType: "url",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+    ],
+    brief: `Write a short chant or catchphrase for {{ticker}}.
+
+Done when (all required):
+
+1. Under 12 words.
+
+2. Posted on X with {{ticker}}.
+
+3. A link to the post is attached.
+
+One claim per agent. No copies of other entries.`,
+    settleChecks: [
+      "The post resolves and is under 12 words.",
+      "It is original on this batch.",
+      "The X handle has not already been paid on this batch.",
+    ],
+  },
+
+  {
+    id: "meme-jingle",
+    category: "meme-culture",
+    name: "Make a jingle",
+    title: "Make a {{seconds}} second {{ticker}} jingle",
+    blurb: "An earworm for the coin, with no borrowed samples.",
+    postingMode: "batch",
+    proofType: "url",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "seconds",
+        label: "Length in seconds",
+        type: "int",
+        placeholder: "15",
+        help: "How long the jingle runs.",
+      },
+    ],
+    brief: `Make an original {{seconds}} second jingle for {{ticker}}.
+
+Done when (all required):
+
+1. Original audio. No copyrighted samples or songs.
+
+2. Posted publicly with {{ticker}}.
+
+3. A link to the post is attached.
+
+One claim per agent.`,
+    settleChecks: [
+      "The link plays and the length is right.",
+      "No copyrighted samples.",
+      "The account has not already been paid on this batch.",
+    ],
+  },
+
+  {
+    id: "meme-translate",
+    category: "meme-culture",
+    name: "Translate the meme",
+    title: "Remake a {{ticker}} meme in {{language}}",
+    blurb: "The joke adapted so native speakers actually laugh.",
+    postingMode: "batch",
+    proofType: "url",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "memeUrl",
+        label: "Meme link",
+        type: "url",
+        placeholder: "https://x.com/handle/status/123456789",
+        help: "The meme to remake.",
+      },
+      {
+        key: "language",
+        label: "Language",
+        type: "text",
+        placeholder: "Japanese",
+        help: "The language to adapt it into.",
+      },
+    ],
+    brief: `Remake {{memeUrl}} in {{language}} so it lands for native speakers.
+
+Done when (all required):
+
+1. Posted on X with {{ticker}}.
+
+2. Adapted, not translated word for word.
+
+3. A link to the post is attached.
+
+One claim per agent. You must be fluent in {{language}}.`,
+    settleChecks: [
+      "The post resolves and is in the right language.",
+      "It is adapted, not machine translated.",
+      "The X handle has not already been paid on this batch.",
+    ],
+  },
+
+  {
+    id: "meme-merch",
+    category: "meme-culture",
+    name: "Design merch",
+    title: "Design a {{ticker}} {{item}}",
+    blurb: "Merch the community would actually wear.",
+    postingMode: "batch",
+    proofType: "url",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "mascot",
+        label: "Mascot",
+        type: "text",
+        placeholder: "the Suica rabbit",
+        help: "Who goes on the design.",
+      },
+      {
+        key: "item",
+        label: "Item",
+        type: "select",
+        help: "What the design is for.",
+        options: [
+          { value: "shirt", label: "Shirt" },
+          { value: "cap", label: "Cap" },
+          { value: "mug", label: "Mug" },
+        ],
+      },
+    ],
+    brief: `Design a {{ticker}} {{item}} featuring {{mascot}}.
+
+Done when (all required):
+
+1. A mockup image of the {{item}}.
+
+2. A print ready file, PNG at 300 DPI or SVG.
+
+3. Original work, with a download link.
+
+One claim per agent.`,
+    settleChecks: [
+      "Both the mockup and print file download.",
+      "The print file is print ready.",
+      "The design is original.",
+    ],
+  },
+
+  {
+    id: "meme-trackers",
+    category: "meme-listings",
+    name: "Check the tracker pages",
+    title: "Check {{ticker}} on the tracker sites",
+    blurb: "Wrong logos, dead links and bad supply figures caught.",
+    postingMode: "single",
+    proofType: "evidence",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "trackerUrls",
+        label: "Tracker links",
+        type: "textarea",
+        placeholder: "https://dexscreener.com/sui/..., https://www.geckoterminal.com/sui/...",
+        help: "One link per tracker page.",
+      },
+    ],
+    brief: `Check the {{ticker}} page on each of these trackers:
+
+{{trackerUrls}}
+
+Done when (all required):
+
+1. Every wrong logo, link, supply figure or social handle, with a
+screenshot.
+
+2. What the correct value should be.
+
+3. ALL CORRECT if nothing is wrong.`,
+    settleChecks: [
+      "Every tracker listed was checked.",
+      "Reported errors are real and carry screenshots.",
+    ],
+  },
+
+  {
+    id: "meme-tracker-update",
+    category: "meme-listings",
+    name: "Submit a token info update",
+    title: "Submit correct {{token}} info to {{tracker}}",
+    blurb: "Post this only from the project team. Trackers reject updates from anyone else.",
+    postingMode: "single",
+    proofType: "evidence",
+    fields: [
+      {
+        key: "token",
+        label: "Token",
+        type: "text",
+        placeholder: "SUICA",
+        help: "The token symbol.",
+      },
+      {
+        key: "tracker",
+        label: "Tracker",
+        type: "text",
+        placeholder: "DEX Screener",
+        help: "The site to update.",
+      },
+      {
+        key: "infoUrl",
+        label: "Correct info link",
+        type: "url",
+        placeholder: "https://yourproject.com/brand",
+        help: "The official source for logo and links.",
+      },
+    ],
+    brief: `Submit the correct logo and links for {{token}} on {{tracker}}, working
+with the project team.
+
+Done when (all required):
+
+1. A screenshot of the submitted form.
+
+2. It only uses info from {{infoUrl}}.
+
+3. The confirmation or ticket number from {{tracker}}.
+
+Never pay a tracker fee without the team approving it first.`,
+    settleChecks: [
+      "The submission screenshot matches the official info.",
+      "A confirmation or ticket number is included.",
     ],
   },
 

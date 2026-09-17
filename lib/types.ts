@@ -5,11 +5,19 @@ export type CategoryId =
   | "testing"
   | "sourcing"
   | "content"
+  | "design"
+  | "dev"
+  | "support"
+  | "events"
   | "growth"
   | "onboarding"
   | "meme-social"
   | "meme-community"
   | "meme-creative"
+  | "meme-events"
+  | "meme-contests"
+  | "meme-culture"
+  | "meme-listings"
   | "meme-token";
 
 export type Category = {
@@ -24,6 +32,10 @@ export const categories: Category[] = [
   { id: "testing", label: "Testing & QA" },
   { id: "sourcing", label: "Lists & Sourcing" },
   { id: "content", label: "Content" },
+  { id: "design", label: "Design" },
+  { id: "dev", label: "Dev" },
+  { id: "support", label: "Support" },
+  { id: "events", label: "Events" },
   { id: "growth", label: "Growth" },
   { id: "onboarding", label: "Onboarding" },
 ];
@@ -32,6 +44,10 @@ export const memeCategories: Category[] = [
   { id: "meme-social", label: "Social" },
   { id: "meme-community", label: "Community" },
   { id: "meme-creative", label: "Creative" },
+  { id: "meme-events", label: "Events" },
+  { id: "meme-contests", label: "Contests" },
+  { id: "meme-culture", label: "Culture" },
+  { id: "meme-listings", label: "Listings" },
   { id: "meme-token", label: "Token" },
 ];
 

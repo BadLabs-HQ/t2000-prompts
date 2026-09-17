@@ -532,6 +532,42 @@ the linked product. Do not invent digests.`,
   },
 
   {
+    id: "mint-report",
+    category: "onchain",
+    name: "Mint an NFT and report the flow",
+    title: "Mint from {{mintUrl}} and report the flow",
+    blurb: "A real mint, plus every step that nearly lost the buyer.",
+    postingMode: "batch",
+    proofType: "digest",
+    fields: [
+      {
+        key: "mintUrl",
+        label: "Mint page",
+        type: "url",
+        placeholder: "https://yourproject.com/mint",
+        help: "The exact page where people mint.",
+      },
+    ],
+    brief: `Mint one NFT at {{mintUrl}} and report the experience.
+
+Done when (all required):
+
+1. The mint transaction digest plus a Suiscan link.
+
+2. Every step that was confusing or slow, with a screenshot.
+
+3. How long the whole mint took, start to finish.
+
+Rejected if the digest is not a mint from the linked collection. Do not
+invent digests.`,
+    settleChecks: [
+      "The digest resolves and mints from the right collection.",
+      "Friction points carry screenshots.",
+      "The wallet has not already been paid on this batch.",
+    ],
+  },
+
+  {
     id: "research-question",
     category: "research",
     name: "Answer a question with sources",
@@ -829,6 +865,47 @@ Rejected if a price does not match its source page.`,
       "Every competitor listed has a row.",
       "Each price matches its source link.",
       "The check date is present.",
+    ],
+  },
+
+  {
+    id: "app-reviews",
+    category: "research",
+    name: "Summarise app store reviews",
+    title: "Summarise the latest reviews of {{appUrl}}",
+    blurb: "What users love and hate, straight from their own reviews.",
+    postingMode: "single",
+    proofType: "text",
+    fields: [
+      {
+        key: "appUrl",
+        label: "App store link",
+        type: "url",
+        placeholder: "https://apps.apple.com/app/id123456789",
+        help: "The App Store or Google Play listing.",
+      },
+      {
+        key: "count",
+        label: "Reviews to read",
+        type: "int",
+        placeholder: "50",
+        help: "The most recent reviews to cover.",
+      },
+    ],
+    brief: `Read the last {{count}} reviews of {{appUrl}}.
+
+Done when (all required):
+
+1. The top complaints, each with a count and two quotes.
+
+2. The top praise, each with a count and two quotes.
+
+3. The date range of the reviews you read.
+
+Rejected if quotes do not appear in real reviews.`,
+    settleChecks: [
+      "Quotes match real reviews on the listing.",
+      "The review count and date range are stated.",
     ],
   },
 
@@ -1173,6 +1250,43 @@ Rejected if fewer than five input types were tried.`,
   },
 
   {
+    id: "referral-test",
+    category: "testing",
+    name: "Test a referral link",
+    title: "Sign up through a referral link and confirm the credit",
+    blurb: "Proof your referral tracking works. Best posted to Established claimers only.",
+    postingMode: "batch",
+    proofType: "evidence",
+    fields: [
+      {
+        key: "refUrl",
+        label: "Referral link",
+        type: "url",
+        placeholder: "https://yourproduct.com/?ref=abc123",
+        help: "The link to sign up through. Pick Established only under Who can claim to avoid self referral farming.",
+      },
+    ],
+    brief: `Sign up for a new account through this link:
+
+{{refUrl}}
+
+Done when (all required):
+
+1. A screenshot of the sign up page showing the referral applied.
+
+2. The email or username of your new account.
+
+3. Whether the referral credit showed up, YES or NO, with a screenshot.
+
+One account per person. Accounts you already had do not count.`,
+    settleChecks: [
+      "The account is new and was created through the link.",
+      "The referral result is backed by a screenshot.",
+      "The account has not already been paid on this batch.",
+    ],
+  },
+
+  {
     id: "find-lead",
     category: "sourcing",
     name: "Find one lead matching criteria",
@@ -1442,6 +1556,42 @@ Rejected if the supplier duplicates another delivery on this batch.`,
       "The supplier link resolves.",
       "The contact is a public business contact.",
       "It is not a duplicate on this batch.",
+    ],
+  },
+
+  {
+    id: "verify-contacts",
+    category: "sourcing",
+    name: "Verify a list of contacts",
+    title: "Verify the rows in {{sheetUrl}}",
+    blurb: "A stale list cleaned: dead sites and closed businesses marked.",
+    postingMode: "single",
+    proofType: "text",
+    fields: [
+      {
+        key: "sheetUrl",
+        label: "Sheet link",
+        type: "url",
+        placeholder: "https://docs.google.com/spreadsheets/d/...",
+        help: "A sheet the agent can view and comment on.",
+      },
+    ],
+    brief: `Check every row in {{sheetUrl}}.
+
+Done when (all required):
+
+1. Each row marked LIVE, DEAD or CLOSED.
+
+2. DEAD means the website does not load. CLOSED means the business has
+publicly shut down, with a source link.
+
+3. A count of each status.
+
+Rejected if a row marked DEAD actually loads.`,
+    settleChecks: [
+      "Every row has a status.",
+      "Spot checked DEAD rows really fail to load.",
+      "CLOSED rows carry a source.",
     ],
   },
 
@@ -1806,6 +1956,672 @@ Rejected if the task is not completed on camera.`,
   },
 
   {
+    id: "alt-text",
+    category: "content",
+    name: "Write alt text",
+    title: "Write alt text for {{pageUrl}}",
+    blurb: "Every image described for screen readers, briefly and accurately.",
+    postingMode: "single",
+    proofType: "text",
+    fields: [
+      {
+        key: "pageUrl",
+        label: "Page URL",
+        type: "url",
+        placeholder: "https://yourproduct.com",
+        help: "The page whose images need alt text.",
+      },
+    ],
+    brief: `Write alt text for every meaningful image on {{pageUrl}}.
+
+Done when (all required):
+
+1. One line per image: the image file name, then the alt text.
+
+2. Each alt text is under 125 characters.
+
+3. Decorative images are marked DECORATIVE instead.
+
+Rejected if images are missed or descriptions are wrong.`,
+    settleChecks: [
+      "Every image on the page is covered.",
+      "Each alt text is under 125 characters and accurate.",
+    ],
+  },
+
+  {
+    id: "design-banner",
+    category: "design",
+    name: "Design a social banner",
+    title: "Design a {{size}} for {{brand}}",
+    blurb: "A banner sized right for the platform, with the source file included.",
+    postingMode: "batch",
+    proofType: "url",
+    fields: [
+      {
+        key: "brand",
+        label: "Brand name",
+        type: "text",
+        placeholder: "t2000 prompts",
+        help: "The name on the banner.",
+      },
+      {
+        key: "size",
+        label: "Banner type",
+        type: "select",
+        help: "The platform decides the exact size.",
+        options: [
+          { value: "X header (1500 by 500)", label: "X header" },
+          { value: "Discord banner (960 by 540)", label: "Discord banner" },
+          { value: "LinkedIn banner (1584 by 396)", label: "LinkedIn banner" },
+        ],
+      },
+      {
+        key: "style",
+        label: "Style notes",
+        type: "textarea",
+        placeholder: "clean, lots of white space, orange accent",
+        help: "One or two lines on the look.",
+      },
+      {
+        key: "assetsUrl",
+        label: "Brand assets link",
+        type: "url",
+        placeholder: "https://yourproduct.com/brand",
+        help: "Logo, colours and fonts to use.",
+      },
+    ],
+    brief: `Design one {{size}} for {{brand}}.
+
+Style: {{style}}
+
+Use the assets at {{assetsUrl}}.
+
+Done when (all required):
+
+1. The exact dimensions for the platform.
+
+2. A PNG export plus the source file.
+
+3. Original work. No watermarked stock images.
+
+Deliver a download link to both files.`,
+    settleChecks: [
+      "The PNG matches the platform dimensions.",
+      "The source file is included.",
+      "It uses the brand assets and is original.",
+    ],
+  },
+
+  {
+    id: "landing-review",
+    category: "design",
+    name: "Review a landing page design",
+    title: "First look review of {{pageUrl}}",
+    blurb: "What a stranger misses in the first ten seconds, with fixes.",
+    postingMode: "batch",
+    proofType: "evidence",
+    fields: [
+      {
+        key: "pageUrl",
+        label: "Page URL",
+        type: "url",
+        placeholder: "https://yourproduct.com",
+        help: "The landing page to review.",
+      },
+    ],
+    brief: `Review {{pageUrl}} as a first time visitor.
+
+Done when (all required):
+
+1. In one sentence, what you think the product does, written before
+scrolling.
+
+2. The 3 biggest things that confused or slowed you, each with a
+screenshot.
+
+3. One concrete fix for each.
+
+Rejected if points are generic advice that fits any website.`,
+    settleChecks: [
+      "Each point refers to something visible on this page.",
+      "Every point has a screenshot and a fix.",
+      "It is not a copy of another submission.",
+    ],
+  },
+
+  {
+    id: "icon-set",
+    category: "design",
+    name: "Make a set of icons",
+    title: "Draw {{count}} icons in a {{style}} style",
+    blurb: "A consistent SVG icon set for your product.",
+    postingMode: "single",
+    proofType: "url",
+    fields: [
+      {
+        key: "iconList",
+        label: "Icons needed",
+        type: "textarea",
+        placeholder: "wallet, send, receive, settings, history",
+        help: "Comma separated list.",
+      },
+      {
+        key: "count",
+        label: "How many icons",
+        type: "int",
+        placeholder: "5",
+        help: "Must match the list.",
+      },
+      {
+        key: "style",
+        label: "Style",
+        type: "text",
+        placeholder: "outline, 2px stroke",
+        help: "The look every icon shares.",
+      },
+    ],
+    brief: `Draw {{count}} icons in a {{style}} style: {{iconList}}.
+
+Done when (all required):
+
+1. SVG files with a consistent stroke and size.
+
+2. Every icon is original.
+
+3. A download link to the set.
+
+Rejected if the set is inconsistent or icons are copied from a library.`,
+    settleChecks: [
+      "The count and names match the list.",
+      "Files are SVG and visually consistent.",
+      "Icons are original.",
+    ],
+  },
+
+  {
+    id: "mock-screen",
+    category: "design",
+    name: "Mock up a screen",
+    title: "Mock up {{screen}}",
+    blurb: "A new screen that looks like it already belongs in your product.",
+    postingMode: "single",
+    proofType: "url",
+    fields: [
+      {
+        key: "screen",
+        label: "Screen to design",
+        type: "textarea",
+        placeholder: "a settings page with profile, wallet and notifications",
+        help: "What the screen is and what it contains.",
+      },
+      {
+        key: "referenceUrl",
+        label: "Reference link",
+        type: "url",
+        placeholder: "https://yourproduct.com",
+        help: "The existing product to match.",
+      },
+    ],
+    brief: `Mock up {{screen}}, matching the look of {{referenceUrl}}.
+
+Done when (all required):
+
+1. A Figma or image link.
+
+2. A desktop and a mobile version.
+
+3. It uses the existing colours and fonts.
+
+Rejected if it does not match the reference product.`,
+    settleChecks: [
+      "Both desktop and mobile versions exist.",
+      "Colours and fonts match the reference.",
+      "Every element asked for is present.",
+    ],
+  },
+
+  {
+    id: "review-pr",
+    category: "dev",
+    name: "Review a pull request",
+    title: "Review {{prUrl}}",
+    blurb: "A second pair of eyes on a change before it ships.",
+    postingMode: "single",
+    proofType: "text",
+    fields: [
+      {
+        key: "prUrl",
+        label: "PR URL",
+        type: "url",
+        placeholder: "https://github.com/org/repo/pull/42",
+        help: "A public pull request.",
+      },
+      {
+        key: "focus",
+        label: "Focus area",
+        type: "text",
+        placeholder: "security and error handling",
+        help: "What matters most in this review.",
+      },
+    ],
+    brief: `Review {{prUrl}}, focusing on {{focus}}.
+
+Done when (all required):
+
+1. Each issue with its file and line number.
+
+2. A severity for each: BUG, RISK or STYLE.
+
+3. NO ISSUES if you found none, plus what you checked.
+
+Rejected if issues point at lines that do not exist in the PR.`,
+    settleChecks: [
+      "Every cited file and line exists in the PR.",
+      "Issues are real, not generic advice.",
+    ],
+  },
+
+  {
+    id: "reproduce-bug",
+    category: "dev",
+    name: "Reproduce a bug",
+    title: "Reproduce the bug in {{issueUrl}}",
+    blurb: "Exact steps that make the bug happen, or proof it does not.",
+    postingMode: "batch",
+    proofType: "evidence",
+    fields: [
+      {
+        key: "issueUrl",
+        label: "Issue URL",
+        type: "url",
+        placeholder: "https://github.com/org/repo/issues/42",
+        help: "The bug report to reproduce.",
+      },
+    ],
+    brief: `Reproduce the bug described in {{issueUrl}}.
+
+Done when (all required):
+
+1. Exact steps, your environment and the version tested.
+
+2. A screenshot or recording of the bug happening.
+
+3. COULD NOT REPRODUCE plus the steps you tried, if it does not happen.
+
+Rejected if steps are missing or the environment is not stated.`,
+    settleChecks: [
+      "Steps are specific enough to follow.",
+      "The environment and version are stated.",
+      "Evidence is attached.",
+    ],
+  },
+
+  {
+    id: "write-tests",
+    category: "dev",
+    name: "Write tests for a function",
+    title: "Write tests for {{function}}",
+    blurb: "Tests that pass, including the edge case nobody wrote.",
+    postingMode: "single",
+    proofType: "url",
+    fields: [
+      {
+        key: "repoUrl",
+        label: "Repo URL",
+        type: "url",
+        placeholder: "https://github.com/org/repo",
+        help: "A public repository.",
+      },
+      {
+        key: "function",
+        label: "File and function",
+        type: "text",
+        placeholder: "lib/compile.ts compilePost",
+        help: "Exactly what to test.",
+      },
+      {
+        key: "framework",
+        label: "Test framework",
+        type: "text",
+        placeholder: "Vitest",
+        help: "The framework the repo uses.",
+      },
+    ],
+    brief: `Write tests for {{function}} in {{repoUrl}} using {{framework}}.
+
+Done when (all required):
+
+1. A pull request or patch link.
+
+2. The tests pass locally, with the output pasted.
+
+3. At least one edge case is covered.
+
+Rejected if the tests fail or only test the happy path.`,
+    settleChecks: [
+      "The tests run and pass.",
+      "At least one edge case is covered.",
+      "No unrelated code was changed.",
+    ],
+  },
+
+  {
+    id: "api-check",
+    category: "dev",
+    name: "Check an API endpoint",
+    title: "Check {{endpoint}} against its docs",
+    blurb: "A real call compared line by line with what the docs promise.",
+    postingMode: "single",
+    proofType: "evidence",
+    fields: [
+      {
+        key: "docsUrl",
+        label: "Docs URL",
+        type: "url",
+        placeholder: "https://docs.yourproduct.com/api",
+        help: "Where the endpoint is documented.",
+      },
+      {
+        key: "endpoint",
+        label: "Endpoint",
+        type: "text",
+        placeholder: "GET /v1/jobs",
+        help: "Method and path.",
+      },
+    ],
+    brief: `Call {{endpoint}} as documented at {{docsUrl}}.
+
+Done when (all required):
+
+1. The request you sent and the response you got, with any keys removed.
+
+2. Every place the response differs from the docs.
+
+3. Response times for 5 calls.
+
+Never paste API keys or tokens in the delivery.`,
+    settleChecks: [
+      "The request and response are included.",
+      "Reported differences are real.",
+      "No keys appear in the delivery.",
+    ],
+  },
+
+  {
+    id: "answer-questions",
+    category: "support",
+    name: "Answer open community questions",
+    title: "Answer {{count}} open questions in our community",
+    blurb: "Unanswered questions cleared, each backed by the docs.",
+    postingMode: "batch",
+    proofType: "url",
+    fields: [
+      {
+        key: "communityUrl",
+        label: "Forum or Discord link",
+        type: "url",
+        placeholder: "https://discord.gg/yourserver",
+        help: "Where the questions are.",
+      },
+      {
+        key: "docsUrl",
+        label: "Docs URL",
+        type: "url",
+        placeholder: "https://docs.yourproduct.com",
+        help: "The only source answers may use.",
+      },
+      {
+        key: "count",
+        label: "Answers per person",
+        type: "int",
+        placeholder: "3",
+        help: "How many questions each person answers.",
+      },
+    ],
+    brief: `Answer {{count}} unanswered questions at {{communityUrl}} using
+{{docsUrl}}.
+
+Done when (all required):
+
+1. A link to each answer.
+
+2. Each answer cites a doc page.
+
+3. No guesses. Skip questions the docs do not cover.
+
+Rejected if a question was already answered by someone else on this
+batch.`,
+    settleChecks: [
+      "Each link resolves to your answer.",
+      "Answers match the cited doc page.",
+      "No question is answered twice on this batch.",
+    ],
+  },
+
+  {
+    id: "mystery-shop",
+    category: "support",
+    name: "Mystery shop our support",
+    title: "Ask our support a question and grade the reply",
+    blurb: "Your support team, tested the way customers meet it.",
+    postingMode: "batch",
+    proofType: "evidence",
+    fields: [
+      {
+        key: "channel",
+        label: "Support channel",
+        type: "text",
+        placeholder: "the chat widget on yourproduct.com",
+        help: "Where to contact support.",
+      },
+      {
+        key: "question",
+        label: "Question to ask",
+        type: "textarea",
+        placeholder: "How do I get a refund for a failed payment?",
+        help: "The question every tester asks.",
+      },
+    ],
+    brief: `Contact support through {{channel}} and ask:
+
+{{question}}
+
+Done when (all required):
+
+1. The time you asked and the time of the first reply.
+
+2. Whether the answer was correct and complete, and why.
+
+3. Screenshots of the whole conversation.
+
+Be polite and do not reveal this is a test.`,
+    settleChecks: [
+      "Screenshots show the full conversation.",
+      "Both timestamps are stated.",
+      "The grade is explained.",
+    ],
+  },
+
+  {
+    id: "feedback-themes",
+    category: "support",
+    name: "Sort feedback into themes",
+    title: "Group the feedback at {{sourceUrl}} into themes",
+    blurb: "A pile of feedback turned into ranked themes with real quotes.",
+    postingMode: "single",
+    proofType: "text",
+    fields: [
+      {
+        key: "sourceUrl",
+        label: "Feedback source link",
+        type: "url",
+        placeholder: "https://docs.google.com/spreadsheets/d/...",
+        help: "A sheet, board or channel with the feedback.",
+      },
+    ],
+    brief: `Read every item at {{sourceUrl}} and group them into themes.
+
+Done when (all required):
+
+1. Each theme has a name, a count and two example quotes.
+
+2. Every item sits in exactly one theme.
+
+3. The top 3 themes are ranked by count.
+
+Rejected if counts do not add up to the total items.`,
+    settleChecks: [
+      "Theme counts add up to the total.",
+      "Quotes appear in the source.",
+      "The top 3 are ranked correctly.",
+    ],
+  },
+
+  {
+    id: "find-events",
+    category: "events",
+    name: "Find events to attend",
+    title: "Find a {{topic}} event in {{location}}",
+    blurb: "Events worth showing up to, with registration still open.",
+    postingMode: "batch",
+    proofType: "text",
+    fields: [
+      {
+        key: "topic",
+        label: "Topic",
+        type: "text",
+        placeholder: "AI agents",
+        help: "What the event should be about.",
+      },
+      {
+        key: "location",
+        label: "City or online",
+        type: "text",
+        placeholder: "London",
+        help: "Where it should happen.",
+      },
+      {
+        key: "dates",
+        label: "Date range",
+        type: "text",
+        placeholder: "October 1 to November 30",
+        help: "When it should happen.",
+      },
+    ],
+    brief: `Find one {{topic}} event in {{location}} between {{dates}}.
+
+Done when (all required):
+
+1. Name, link, date and ticket price.
+
+2. Registration is still open.
+
+3. One sentence on why it fits.
+
+Rejected if registration is closed or it duplicates another delivery
+on this batch.`,
+    settleChecks: [
+      "The link resolves and registration is open.",
+      "The date falls in the range.",
+      "It is not a duplicate on this batch.",
+    ],
+  },
+
+  {
+    id: "event-notes",
+    category: "events",
+    name: "Attend and take notes",
+    title: "Attend {{eventUrl}} and take notes",
+    blurb: "Someone in the room for you, with notes you can use.",
+    postingMode: "single",
+    proofType: "text",
+    fields: [
+      {
+        key: "eventUrl",
+        label: "Event link",
+        type: "url",
+        placeholder: "https://lu.ma/yourevent",
+        help: "The event to attend.",
+      },
+      {
+        key: "focus",
+        label: "What to capture",
+        type: "textarea",
+        placeholder: "announcements, pricing changes and who is hiring",
+        help: "What the notes should cover.",
+      },
+    ],
+    brief: `Attend {{eventUrl}} and capture {{focus}}.
+
+Done when (all required):
+
+1. Proof of attendance: a badge, ticket or photo from the event.
+
+2. 5 to 10 bullet notes.
+
+3. Speakers quoted by name, spelled correctly.
+
+Rejected without proof of attendance.`,
+    settleChecks: [
+      "Proof of attendance matches the event.",
+      "The notes cover what was asked.",
+      "Speaker names are correct.",
+    ],
+  },
+
+  {
+    id: "promote-event",
+    category: "events",
+    name: "Promote an event locally",
+    title: "Share {{event}} in a {{city}} community",
+    blurb: "Your event posted where locals actually look.",
+    postingMode: "batch",
+    proofType: "url",
+    fields: [
+      {
+        key: "event",
+        label: "Event name",
+        type: "text",
+        placeholder: "Sui Builders Night",
+        help: "As it should appear.",
+      },
+      {
+        key: "eventUrl",
+        label: "Event link",
+        type: "url",
+        placeholder: "https://lu.ma/yourevent",
+        help: "Where people register.",
+      },
+      {
+        key: "city",
+        label: "City",
+        type: "text",
+        placeholder: "Lagos",
+        help: "Where the event happens.",
+      },
+    ],
+    brief: `Share {{event}} ({{eventUrl}}) in one {{city}} community where event
+posts are allowed.
+
+Done when (all required):
+
+1. A link to your post.
+
+2. The community's rules allow event posts.
+
+3. One sentence naming the community.
+
+Rejected if the community was already used on this batch or the post
+was removed.`,
+    settleChecks: [
+      "The post resolves and is still up.",
+      "The community allows event posts.",
+      "The community is not a duplicate on this batch.",
+    ],
+  },
+
+  {
     id: "onboard-agent",
     category: "growth",
     name: "Bring me a user who actually transacts",
@@ -1902,6 +2718,49 @@ Rejected if the directory was already used on this batch.`,
       "The listing or confirmation is real.",
       "It links to the right product URL.",
       "The directory is not a duplicate on this batch.",
+    ],
+  },
+
+  {
+    id: "waitlist-report",
+    category: "growth",
+    name: "Join a waitlist and report onboarding",
+    title: "Join the {{product}} waitlist and report every step",
+    blurb: "Your waitlist journey, told by someone going through it.",
+    postingMode: "batch",
+    proofType: "evidence",
+    fields: [
+      {
+        key: "product",
+        label: "Product name",
+        type: "text",
+        placeholder: "t2000 prompts",
+        help: "As it should appear.",
+      },
+      {
+        key: "url",
+        label: "Waitlist link",
+        type: "url",
+        placeholder: "https://yourproduct.com/waitlist",
+        help: "Where people join.",
+      },
+    ],
+    brief: `Join the {{product}} waitlist at {{url}}.
+
+Done when (all required):
+
+1. Screenshots of every email and step until you get access, or until
+settle time.
+
+2. How long each step took.
+
+3. The one moment you almost gave up, if any.
+
+One account per person.`,
+    settleChecks: [
+      "Screenshots cover each step.",
+      "Timings are stated.",
+      "The account has not already been paid on this batch.",
     ],
   },
 
