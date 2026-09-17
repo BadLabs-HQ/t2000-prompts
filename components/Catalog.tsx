@@ -530,7 +530,7 @@ export function Catalog() {
                         }}
                       >
                         <span className="remote-pill" style={REMOTE_PILL}>
-                          Remote
+                          {c.mode === "on-site" ? "On site" : "Remote"}
                         </span>
                       </span>
                     </button>
@@ -600,7 +600,7 @@ export function Catalog() {
                         </span>
                       </span>
                       <span className="remote-pill" style={REMOTE_PILL}>
-                        Remote
+                        {c.mode === "on-site" ? "On site" : "Remote"}
                       </span>
                       <span aria-hidden style={{ flexShrink: 0, color: "var(--ink)", fontSize: 15 }}>
                         ›

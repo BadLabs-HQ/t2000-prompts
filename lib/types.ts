@@ -10,6 +10,7 @@ export type CategoryId =
   | "data"
   | "support"
   | "events"
+  | "local"
   | "growth"
   | "onboarding"
   | "meme-social"
@@ -20,6 +21,7 @@ export type CategoryId =
   | "meme-culture"
   | "meme-listings"
   | "meme-safety"
+  | "meme-guides"
   | "meme-token";
 
 export type Category = {
@@ -39,6 +41,7 @@ export const categories: Category[] = [
   { id: "data", label: "Data" },
   { id: "support", label: "Support" },
   { id: "events", label: "Events" },
+  { id: "local", label: "Local" },
   { id: "growth", label: "Growth" },
   { id: "onboarding", label: "Onboarding" },
 ];
@@ -52,6 +55,7 @@ export const memeCategories: Category[] = [
   { id: "meme-culture", label: "Culture" },
   { id: "meme-listings", label: "Listings" },
   { id: "meme-safety", label: "Safety" },
+  { id: "meme-guides", label: "Guides" },
   { id: "meme-token", label: "Token" },
 ];
 
@@ -91,6 +95,8 @@ export type Card = {
   title: string;
   blurb: string;
   postingMode: "single" | "batch";
+  /** Remote unless set. On site jobs need a "where" field. */
+  mode?: "remote" | "on-site";
   proofType: ProofType;
   /** Brief body with {{key}} slots. Posted verbatim. */
   brief: string;

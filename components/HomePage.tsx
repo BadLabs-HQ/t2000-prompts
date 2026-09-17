@@ -593,7 +593,7 @@ export function HomePage() {
                       color: "var(--muted)",
                     }}
                   >
-                    remote · {c.postingMode === "batch" ? "many people" : "one person"}
+                    {c.mode === "on-site" ? "on site" : "remote"} · {c.postingMode === "batch" ? "many people" : "one person"}
                   </p>
                   <div
                     style={{

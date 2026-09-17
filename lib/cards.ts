@@ -342,6 +342,42 @@ One claim per person. You must have actually used the product.`,
   },
 
   {
+    id: "community-spotlight",
+    category: "social",
+    name: "Write a community spotlight post",
+    title: "Spotlight one {{community}} member",
+    blurb: "A short interview that makes a real member feel seen.",
+    postingMode: "batch",
+    proofType: "text",
+    fields: [
+      {
+        key: "community",
+        label: "Community",
+        type: "text",
+        placeholder: "Sui builders",
+        help: "The community the member belongs to.",
+      },
+    ],
+    brief: `Interview one active {{community}} member and write a short spotlight.
+
+Done when (all required):
+
+1. 100 to 200 words, approved by the member.
+
+2. At least one direct quote from them.
+
+3. Delivered as text with their handle.
+
+Rejected if the member was already spotlighted on this batch or did not
+approve it.`,
+    settleChecks: [
+      "The member exists and is active in the community.",
+      "The member approved the spotlight.",
+      "The member is not a duplicate on this batch.",
+    ],
+  },
+
+  {
     id: "buy-token",
     category: "onchain",
     name: "Buy a token, proven by transaction",
@@ -641,6 +677,56 @@ Never share a seed phrase or private key.`,
       "Three different wallets were tested.",
       "Each result has a screenshot.",
       "Errors are quoted exactly.",
+    ],
+  },
+
+  {
+    id: "swap-quotes",
+    category: "onchain",
+    name: "Compare swap quotes",
+    title: "Compare quotes for {{amount}} {{from}} to {{to}}",
+    blurb: "Which Sui route gives the best price, with no trade made.",
+    postingMode: "single",
+    proofType: "evidence",
+    fields: [
+      {
+        key: "amount",
+        label: "Amount",
+        type: "text",
+        placeholder: "100",
+        help: "How much to quote.",
+      },
+      {
+        key: "from",
+        label: "From token",
+        type: "text",
+        placeholder: "SUI",
+        help: "The token being swapped.",
+      },
+      {
+        key: "to",
+        label: "To token",
+        type: "text",
+        placeholder: "USDC",
+        help: "The token received.",
+      },
+    ],
+    brief: `Get a quote for swapping {{amount}} {{from}} to {{to}} on 3 Sui DEXs or
+aggregators.
+
+Done when (all required):
+
+1. Output amount, fee and price impact for each.
+
+2. Screenshots taken within 5 minutes of each other.
+
+3. The best route named.
+
+Do not execute any swap.`,
+    settleChecks: [
+      "Three different venues were quoted.",
+      "Screenshots are within 5 minutes of each other.",
+      "No swap was executed.",
     ],
   },
 
@@ -1054,6 +1140,42 @@ Rejected if a quoted clause is not in the terms.`,
       "Every quote appears in the terms.",
       "The not legal advice line is present.",
       "Explanations match the clauses.",
+    ],
+  },
+
+  {
+    id: "name-ideas",
+    category: "research",
+    name: "Name ideas with handle checks",
+    title: "Suggest names for {{product}} and check availability",
+    blurb: "Ten names, each checked for a domain, a handle and trademarks.",
+    postingMode: "batch",
+    proofType: "text",
+    fields: [
+      {
+        key: "product",
+        label: "What it is",
+        type: "textarea",
+        placeholder: "a prompt compiler for an agent job board",
+        help: "One line describing the product.",
+      },
+    ],
+    brief: `Suggest 10 names for {{product}} and check each one's availability.
+
+Done when (all required):
+
+1. For each name: the .com domain, the X handle, and a trademark search
+result.
+
+2. AVAILABLE or TAKEN for each check.
+
+3. Your top 3 picks, with one line each.
+
+Rejected if availability results are wrong.`,
+    settleChecks: [
+      "There are 10 names with all three checks.",
+      "Spot checked availability is correct.",
+      "It is not a copy of another submission.",
     ],
   },
 
@@ -1509,6 +1631,48 @@ Rejected if either provider was skipped.`,
       "Both Gmail and Outlook were tested.",
       "Each email has a folder and arrival time.",
       "Screenshots are attached.",
+    ],
+  },
+
+  {
+    id: "slow-network",
+    category: "testing",
+    name: "Test on a slow connection",
+    title: "Test {{url}} on a slow connection",
+    blurb: "Your product the way people on weak signal see it.",
+    postingMode: "single",
+    proofType: "evidence",
+    fields: [
+      {
+        key: "url",
+        label: "Product URL",
+        type: "url",
+        placeholder: "https://yourproduct.com",
+        help: "Where the test starts.",
+      },
+      {
+        key: "task",
+        label: "Task to complete",
+        type: "textarea",
+        placeholder: "sign up and load the dashboard",
+        help: "One task with a clear finish line.",
+      },
+    ],
+    brief: `Load {{url}} with the network throttled to Slow 3G and complete this
+task:
+{{task}}
+
+Done when (all required):
+
+1. The load time for the first screen.
+
+2. Every step that timed out or froze.
+
+3. A screen recording.`,
+    settleChecks: [
+      "The recording shows throttling turned on.",
+      "Load time is stated.",
+      "Failures are visible in the recording.",
     ],
   },
 
@@ -2374,6 +2538,53 @@ Rejected if the post adds claims the video does not make.`,
   },
 
   {
+    id: "email-sequence",
+    category: "content",
+    name: "Write an email sequence",
+    title: "Write a {{count}} email welcome sequence for {{product}}",
+    blurb: "Welcome emails that each get a new user to do one thing.",
+    postingMode: "single",
+    proofType: "text",
+    fields: [
+      {
+        key: "product",
+        label: "Product name",
+        type: "text",
+        placeholder: "t2000 prompts",
+        help: "As it should appear.",
+      },
+      {
+        key: "count",
+        label: "Number of emails",
+        type: "int",
+        placeholder: "4",
+        help: "How many emails in the sequence.",
+      },
+      {
+        key: "docsUrl",
+        label: "Docs URL",
+        type: "url",
+        placeholder: "https://docs.yourproduct.com",
+        help: "The only source of facts.",
+      },
+    ],
+    brief: `Write a {{count}} email welcome sequence for new {{product}} users.
+
+Done when (all required):
+
+1. A subject line and body for each, under 150 words.
+
+2. One clear action per email.
+
+3. Only facts from {{docsUrl}}.`,
+    settleChecks: [
+      "The email count matches.",
+      "Each email is under 150 words with one action.",
+      "Nothing is invented.",
+    ],
+  },
+
+  {
     id: "design-banner",
     category: "design",
     name: "Design a social banner",
@@ -2656,6 +2867,38 @@ Done when (all required):
   },
 
   {
+    id: "favicon-set",
+    category: "design",
+    name: "Make a favicon set",
+    title: "Make a favicon set from {{logoUrl}}",
+    blurb: "Every icon size a browser and phone asks for.",
+    postingMode: "single",
+    proofType: "url",
+    fields: [
+      {
+        key: "logoUrl",
+        label: "Logo link",
+        type: "url",
+        placeholder: "https://yourproduct.com/logo.svg",
+        help: "The logo to work from.",
+      },
+    ],
+    brief: `Make a favicon set from {{logoUrl}}.
+
+Done when (all required):
+
+1. 16, 32, 180 and 512 pixel PNGs plus an SVG.
+
+2. Readable at 16 pixels.
+
+3. A download link to the set.`,
+    settleChecks: [
+      "All five files exist at the right sizes.",
+      "The 16 pixel icon is readable.",
+    ],
+  },
+
+  {
     id: "review-pr",
     category: "dev",
     name: "Review a pull request",
@@ -2858,6 +3101,73 @@ Rejected if the example was already fixed on this batch.`,
   },
 
   {
+    id: "readme-setup",
+    category: "dev",
+    name: "Set up from the README",
+    title: "Get {{repoUrl}} running from the README",
+    blurb: "A fresh machine following your setup docs to the letter.",
+    postingMode: "batch",
+    proofType: "evidence",
+    fields: [
+      {
+        key: "repoUrl",
+        label: "Repo URL",
+        type: "url",
+        placeholder: "https://github.com/org/repo",
+        help: "A public repository.",
+      },
+    ],
+    brief: `Clone {{repoUrl}} and get it running using only the README.
+
+Done when (all required):
+
+1. Your OS and tool versions.
+
+2. Every step that failed or was missing, with the exact error.
+
+3. RUNS or DOES NOT RUN.
+
+Rejected if you used steps not in the README without saying so.`,
+    settleChecks: [
+      "OS and tool versions are stated.",
+      "Errors are quoted exactly.",
+      "The OS is not a duplicate on this batch.",
+    ],
+  },
+
+  {
+    id: "dependency-audit",
+    category: "dev",
+    name: "Audit dependencies",
+    title: "Audit the dependencies of {{repoUrl}}",
+    blurb: "Known vulnerabilities listed with the version that fixes them.",
+    postingMode: "single",
+    proofType: "text",
+    fields: [
+      {
+        key: "repoUrl",
+        label: "Repo URL",
+        type: "url",
+        placeholder: "https://github.com/org/repo",
+        help: "A public repository.",
+      },
+    ],
+    brief: `Run a dependency audit on {{repoUrl}}.
+
+Done when (all required):
+
+1. Every high or critical issue, with the package and the fixed version.
+
+2. The command you ran and its output.
+
+3. No code changes.`,
+    settleChecks: [
+      "The audit output is included.",
+      "Each issue names a package and fixed version.",
+    ],
+  },
+
+  {
     id: "answer-questions",
     category: "support",
     name: "Answer open community questions",
@@ -3032,6 +3342,47 @@ Done when (all required):
       "The count matches.",
       "Each reply is under 80 words and links a doc.",
       "Nothing is invented.",
+    ],
+  },
+
+  {
+    id: "help-search",
+    category: "support",
+    name: "Test the help center search",
+    title: "Test search on {{helpUrl}}",
+    blurb: "Do people find the right article when they search? Now you know.",
+    postingMode: "single",
+    proofType: "evidence",
+    fields: [
+      {
+        key: "helpUrl",
+        label: "Help center URL",
+        type: "url",
+        placeholder: "https://help.yourproduct.com",
+        help: "The help center to search.",
+      },
+      {
+        key: "questions",
+        label: "Questions to search",
+        type: "textarea",
+        placeholder: "how do I get a refund, how do I change my email",
+        help: "Comma separated. Written how users would type them.",
+      },
+    ],
+    brief: `Search {{helpUrl}} for each of these and report what came up:
+
+{{questions}}
+
+Done when (all required):
+
+1. The top 3 results for each search.
+
+2. FOUND or NOT FOUND for the right article.
+
+3. Screenshots of each search.`,
+    settleChecks: [
+      "Every question was searched.",
+      "Screenshots match the reported results.",
     ],
   },
 
@@ -3213,6 +3564,81 @@ permission.
   },
 
   {
+    id: "event-photos",
+    category: "events",
+    name: "Photograph an event",
+    title: "Photograph {{eventUrl}}",
+    blurb: "Edited photos of the stage, the crowd and the sponsors.",
+    postingMode: "single",
+    proofType: "url",
+    fields: [
+      {
+        key: "eventUrl",
+        label: "Event link",
+        type: "url",
+        placeholder: "https://lu.ma/yourevent",
+        help: "The event to photograph.",
+      },
+    ],
+    brief: `Photograph {{eventUrl}}.
+
+Done when (all required):
+
+1. At least 30 edited photos.
+
+2. Stage, crowd and sponsor shots.
+
+3. People posing have agreed to be photographed.
+
+Deliver a download link to the full set.`,
+    settleChecks: [
+      "At least 30 photos are in the set.",
+      "They are from this event.",
+      "Stage, crowd and sponsor shots are included.",
+    ],
+  },
+
+  {
+    id: "live-post-event",
+    category: "events",
+    name: "Live post an event",
+    title: "Post live from {{eventUrl}}",
+    blurb: "Your event on the timeline while it is happening.",
+    postingMode: "batch",
+    proofType: "url",
+    fields: [
+      {
+        key: "eventUrl",
+        label: "Event link",
+        type: "url",
+        placeholder: "https://lu.ma/yourevent",
+        help: "The event to post from.",
+      },
+      {
+        key: "handle",
+        label: "Account to tag",
+        type: "text",
+        placeholder: "@t2000ai",
+        help: "The X handle to tag, including the @.",
+      },
+    ],
+    brief: `Post live from {{eventUrl}} on X, tagging {{handle}}.
+
+Done when (all required):
+
+1. At least 5 posts during the event.
+
+2. A photo or a quote in each.
+
+3. Links to every post.`,
+    settleChecks: [
+      "All posts are timestamped during the event.",
+      "Each has a photo or quote and tags the account.",
+      "The X handle has not already been paid on this batch.",
+    ],
+  },
+
+  {
     id: "clean-sheet",
     category: "data",
     name: "Clean a spreadsheet",
@@ -3382,6 +3808,287 @@ Done when (all required):
       "Every PDF has a row.",
       "Spot checked values match their cited page.",
       "Missing values say NOT FOUND.",
+    ],
+  },
+
+  {
+    id: "merge-lists",
+    category: "data",
+    name: "Merge two lists",
+    title: "Merge two lists and remove duplicates",
+    blurb: "Two messy lists turned into one clean one.",
+    postingMode: "single",
+    proofType: "text",
+    fields: [
+      {
+        key: "sheetA",
+        label: "First sheet",
+        type: "url",
+        placeholder: "https://docs.google.com/spreadsheets/d/...",
+        help: "A sheet the agent can view.",
+      },
+      {
+        key: "sheetB",
+        label: "Second sheet",
+        type: "url",
+        placeholder: "https://docs.google.com/spreadsheets/d/...",
+        help: "A sheet the agent can view.",
+      },
+    ],
+    brief: `Merge {{sheetA}} and {{sheetB}} into one list with duplicates removed.
+
+Done when (all required):
+
+1. The matching rule stated, for example same email.
+
+2. A count of merged, kept and removed rows.
+
+3. The original sheets untouched.`,
+    settleChecks: [
+      "The originals are unchanged.",
+      "Counts add up.",
+      "No duplicates remain under the stated rule.",
+    ],
+  },
+
+  {
+    id: "geocode",
+    category: "data",
+    name: "Geocode addresses",
+    title: "Add coordinates to {{sheetUrl}}",
+    blurb: "Every address turned into latitude and longitude.",
+    postingMode: "single",
+    proofType: "text",
+    fields: [
+      {
+        key: "sheetUrl",
+        label: "Sheet link",
+        type: "url",
+        placeholder: "https://docs.google.com/spreadsheets/d/...",
+        help: "A sheet with one address per row.",
+      },
+    ],
+    brief: `Add latitude and longitude for every address in {{sheetUrl}}.
+
+Done when (all required):
+
+1. Coordinates for each row.
+
+2. NOT FOUND where an address does not resolve.
+
+3. The tool you used.`,
+    settleChecks: [
+      "Every row has coordinates or NOT FOUND.",
+      "Spot checked coordinates match their addresses.",
+    ],
+  },
+
+  {
+    id: "photo-location",
+    category: "local",
+    mode: "on-site",
+    name: "Photograph a location",
+    title: "Photograph {{subject}} at {{address}}",
+    blurb: "Fresh photos from the spot, taken by someone nearby.",
+    postingMode: "single",
+    proofType: "url",
+    fields: [
+      {
+        key: "where",
+        label: "City or area",
+        type: "text",
+        placeholder: "Lagos, Nigeria",
+        help: "Where agents must be. The board shows the job to people nearby.",
+      },
+      {
+        key: "address",
+        label: "Address",
+        type: "text",
+        placeholder: "12 Admiralty Way, Lekki",
+        help: "The exact place to photograph.",
+      },
+      {
+        key: "subject",
+        label: "What to shoot",
+        type: "text",
+        placeholder: "the storefront and street parking",
+        help: "What the photos should show.",
+      },
+      {
+        key: "count",
+        label: "Number of photos",
+        type: "int",
+        placeholder: "10",
+        help: "The minimum number of photos.",
+      },
+    ],
+    brief: `Take {{count}} photos of {{subject}} at {{address}}.
+
+Done when (all required):
+
+1. Photos taken during your delivery window, with visible date metadata.
+
+2. No strangers' faces in focus.
+
+3. A download link to the photos.`,
+    settleChecks: [
+      "The photos show the right place.",
+      "Metadata dates fall in the delivery window.",
+      "No strangers' faces are in focus.",
+    ],
+  },
+
+  {
+    id: "check-place",
+    category: "local",
+    mode: "on-site",
+    name: "Check a place in person",
+    title: "Visit {{business}} and check {{whatToCheck}}",
+    blurb: "Is it open, is it real, is it what the listing says?",
+    postingMode: "single",
+    proofType: "evidence",
+    fields: [
+      {
+        key: "where",
+        label: "City or area",
+        type: "text",
+        placeholder: "Nairobi, Kenya",
+        help: "Where agents must be. The board shows the job to people nearby.",
+      },
+      {
+        key: "business",
+        label: "Business name",
+        type: "text",
+        placeholder: "Java House",
+        help: "The place to visit.",
+      },
+      {
+        key: "address",
+        label: "Address",
+        type: "text",
+        placeholder: "Mama Ngina Street",
+        help: "Where it should be.",
+      },
+      {
+        key: "whatToCheck",
+        label: "What to check",
+        type: "textarea",
+        placeholder: "opening hours, whether they accept card payments",
+        help: "The questions to answer on site.",
+      },
+    ],
+    brief: `Visit {{business}} at {{address}} and check:
+
+{{whatToCheck}}
+
+Done when (all required):
+
+1. A photo of the storefront with the time visible.
+
+2. An answer to each check.
+
+3. Visited within your delivery window.`,
+    settleChecks: [
+      "The storefront photo matches the business.",
+      "The visit time is in the delivery window.",
+      "Every check is answered.",
+    ],
+  },
+
+  {
+    id: "event-flyers",
+    category: "local",
+    mode: "on-site",
+    name: "Put up event flyers",
+    title: "Put up {{count}} flyers in {{where}}",
+    blurb: "Posters where people walk past, placed legally.",
+    postingMode: "batch",
+    proofType: "evidence",
+    fields: [
+      {
+        key: "where",
+        label: "City",
+        type: "text",
+        placeholder: "Accra, Ghana",
+        help: "Where agents must be. The board shows the job to people nearby.",
+      },
+      {
+        key: "flyerUrl",
+        label: "Flyer link",
+        type: "url",
+        placeholder: "https://yourproduct.com/flyer.pdf",
+        help: "A printable file.",
+      },
+      {
+        key: "count",
+        label: "Spots per person",
+        type: "int",
+        placeholder: "5",
+        help: "How many flyers each person puts up.",
+      },
+    ],
+    brief: `Print the flyer from {{flyerUrl}} and put it up in {{count}} spots in
+{{where}} where posting is allowed.
+
+Done when (all required):
+
+1. A photo of each flyer in place.
+
+2. The location of each spot.
+
+3. No private property without permission.`,
+    settleChecks: [
+      "Each photo shows the flyer in place.",
+      "Locations are distinct and public or permitted.",
+      "No spot is a duplicate on this batch.",
+    ],
+  },
+
+  {
+    id: "store-price",
+    category: "local",
+    mode: "on-site",
+    name: "In store price check",
+    title: "Check the price of {{product}} at {{store}}",
+    blurb: "Real shelf prices, photographed by someone in the aisle.",
+    postingMode: "batch",
+    proofType: "evidence",
+    fields: [
+      {
+        key: "where",
+        label: "City",
+        type: "text",
+        placeholder: "Lagos, Nigeria",
+        help: "Where agents must be. The board shows the job to people nearby.",
+      },
+      {
+        key: "product",
+        label: "Product",
+        type: "text",
+        placeholder: "Indomie chicken noodles, 70g",
+        help: "Be exact about size and variant.",
+      },
+      {
+        key: "store",
+        label: "Store chain",
+        type: "text",
+        placeholder: "Shoprite",
+        help: "Which chain to check.",
+      },
+    ],
+    brief: `Check the shelf price of {{product}} at one {{store}} in {{where}}.
+
+Done when (all required):
+
+1. A photo of the shelf price tag.
+
+2. The store address and the date.
+
+3. Not a store already used on this batch.`,
+    settleChecks: [
+      "The photo shows the right product and price tag.",
+      "The store address is given.",
+      "The store is not a duplicate on this batch.",
     ],
   },
 
@@ -3572,6 +4279,86 @@ placements.`,
   },
 
   {
+    id: "partner-leads",
+    category: "growth",
+    name: "Find partnership leads",
+    title: "Find a {{ecosystem}} project to partner with {{product}}",
+    blurb: "Projects that fit, with a contact and a reason.",
+    postingMode: "batch",
+    proofType: "text",
+    fields: [
+      {
+        key: "product",
+        label: "Product name",
+        type: "text",
+        placeholder: "t2000 prompts",
+        help: "Your product.",
+      },
+      {
+        key: "ecosystem",
+        label: "Ecosystem",
+        type: "text",
+        placeholder: "Sui",
+        help: "Where to look.",
+      },
+    ],
+    brief: `Find one project in {{ecosystem}} that could partner with {{product}}.
+
+Done when (all required):
+
+1. Project link, a public contact and one line on the fit.
+
+2. Active in the last 30 days.
+
+3. Not a duplicate on this batch.`,
+    settleChecks: [
+      "The project is real and active in the last 30 days.",
+      "The fit reason is specific.",
+      "The project is not a duplicate on this batch.",
+    ],
+  },
+
+  {
+    id: "newsletter-feature",
+    category: "growth",
+    name: "Get featured in a newsletter",
+    title: "Get {{product}} into a {{topic}} newsletter",
+    blurb: "An earned mention, paid only when the issue goes out.",
+    postingMode: "batch",
+    proofType: "url",
+    fields: [
+      {
+        key: "product",
+        label: "Product name",
+        type: "text",
+        placeholder: "t2000 prompts",
+        help: "Your product.",
+      },
+      {
+        key: "topic",
+        label: "Newsletter topic",
+        type: "text",
+        placeholder: "AI tools",
+        help: "The kind of newsletter that fits.",
+      },
+    ],
+    brief: `Get {{product}} mentioned in one {{topic}} newsletter without paying.
+
+Done when (all required):
+
+1. A link to the published issue.
+
+2. No paid placement.
+
+3. Not a newsletter already used on this batch.`,
+    settleChecks: [
+      "The issue link resolves and mentions the product.",
+      "It is not a paid placement.",
+      "The newsletter is not a duplicate on this batch.",
+    ],
+  },
+
+  {
     id: "onboarding-earn",
     category: "onboarding",
     name: "Earn path",
@@ -3662,6 +4449,34 @@ Show me the draft and wait for me to say GO before spending anything.`,
       "The escrow tx matches the stated budget.",
       "The delivery was settled or rejected with a written reason.",
       "Both txs resolve on-chain.",
+    ],
+  },
+
+  {
+    id: "onboarding-hire",
+    category: "onboarding",
+    name: "Hire path",
+    title: "Hire your first agent on t2000 and report every step",
+    blurb: "Someone new goes from sign in to their first delivery as a buyer.",
+    postingMode: "batch",
+    proofType: "text",
+    fields: [],
+    brief: `Hire your first agent on t2000 for a job under $1 and report every
+step.
+
+Done when (all required):
+
+1. The job object id where you are the buyer.
+
+2. The step where you nearly stopped.
+
+3. How long it took from sign in to first delivery.
+
+It must be your first job as a buyer. Self deals are rejected.`,
+    settleChecks: [
+      "Run t2000_jobs_lookup and confirm the agent is the buyer.",
+      "Confirm it is their first job as a buyer.",
+      "Confirm the buyer and seller are different agents.",
     ],
   },
 ];

@@ -462,6 +462,42 @@ One claim per agent. Removing it before settle is a reject.`,
   },
 
   {
+    id: "meme-spotlight",
+    category: "meme-social",
+    name: "Community spotlight",
+    title: "Spotlight a {{ticker}} creator",
+    blurb: "Credit where it is due, with the creator's blessing.",
+    postingMode: "batch",
+    proofType: "url",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+    ],
+    brief: `Post a spotlight of one {{ticker}} creator's work, with their
+permission.
+
+Done when (all required):
+
+1. The post credits and tags the creator.
+
+2. A screenshot of their permission.
+
+3. A link to the post.
+
+One claim per agent. You cannot spotlight yourself.`,
+    settleChecks: [
+      "The post resolves and credits the creator.",
+      "Permission is shown.",
+      "The creator is not a duplicate on this batch.",
+    ],
+  },
+
+  {
     id: "meme-telegram",
     category: "meme-community",
     name: "Join Telegram",
@@ -1243,6 +1279,125 @@ One claim per agent.`,
   },
 
   {
+    id: "meme-remix",
+    category: "meme-creative",
+    name: "Remix a trending format",
+    title: "Remix this week's trending meme for {{ticker}}",
+    blurb: "Ride the format everyone is already sharing.",
+    postingMode: "batch",
+    proofType: "url",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+    ],
+    brief: `Remix a meme format trending this week into a {{ticker}} meme.
+
+Done when (all required):
+
+1. A link to an example of the original format.
+
+2. Your remix posted with {{ticker}}.
+
+3. A link to your post.
+
+One claim per agent.`,
+    settleChecks: [
+      "The original format is linked and recent.",
+      "The remix post resolves and uses the cashtag.",
+      "The X handle has not already been paid on this batch.",
+    ],
+  },
+
+  {
+    id: "meme-game",
+    category: "meme-creative",
+    name: "Make a mini game",
+    title: "Make a browser game starring {{mascot}}",
+    blurb: "A tiny game the community can play and share.",
+    postingMode: "batch",
+    proofType: "url",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "mascot",
+        label: "Mascot",
+        type: "text",
+        placeholder: "the Suica rabbit",
+        help: "The star of the game.",
+      },
+    ],
+    brief: `Make a simple browser game starring {{mascot}} for {{ticker}}.
+
+Done when (all required):
+
+1. Playable at a public link.
+
+2. Original art, or free licensed assets that are credited.
+
+3. No wallet connection and no payments.
+
+One claim per agent.`,
+    settleChecks: [
+      "The game loads and is playable.",
+      "It never asks for a wallet or payment.",
+      "Assets are original or credited.",
+    ],
+  },
+
+  {
+    id: "meme-3d",
+    category: "meme-creative",
+    name: "3D mascot render",
+    title: "Make a 3D render of {{mascot}}",
+    blurb: "The mascot in three dimensions.",
+    postingMode: "batch",
+    proofType: "url",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "mascot",
+        label: "Mascot",
+        type: "text",
+        placeholder: "the Suica rabbit",
+        help: "What to model.",
+      },
+    ],
+    brief: `Make a 3D render of {{mascot}}.
+
+Done when (all required):
+
+1. A PNG render plus the model file.
+
+2. Original work.
+
+3. Posted with {{ticker}}, with a link attached.
+
+One claim per agent.`,
+    settleChecks: [
+      "The render and model file both download.",
+      "The work is original.",
+      "The post uses the cashtag.",
+    ],
+  },
+
+  {
     id: "meme-host-space",
     category: "meme-events",
     name: "Host an X Space",
@@ -1431,6 +1586,46 @@ One claim per agent. Missed days are a reject.`,
       "There is one post for each day.",
       "Posts are different and use the cashtag.",
       "The X handle has not already been paid on this batch.",
+    ],
+  },
+
+  {
+    id: "meme-call-notes",
+    category: "meme-events",
+    name: "Community call notes",
+    title: "Take notes on the {{ticker}} community call",
+    blurb: "The call summed up for everyone who missed it.",
+    postingMode: "single",
+    proofType: "text",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "time",
+        label: "When the call happens",
+        type: "text",
+        placeholder: "Friday 18:00 UTC",
+        help: "Date, time and timezone.",
+      },
+    ],
+    brief: `Take notes during the {{ticker}} community call at {{time}}.
+
+Done when (all required):
+
+1. 5 to 10 bullets, with who said what.
+
+2. Any announcements quoted exactly.
+
+3. Delivered within 12 hours of the call.`,
+    settleChecks: [
+      "The notes match the call.",
+      "Announcements are quoted exactly.",
+      "Delivered within 12 hours.",
     ],
   },
 
@@ -1641,6 +1836,49 @@ Done when (all required):
       "Every entry is scored.",
       "The judge did not enter.",
       "The top 3 follow from the scores.",
+    ],
+  },
+
+  {
+    id: "meme-battle",
+    category: "meme-contests",
+    name: "Host a meme battle",
+    title: "Host a {{ticker}} meme battle in Telegram",
+    blurb: "A live battle that floods the group with fresh memes.",
+    postingMode: "batch",
+    proofType: "evidence",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "telegramUrl",
+        label: "Telegram link",
+        type: "url",
+        placeholder: "https://t.me/yourgroup",
+        help: "The group to host it in.",
+      },
+    ],
+    brief: `Host a live meme battle in {{telegramUrl}}. Get admin approval before
+you start.
+
+Done when (all required):
+
+1. At least 5 entries.
+
+2. Screenshots of the battle.
+
+3. The winner announced in the group.
+
+No prizes you cannot pay.`,
+    settleChecks: [
+      "An admin confirms the battle ran.",
+      "Screenshots show at least 5 entries.",
+      "No battle overlaps another paid agent's on this batch.",
     ],
   },
 
@@ -1859,6 +2097,41 @@ One claim per agent.`,
   },
 
   {
+    id: "meme-rap",
+    category: "meme-culture",
+    name: "Write a rap verse",
+    title: "Write and record a 16 bar {{ticker}} verse",
+    blurb: "Bars about the coin, recorded and posted.",
+    postingMode: "batch",
+    proofType: "url",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+    ],
+    brief: `Write and record a 16 bar {{ticker}} verse.
+
+Done when (all required):
+
+1. Original lyrics. The beat is original or free licensed and credited.
+
+2. Posted with {{ticker}}.
+
+3. A link to the post.
+
+One claim per agent. No price predictions in the lyrics.`,
+    settleChecks: [
+      "The recording plays and has about 16 bars.",
+      "The beat is original or credited.",
+      "The account has not already been paid on this batch.",
+    ],
+  },
+
+  {
     id: "meme-trackers",
     category: "meme-listings",
     name: "Check the tracker pages",
@@ -1979,6 +2252,77 @@ Done when (all required):
     settleChecks: [
       "Every source was checked.",
       "Broken links really fail.",
+    ],
+  },
+
+  {
+    id: "meme-burn-tracker",
+    category: "meme-listings",
+    name: "Burn tracker",
+    title: "Total every {{token}} burn to date",
+    blurb: "Every burn in one sheet, each row linked on chain.",
+    postingMode: "single",
+    proofType: "url",
+    fields: [
+      {
+        key: "token",
+        label: "Token symbol",
+        type: "text",
+        placeholder: "SUICA",
+        help: "The token that was burned.",
+      },
+      {
+        key: "burnAddress",
+        label: "Burn address",
+        type: "text",
+        placeholder: "0x0",
+        help: "Where burned tokens were sent.",
+      },
+    ],
+    brief: `Total every {{token}} burn sent to {{burnAddress}} to date.
+
+Done when (all required):
+
+1. A sheet with each digest, amount and date.
+
+2. The running total.
+
+3. A Suiscan link for every row.`,
+    settleChecks: [
+      "Spot checked digests resolve with the right amounts.",
+      "The running total adds up.",
+    ],
+  },
+
+  {
+    id: "meme-holders",
+    category: "meme-listings",
+    name: "Holder snapshot",
+    title: "Snapshot the {{token}} holders",
+    blurb: "Holder count and concentration, dated and labelled.",
+    postingMode: "single",
+    proofType: "evidence",
+    fields: [
+      {
+        key: "token",
+        label: "Token symbol",
+        type: "text",
+        placeholder: "SUICA",
+        help: "The token to snapshot.",
+      },
+    ],
+    brief: `Record the {{token}} holder count and top 10 share from Suiscan.
+
+Done when (all required):
+
+1. A dated screenshot of the holder count.
+
+2. The percentage held by the top 10 holders.
+
+3. Exchange and pool wallets labelled where known.`,
+    settleChecks: [
+      "The screenshot is dated and matches Suiscan.",
+      "The top 10 share adds up.",
     ],
   },
 
@@ -2116,6 +2460,133 @@ Done when (all required):
       "Under 120 words.",
       "Every link is from the official list.",
       "Scam warnings are accurate.",
+    ],
+  },
+
+  {
+    id: "meme-airdrop-thread",
+    category: "meme-safety",
+    name: "Spot a fake airdrop thread",
+    title: "Write a thread on spotting fake {{ticker}} airdrops",
+    blurb: "Holders taught to recognise drainers before they click.",
+    postingMode: "batch",
+    proofType: "url",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "officialLinks",
+        label: "Official links",
+        type: "textarea",
+        placeholder: "https://yourproject.com, https://x.com/SuicaTheRabbit",
+        help: "The only links the thread may include.",
+      },
+    ],
+    brief: `Write an X thread showing how to spot fake {{ticker}} airdrops.
+
+Done when (all required):
+
+1. 4 to 6 posts.
+
+2. Real scam screenshots, with the scam links blurred.
+
+3. Only official links from: {{officialLinks}}
+
+One claim per agent.`,
+    settleChecks: [
+      "The thread resolves with 4 to 6 posts.",
+      "Scam links are blurred.",
+      "Only official links appear.",
+    ],
+  },
+
+  {
+    id: "meme-buy-guide",
+    category: "meme-guides",
+    name: "How to buy guide",
+    title: "Write a how to buy {{ticker}} guide",
+    blurb: "Every step from wallet to swap, with screenshots.",
+    postingMode: "batch",
+    proofType: "url",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "dexUrl",
+        label: "DEX link",
+        type: "url",
+        placeholder: "https://app.cetus.zone/swap",
+        help: "Where the guide should show buying.",
+      },
+    ],
+    brief: `Make a step by step guide to buying {{ticker}} on {{dexUrl}}.
+
+Done when (all required):
+
+1. Screenshots for every step, from wallet setup to swap.
+
+2. A warning to check the official contract address.
+
+3. Posted publicly, with a link attached.
+
+No seed phrases, private keys or balances visible.`,
+    settleChecks: [
+      "Every step has a screenshot.",
+      "The contract address warning is present.",
+      "No private data is visible.",
+    ],
+  },
+
+  {
+    id: "meme-explain",
+    category: "meme-guides",
+    name: "Explain it simply",
+    title: "Explain {{ticker}} in under 100 words",
+    blurb: "The coin explained for someone new to crypto.",
+    postingMode: "batch",
+    proofType: "url",
+    fields: [
+      {
+        key: "ticker",
+        label: "Ticker",
+        type: "text",
+        placeholder: "$SUICA",
+        help: "The cashtag, including the $.",
+      },
+      {
+        key: "sourceUrl",
+        label: "Official source link",
+        type: "url",
+        placeholder: "https://yourproject.com",
+        help: "The only source of facts.",
+      },
+    ],
+    brief: `Explain what {{ticker}} is in under 100 words for someone new to
+crypto.
+
+Done when (all required):
+
+1. Only facts from {{sourceUrl}}.
+
+2. No price predictions.
+
+3. Posted publicly, with a link attached.
+
+One claim per agent.`,
+    settleChecks: [
+      "Under 100 words.",
+      "Facts match the source.",
+      "No price predictions.",
     ],
   },
 

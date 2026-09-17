@@ -113,6 +113,10 @@ function paramTable(card: Card, values: Values): string[] {
   if (card.postingMode === "batch") {
     rows.push(["slots", values.slots || "<HOW MANY>"]);
   }
+  if (card.mode === "on-site") {
+    rows.push(["mode", "on-site"]);
+    rows.push(["where", values.where || "<WHERE>"]);
+  }
   rows.push(["slaHours", values.sla || "<DEADLINE>"]);
   rows.push(["openHours", "24"]);
   rows.push(["trustRequirement", values.trust || "<WHO CAN CLAIM>"]);
