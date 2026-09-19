@@ -112,4 +112,4 @@ export type Card = {
 
 export type Values = Record<string, string>;
 
-export type Tab = "post" | "settle" | "both";
+export type Tab = "post" | "settle";

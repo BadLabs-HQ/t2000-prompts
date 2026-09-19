@@ -9,8 +9,7 @@ import { PromptLines } from "./PromptLines";
 
 const PANEL_TABS: { id: Tab; label: string }[] = [
   { id: "post", label: "Post" },
-  { id: "settle", label: "Settle" },
-  { id: "both", label: "Post + settle" },
+  { id: "settle", label: "Review & settle" },
 ];
 
 const INPUT: CSSProperties = {

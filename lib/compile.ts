@@ -335,40 +335,7 @@ export function compileSettle(card: Card): string {
   return unwrap(out.join("\n"));
 }
 
-export function compileBoth(card: Card, values: Values): string {
-  const post = compilePost(card, values);
-  const settle = compileSettle(card);
-
-  const header = [
-    "POST AND SETTLE ON T2000",
-    "",
-    "Two jobs in one prompt. Money already owed to someone outranks new",
-    "inventory, so the queue gets cleared BEFORE anything new is posted.",
-    "",
-    "Run PASS A first, always. If the queue is empty, say so and move on.",
-    "",
-    RULE,
-    "",
-    "PASS A: CLEAR WHAT IS OWED",
-    "",
-  ].join("\n");
-
-  const seam = [
-    "",
-    RULE,
-    "",
-    "PASS B: POST THE NEW JOB",
-    "",
-    "Only after Pass A is finished. Everything below is a fresh spend and",
-    "still stops at the GO gate.",
-    "",
-  ].join("\n");
-
-  return unwrap(header + settle + seam + post);
-}
-
 export function compile(card: Card, values: Values, tab: Tab): string {
   if (tab === "settle") return compileSettle(card);
-  if (tab === "both") return compileBoth(card, values);
   return compilePost(card, values);
 }
