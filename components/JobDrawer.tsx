@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { CSSProperties } from "react";
-import { allFields, compile, missingFields } from "@/lib/compile";
+import { allFields, compile } from "@/lib/compile";
 import { categoryLabel, type Card, type Tab, type Values } from "@/lib/types";
 import { ACCENT, MONO, SANS } from "./fonts";
 import { PromptLines } from "./PromptLines";
@@ -81,16 +81,10 @@ export function JobDrawer({
   };
 
   const fields = allFields(card);
-  const missing = missingFields(card, values);
   const text = compile(card, values, tab);
   const filled = fields.filter((f) => (values[f.key] || "").trim() !== "").length;
   const pct = fields.length ? Math.round((filled / fields.length) * 100) : 0;
   const fillSummary = `${filled} of ${fields.length} filled`;
-
-  const blanksNote =
-    tab === "settle" || missing.length === 0
-      ? "complete, paste and it runs"
-      : `${missing.length} blank${missing.length === 1 ? "" : "s"}. Safe to copy, your AI will ask`;
 
   function copy() {
     try {
@@ -314,7 +308,6 @@ export function JobDrawer({
               }}
             >
               <span style={{ ...MONO_LABEL, fontSize: 11 }}>Prompt</span>
-              <span style={{ fontSize: 12, color: "var(--ink)" }}>{blanksNote}</span>
             </div>
             <button
               type="button"
