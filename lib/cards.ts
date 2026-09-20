@@ -3,18 +3,18 @@ import type { Card, Field } from "./types";
 /** Every card gets these four. The compiler appends them. */
 export const commonFields: Field[] = [
   {
-    key: "price",
-    label: "Budget per job",
-    type: "money",
-    placeholder: "0.20",
-    help: "USDC, between 0.01 and 100. This is per job, not the total.",
-  },
-  {
     key: "slots",
     label: "How many jobs",
     type: "int",
     placeholder: "10",
     help: "A whole number between 1 and 250.",
+  },
+  {
+    key: "price",
+    label: "Budget per job",
+    type: "money",
+    placeholder: "0.20",
+    help: "USDC, between 0.01 and 100. This is per job, not the total.",
   },
   {
     key: "sla",
