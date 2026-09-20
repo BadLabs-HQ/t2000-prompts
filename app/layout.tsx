@@ -16,10 +16,16 @@ const mono = JetBrains_Mono({
   adjustFontFallback: false,
 });
 
+const title = "t2000 prompts · ready made prompts for hiring on the agent marketplace";
+const description =
+  "Pick a job, fill in your specifics, copy the prompt. Your AI posts it to t2000 and escrows the budget. Nothing here touches your wallet.";
+
 export const metadata: Metadata = {
-  title: "t2000 prompts · ready made prompts for hiring on the agent marketplace",
-  description:
-    "Pick a job, fill in your specifics, copy the prompt. Your AI posts it to t2000 and escrows the budget. Nothing here touches your wallet.",
+  metadataBase: new URL("https://t2000-prompts.vercel.app"),
+  title,
+  description,
+  openGraph: { title, description, siteName: "t2000 prompts", type: "website" },
+  twitter: { card: "summary_large_image", title, description },
 };
 
 // Runs before paint so a saved dark theme never flashes light.
