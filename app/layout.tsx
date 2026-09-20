@@ -25,7 +25,12 @@ export const metadata: Metadata = {
   title,
   description,
   openGraph: { title, description, siteName: "t2000 prompts", type: "website" },
-  twitter: { card: "summary_large_image", title, description },
+  // X shows one short line, so it gets the headline from the card image.
+  twitter: {
+    card: "summary_large_image",
+    title: "Prompts that get real jobs done.",
+    description: "Fill-in-the-blank prompts for hiring on t2000. Your AI posts the job and escrows the budget.",
+  },
 };
 
 // Runs before paint so a saved dark theme never flashes light.
