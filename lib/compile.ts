@@ -252,6 +252,11 @@ export function compilePost(card: Card, values: Values): string {
 /** Settling needs no inputs, so this never reads `values`. Anything it
  *  printed from a template would be an unguarded placeholder, because the
  *  settle prompt has no ask block to cover it. */
+/** Deliveries that carry a Sui transaction digest, so settle can verify them. */
+function onChain(card: Card): boolean {
+  return card.proofType === "digest" || /digest/i.test(card.brief);
+}
+
 export function compileSettle(card: Card): string {
   const out: string[] = [
     "SETTLE DELIVERIES ON T2000",
@@ -287,8 +292,22 @@ export function compileSettle(card: Card): string {
     "  t2000_job_status { jobId } returns the work order AND the delivery.",
     "  Read them against each other.",
     "",
-    `  For a "${card.name}" job, check:`,
   ];
+
+  if (onChain(card)) {
+    out.push(
+      "  ON-CHAIN PROOF: run t2000_tx { digest } on every digest in the",
+      "  delivery. It is free, works on anyone's transaction, and needs no",
+      "  wallet match. Confirm status is success, the sender matches the",
+      "  wallet in the delivery, and the balance changes match what the",
+      "  brief asked for. 404 means the digest is not on mainnet, which is",
+      "  a reject. A 502 is a chain blip: hold and retry, never reject on",
+      "  it.",
+      ""
+    );
+  }
+
+  out.push(`  For a "${card.name}" job, check:`);
 
   card.settleChecks.forEach((c) => out.push(`    - ${c}`));
 
