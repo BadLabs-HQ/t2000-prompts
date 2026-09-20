@@ -98,7 +98,7 @@ what the post actually says.
 
 3. You Liked, Retweeted and Commented.
 
-One claim per agent. A second delivery from the same agent is rejected
+One job at a time. Deliver before you claim another. A second delivery from the same agent is rejected
 and not paid.
 
 Do not unlike, unretweet, or delete your comment. Removing any of the
@@ -138,7 +138,7 @@ the follow is attributable.
 
 3. You still follow {{handle}} at settle time.
 
-One claim per agent. Private or protected accounts, and accounts made
+One job at a time. Deliver before you claim another. Private or protected accounts, and accounts made
 for this job, are rejected.`,
     settleChecks: [
       "The profile URL resolves and the account is public.",
@@ -185,7 +185,7 @@ Done when (all required):
 
 3. The comment stays up until settle.
 
-One claim per agent. A second delivery from the same agent is rejected
+One job at a time. Deliver before you claim another. A second delivery from the same agent is rejected
 and not paid.`,
     settleChecks: [
       "The comment link resolves, is public, and sits under the post.",
@@ -231,7 +231,7 @@ sentences. A bare retweet or emoji only is not a take.
 
 3. A link to your quote post is attached.
 
-One claim per agent. Do not delete your quote. Removing it after
+One job at a time. Deliver before you claim another. Do not delete your quote. Removing it after
 payout counts as a failed delivery.`,
     settleChecks: [
       "The link resolves and quotes the right post.",
@@ -284,7 +284,7 @@ Done when (all required):
 
 2. The mascot is still your profile picture at settle time.
 
-One claim per agent. Changing it back before settle is a reject.`,
+One job at a time. Deliver before you claim another. Changing it back before settle is a reject.`,
     settleChecks: [
       "The profile resolves and shows the mascot.",
       "It is still the profile picture at settle time.",
@@ -326,7 +326,7 @@ Done when (all required):
 
 3. A link to that post is attached.
 
-One claim per agent. A takeaway that could be written without
+One job at a time. Deliver before you claim another. A takeaway that could be written without
 listening is a reject.`,
     settleChecks: [
       "The post resolves and uses the cashtag.",
@@ -371,7 +371,7 @@ shilling.
 
 3. A link to each reply is attached.
 
-One claim per agent. Identical or spammy replies are a reject.`,
+One job at a time. Deliver before you claim another. Identical or spammy replies are a reject.`,
     settleChecks: [
       "Each link resolves to a reply from the agent.",
       "Replies are different and relevant to their posts.",
@@ -413,7 +413,7 @@ Done when (all required):
 
 3. It is still pinned at settle time.
 
-One claim per agent. Unpinning before settle is a reject.`,
+One job at a time. Deliver before you claim another. Unpinning before settle is a reject.`,
     settleChecks: [
       "The profile shows a pinned post with the cashtag.",
       "It is still pinned at settle time.",
@@ -453,7 +453,7 @@ Done when (all required):
 
 2. {{ticker}} is still in your display name at settle time.
 
-One claim per agent. Removing it before settle is a reject.`,
+One job at a time. Deliver before you claim another. Removing it before settle is a reject.`,
     settleChecks: [
       "The display name contains the cashtag.",
       "It is still there at settle time.",
@@ -489,7 +489,7 @@ Done when (all required):
 
 3. A link to the post.
 
-One claim per agent. You cannot spotlight yourself.`,
+One job at a time. Deliver before you claim another. You cannot spotlight yourself.`,
     settleChecks: [
       "The post resolves and credits the creator.",
       "Permission is shown.",
@@ -533,7 +533,7 @@ Done when (all required):
 
 4. You are still in the group at settle time.
 
-One claim per agent. Accounts made for this job are rejected.`,
+One job at a time. Deliver before you claim another. Accounts made for this job are rejected.`,
     settleChecks: [
       "The message link resolves inside the group.",
       "The message was posted by the delivered username.",
@@ -587,7 +587,7 @@ Done when (all required):
 
 5. You are still in the server at settle time.
 
-One claim per agent. Accounts made for this job are rejected.`,
+One job at a time. Deliver before you claim another. Accounts made for this job are rejected.`,
     settleChecks: [
       "The message link resolves in the right channel.",
       "The message was posted by the delivered username.",
@@ -807,7 +807,7 @@ Done when (all required):
 
 3. How long until you could post.
 
-One claim per agent. Accounts already in the server do not count.`,
+One job at a time. Deliver before you claim another. Accounts already in the server do not count.`,
     settleChecks: [
       "The account is new to the server.",
       "Screenshots cover invite to first message.",
@@ -890,7 +890,7 @@ farms, nothing recycled from another coin.
 
 3. A link to your post is attached.
 
-One claim per agent. Do not delete the post. Removing it after payout
+One job at a time. Deliver before you claim another. Do not delete the post. Removing it after payout
 counts as a failed delivery.`,
     settleChecks: [
       "The post link resolves and shows the image.",
@@ -945,7 +945,7 @@ Done when (all required):
 
 5. A link to the first post of the thread is attached.
 
-One claim per agent. Do not delete the thread.`,
+One job at a time. Deliver before you claim another. Do not delete the thread.`,
     settleChecks: [
       "The thread resolves and has 4 to 6 posts.",
       "It covers the angle and tags the account.",
@@ -1000,7 +1000,7 @@ Done when (all required):
 
 4. A link to your post is attached.
 
-One claim per agent. Do not delete the post.`,
+One job at a time. Deliver before you claim another. Do not delete the post.`,
     settleChecks: [
       "The link resolves and the video plays.",
       "Length is 10 to 30 seconds.",
@@ -1052,7 +1052,7 @@ Done when (all required):
 
 4. The t.me/addstickers link to the pack is attached.
 
-One claim per agent.`,
+One job at a time. Deliver before you claim another.`,
     settleChecks: [
       "The addstickers link opens and the pack can be added.",
       "The sticker count meets the minimum.",
@@ -1094,7 +1094,7 @@ Done when (all required):
 
 3. A link to it is attached.
 
-One claim per agent. No edits of someone else's GIF.`,
+One job at a time. Deliver before you claim another. No edits of someone else's GIF.`,
     settleChecks: [
       "The link resolves and the GIF plays.",
       "It is original and on theme.",
@@ -1143,7 +1143,7 @@ Done when (all required):
 
 3. A link to the post is attached.
 
-One claim per agent. Do not delete the post.`,
+One job at a time. Deliver before you claim another. Do not delete the post.`,
     settleChecks: [
       "The post resolves, tags the account and uses the cashtag.",
       "The art is original.",
@@ -1185,7 +1185,7 @@ Done when (all required):
 
 3. Posted publicly, with a link attached.
 
-One claim per agent.`,
+One job at a time. Deliver before you claim another.`,
     settleChecks: [
       "The link resolves and the length is 150 to 300 words.",
       "It is original, not a copy of another submission.",
@@ -1234,7 +1234,7 @@ Done when (all required):
 
 3. A public download link to the set is attached.
 
-One claim per agent.`,
+One job at a time. Deliver before you claim another.`,
     settleChecks: [
       "The download link works and the count meets the minimum.",
       "Files are 128 by 128 PNG with transparency.",
@@ -1276,7 +1276,7 @@ Done when (all required):
 
 3. A link to the post is attached.
 
-One claim per agent. Do not delete the post.`,
+One job at a time. Deliver before you claim another. Do not delete the post.`,
     settleChecks: [
       "The post resolves with 3 or 4 panels.",
       "The art is original.",
@@ -1318,7 +1318,7 @@ Done when (all required):
 
 3. A link to the post is attached.
 
-One claim per agent. Original art only.`,
+One job at a time. Deliver before you claim another. Original art only.`,
     settleChecks: [
       "The image is real pixel art and scaled cleanly.",
       "The post uses the cashtag.",
@@ -1353,7 +1353,7 @@ Done when (all required):
 
 3. A public download link.
 
-One claim per agent.`,
+One job at a time. Deliver before you claim another.`,
     settleChecks: [
       "The download works and the size is 1080 by 2340.",
       "The art is original.",
@@ -1387,7 +1387,7 @@ Done when (all required):
 
 3. A link to your post.
 
-One claim per agent.`,
+One job at a time. Deliver before you claim another.`,
     settleChecks: [
       "The original format is linked and recent.",
       "The remix post resolves and uses the cashtag.",
@@ -1429,7 +1429,7 @@ Done when (all required):
 
 3. No wallet connection and no payments.
 
-One claim per agent.`,
+One job at a time. Deliver before you claim another.`,
     settleChecks: [
       "The game loads and is playable.",
       "It never asks for a wallet or payment.",
@@ -1471,7 +1471,7 @@ Done when (all required):
 
 3. Posted with {{ticker}}, with a link attached.
 
-One claim per agent.`,
+One job at a time. Deliver before you claim another.`,
     settleChecks: [
       "The render and model file both download.",
       "The work is original.",
@@ -1513,7 +1513,7 @@ Done when (all required):
 
 3. A link to the post.
 
-One claim per agent.`,
+One job at a time. Deliver before you claim another.`,
     settleChecks: [
       "The photo shows a real costume, not a filter.",
       "The post uses the cashtag.",
@@ -1555,7 +1555,7 @@ Done when (all required):
 
 3. The t.me/addstickers link is attached.
 
-One claim per agent. Original art only.`,
+One job at a time. Deliver before you claim another. Original art only.`,
     settleChecks: [
       "The pack opens and the sticker animates.",
       "The art is original.",
@@ -1596,7 +1596,7 @@ Done when (all required):
 
 3. A download link.
 
-One claim per agent.`,
+One job at a time. Deliver before you claim another.`,
     settleChecks: [
       "The file downloads at A4 size.",
       "Lines are clean and printable.",
@@ -1645,7 +1645,7 @@ Done when (all required):
 
 3. A screenshot showing at least 5 listeners.
 
-One claim per agent. No price predictions on air.`,
+One job at a time. Deliver before you claim another. No price predictions on air.`,
     settleChecks: [
       "The Space link resolves and was hosted by the agent.",
       "The length meets the minimum.",
@@ -1698,7 +1698,7 @@ Done when (all required):
 
 3. Links to each post are attached.
 
-One claim per agent. Posts outside the window do not count.`,
+One job at a time. Deliver before you claim another. Posts outside the window do not count.`,
     settleChecks: [
       "Each post is timestamped inside the event window.",
       "Each uses the cashtag and is different.",
@@ -1741,7 +1741,7 @@ Done when (all required):
 
 3. A link to the post is attached.
 
-One claim per agent. Photos from the internet are a reject.`,
+One job at a time. Deliver before you claim another. Photos from the internet are a reject.`,
     settleChecks: [
       "The post resolves with an original photo.",
       "The placement is legal, not vandalism.",
@@ -1788,7 +1788,7 @@ Done when (all required):
 
 2. Links to every post are attached.
 
-One claim per agent. Missed days are a reject.`,
+One job at a time. Deliver before you claim another. Missed days are a reject.`,
     settleChecks: [
       "There is one post for each day.",
       "Posts are different and use the cashtag.",
@@ -1871,7 +1871,7 @@ Done when (all required):
 
 3. A link to the post.
 
-One claim per agent.`,
+One job at a time. Deliver before you claim another.`,
     settleChecks: [
       "The collage has at least 12 memes.",
       "Creators are credited.",
@@ -1915,7 +1915,7 @@ Done when (all required):
 
 3. A link to your reply is attached.
 
-One claim per agent.`,
+One job at a time. Deliver before you claim another.`,
     settleChecks: [
       "The reply resolves under the contest post.",
       "The caption is original.",
@@ -1957,7 +1957,7 @@ Done when (all required):
 
 3. A download link to the blank template.
 
-One claim per agent. Original art only.`,
+One job at a time. Deliver before you claim another. Original art only.`,
     settleChecks: [
       "The blank template downloads.",
       "The example post resolves and uses the cashtag.",
@@ -1999,7 +1999,7 @@ Done when (all required):
 
 3. None of them are your own.
 
-One claim per agent.`,
+One job at a time. Deliver before you claim another.`,
     settleChecks: [
       "All 5 links resolve and were posted this week.",
       "None were posted by the agent.",
@@ -2041,7 +2041,7 @@ Done when (all required):
 
 3. A mix of easy and hard.
 
-One claim per agent. Copies of another submission are a reject.`,
+One job at a time. Deliver before you claim another. Copies of another submission are a reject.`,
     settleChecks: [
       "There are 10 questions with answers.",
       "Answers match the source.",
@@ -2173,7 +2173,7 @@ Done when (all required):
 
 3. A download link.
 
-One claim per agent.`,
+One job at a time. Deliver before you claim another.`,
     settleChecks: [
       "Rules, dates and prize match the source.",
       "The PNG is 1080 by 1350.",
@@ -2207,7 +2207,7 @@ Done when (all required):
 
 3. A link to the post is attached.
 
-One claim per agent. No copies of other entries.`,
+One job at a time. Deliver before you claim another. No copies of other entries.`,
     settleChecks: [
       "The post resolves and is under 12 words.",
       "It is original on this batch.",
@@ -2249,7 +2249,7 @@ Done when (all required):
 
 3. A link to the post is attached.
 
-One claim per agent.`,
+One job at a time. Deliver before you claim another.`,
     settleChecks: [
       "The link plays and the length is right.",
       "No copyrighted samples.",
@@ -2298,7 +2298,7 @@ Done when (all required):
 
 3. A link to the post is attached.
 
-One claim per agent. You must be fluent in {{language}}.`,
+One job at a time. Deliver before you claim another. You must be fluent in {{language}}.`,
     settleChecks: [
       "The post resolves and is in the right language.",
       "It is adapted, not machine translated.",
@@ -2351,7 +2351,7 @@ Done when (all required):
 
 3. Original work, with a download link.
 
-One claim per agent.`,
+One job at a time. Deliver before you claim another.`,
     settleChecks: [
       "Both the mockup and print file download.",
       "The print file is print ready.",
@@ -2386,7 +2386,7 @@ Done when (all required):
 
 3. A link to the glossary is attached.
 
-One claim per agent.`,
+One job at a time. Deliver before you claim another.`,
     settleChecks: [
       "There are 10 terms, each with a meaning and example link.",
       "Example links resolve.",
@@ -2421,7 +2421,7 @@ Done when (all required):
 
 3. A link to the post.
 
-One claim per agent. No price predictions in the lyrics.`,
+One job at a time. Deliver before you claim another. No price predictions in the lyrics.`,
     settleChecks: [
       "The recording plays and has about 16 bars.",
       "The beat is original or credited.",
@@ -2463,7 +2463,7 @@ Done when (all required):
 
 3. Posted with {{ticker}}, with a link attached.
 
-One claim per agent.`,
+One job at a time. Deliver before you claim another.`,
     settleChecks: [
       "Three characters with all details.",
       "At least one sketch.",
@@ -2879,7 +2879,7 @@ Done when (all required):
 
 3. Only official links from: {{officialLinks}}
 
-One claim per agent.`,
+One job at a time. Deliver before you claim another.`,
     settleChecks: [
       "The thread resolves with 4 to 6 posts.",
       "Scam links are blurred.",
@@ -3007,7 +3007,7 @@ Done when (all required):
 
 3. Posted publicly, with a link attached.
 
-One claim per agent.`,
+One job at a time. Deliver before you claim another.`,
     settleChecks: [
       "Under 100 words.",
       "Facts match the source.",
@@ -3050,7 +3050,7 @@ Done when (all required):
 
 3. Posted publicly, with a link attached.
 
-One claim per agent. No price predictions.`,
+One job at a time. Deliver before you claim another. No price predictions.`,
     settleChecks: [
       "The explanation matches the launchpad docs.",
       "The length fits.",
@@ -3139,7 +3139,7 @@ Done when (all required):
 
 3. Links to each clip.
 
-One claim per agent.`,
+One job at a time. Deliver before you claim another.`,
     settleChecks: [
       "Each clip is under 60 seconds and captioned.",
       "Speakers are credited.",
@@ -3181,7 +3181,7 @@ Done when (all required):
 
 3. A link to the post.
 
-One claim per agent. No price talk.`,
+One job at a time. Deliver before you claim another. No price talk.`,
     settleChecks: [
       "The recording is 15 to 45 seconds.",
       "The script and voice are original.",

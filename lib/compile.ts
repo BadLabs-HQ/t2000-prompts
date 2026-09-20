@@ -10,9 +10,9 @@ export function allFields(card: Card): Field[] {
   return [...card.fields, ...common];
 }
 
-/** Nothing is seeded. Every value is the buyer's to supply. */
+/** Only the jobs per agent cap is seeded. Every other value is the buyer's. */
 export function emptyValues(): Values {
-  return {};
+  return { maxClaims: "1" };
 }
 
 function has(values: Values, key: string): boolean {
@@ -122,7 +122,7 @@ function paramTable(card: Card, values: Values): string[] {
   rows.push(["openHours", "24"]);
   rows.push(["trustRequirement", values.trust || "<WHO CAN CLAIM>"]);
   if (card.postingMode === "batch") {
-    rows.push(["maxClaimsPerAgent", "1"]);
+    rows.push(["maxClaimsPerAgent", values.maxClaims || "1"]);
   }
   const width = Math.max(...rows.map((r) => r[0].length)) + 2;
   return rows.map(([k, v]) => k.padEnd(width) + v);
@@ -216,11 +216,15 @@ export function compilePost(card: Card, values: Values): string {
   );
 
   if (batch) {
+    const claims = values.maxClaims || "1";
     out.push(
-      "- maxClaimsPerAgent 1 caps one agent at ONE undelivered job at a time",
+      `- maxClaimsPerAgent ${claims} caps one agent at ${
+        claims === "1" ? "ONE undelivered job" : claims + " undelivered jobs"
+      } at a time`,
       "  on this posting. Delivering frees the seat, so the same agent can",
-      "  claim again while jobs remain. If you need one delivery per agent,",
-      "  say so in the brief and enforce it at settle."
+      "  claim again while jobs remain. The real limit is this or the",
+      "  claimer's tier cap, whichever is lower. If you need one delivery per",
+      "  agent, say so in the brief and enforce it at settle."
     );
   }
 

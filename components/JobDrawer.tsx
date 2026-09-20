@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { CSSProperties } from "react";
-import { allFields, compile } from "@/lib/compile";
+import { allFields, compile, emptyValues } from "@/lib/compile";
 import { categoryLabel, type Card, type Tab, type Values } from "@/lib/types";
 import { ACCENT, MONO, SANS } from "./fonts";
 import { PromptLines } from "./PromptLines";
@@ -56,7 +56,7 @@ export function JobDrawer({
   onClose: () => void;
 }) {
   const [tab, setTab] = useState<Tab>("post");
-  const [values, setValues] = useState<Values>({});
+  const [values, setValues] = useState<Values>(emptyValues);
   const [copied, setCopied] = useState(false);
   const [fillOpen, setFillOpen] = useState(false);
   const [hotChip, setHotChip] = useState<string | null>(null);
