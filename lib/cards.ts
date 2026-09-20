@@ -11,7 +11,7 @@ export const commonFields: Field[] = [
   },
   {
     key: "slots",
-    label: "How many people",
+    label: "How many jobs",
     type: "int",
     placeholder: "10",
     help: "A whole number between 1 and 250.",
