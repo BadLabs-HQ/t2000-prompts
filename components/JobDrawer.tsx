@@ -291,24 +291,11 @@ export function JobDrawer({
             style={{
               display: "flex",
               alignItems: "center",
-              justifyContent: "space-between",
+              justifyContent: "flex-end",
               gap: 12,
               paddingBottom: 12,
             }}
           >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "baseline",
-                gap: 8,
-                minWidth: 0,
-                border: "1px solid var(--ink)",
-                borderRadius: 14,
-                padding: "10px 16px",
-              }}
-            >
-              <span style={{ ...MONO_LABEL, fontSize: 11 }}>Prompt</span>
-            </div>
             <button
               type="button"
               onClick={copy}
@@ -328,7 +315,7 @@ export function JobDrawer({
                 color: "var(--ink)",
               }}
             >
-              {copied ? "Copied" : "Copy"}
+              {copied ? "Copied" : "Copy prompt"}
             </button>
           </div>
           <div
