@@ -4,10 +4,10 @@ import type { Card, Field } from "./types";
 export const commonFields: Field[] = [
   {
     key: "price",
-    label: "Budget per person",
+    label: "Budget per job",
     type: "money",
     placeholder: "0.20",
-    help: "USDC, between 0.01 and 100. This is per person, not the total.",
+    help: "USDC, between 0.01 and 100. This is per job, not the total.",
   },
   {
     key: "slots",

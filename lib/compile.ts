@@ -109,7 +109,7 @@ function wrap(text: string, width: number): string[] {
 }
 
 function paramTable(card: Card, values: Values): string[] {
-  const rows: [string, string][] = [["maxUsdc", values.price || "<BUDGET>"]];
+  const rows: [string, string][] = [["maxUsdc", values.price || "<BUDGET PER JOB>"]];
   if (card.postingMode === "batch") {
     rows.push(["slots", values.slots || "<HOW MANY JOBS>"]);
   }
