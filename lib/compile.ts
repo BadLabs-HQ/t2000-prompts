@@ -204,7 +204,7 @@ export function compilePost(card: Card, values: Values): string {
   ];
 
   if (batch) {
-    out.push("- ONE call. Not one per person.");
+    out.push("- ONE call. Not one per job.");
     out.push(`- maxUsdc is PER JOB. Total escrow is ${totalPhrase}.`);
   } else {
     out.push(`- ONE call. Total escrow is ${total === null ? "maxUsdc" : money(total)}.`);
@@ -217,7 +217,10 @@ export function compilePost(card: Card, values: Values): string {
 
   if (batch) {
     out.push(
-      "- maxClaimsPerAgent 1 is what limits one agent to one slot. Keep it at 1."
+      "- maxClaimsPerAgent 1 caps one agent at ONE undelivered job at a time",
+      "  on this posting. Delivering frees the seat, so the same agent can",
+      "  claim again while jobs remain. If you need one delivery per agent,",
+      "  say so in the brief and enforce it at settle."
     );
   }
 
