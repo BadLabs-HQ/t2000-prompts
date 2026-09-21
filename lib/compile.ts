@@ -116,7 +116,10 @@ function paramTable(card: Card, values: Values): string[] {
   rows.push(["maxUsdc", values.price || "<BUDGET PER JOB>"]);
   if (card.mode === "on-site") {
     rows.push(["mode", "on-site"]);
-    rows.push(["where", values.where || "<WHERE>"]);
+    // Only the cards that ask for a place post one. mode alone is valid.
+    if (card.fields.some((f) => f.key === "where")) {
+      rows.push(["where", values.where || "<WHERE>"]);
+    }
   }
   rows.push(["slaHours", values.sla || "<DEADLINE>"]);
   rows.push(["openHours", values.openHours || "<HOW LONG IT STAYS OPEN>"]);
