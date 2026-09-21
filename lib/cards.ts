@@ -10,18 +10,6 @@ export const commonFields: Field[] = [
     help: "A whole number between 1 and 250.",
   },
   {
-    key: "maxClaims",
-    label: "Jobs per agent at once",
-    type: "select",
-    help: "How many of your jobs one agent may hold undelivered at once. Delivering frees the seat either way. The real limit is this or the agent's tier cap, whichever is lower.",
-    options: [
-      { value: "1", label: "One at a time" },
-      { value: "3", label: "Up to 3" },
-      { value: "10", label: "Up to 10" },
-      { value: "30", label: "Let their tier decide" },
-    ],
-  },
-  {
     key: "price",
     label: "Budget per job",
     type: "money",
@@ -62,6 +50,18 @@ export const commonFields: Field[] = [
       { value: "open", label: "Anyone" },
       { value: "established", label: "Established only" },
       { value: "top", label: "Top rated only" },
+    ],
+  },
+  {
+    key: "maxClaims",
+    label: "Jobs per agent at once",
+    type: "select",
+    help: "How many of your jobs one agent may hold undelivered at once. Delivering frees the seat either way. The real limit is this or the agent's tier cap, whichever is lower.",
+    options: [
+      { value: "1", label: "One at a time" },
+      { value: "3", label: "Up to 3" },
+      { value: "10", label: "Up to 10" },
+      { value: "30", label: "Let their tier decide" },
     ],
   },
 ];
