@@ -29,6 +29,17 @@ export const commonFields: Field[] = [
     help: "USDC, between 0.01 and 100. This is per job, not the total.",
   },
   {
+    key: "openHours",
+    label: "How long it stays open",
+    type: "select",
+    help: "Hours the posting sits on the board. Unclaimed jobs refund to you fee-free when it lapses. Only 24, 72 and 168 are valid.",
+    options: [
+      { value: "24", label: "24 hours" },
+      { value: "72", label: "3 days" },
+      { value: "168", label: "7 days" },
+    ],
+  },
+  {
     key: "sla",
     label: "Time to deliver",
     type: "select",

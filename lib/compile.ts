@@ -12,7 +12,7 @@ export function allFields(card: Card): Field[] {
 
 /** Only the jobs per agent cap is seeded. Every other value is the buyer's. */
 export function emptyValues(): Values {
-  return { maxClaims: "1" };
+  return { maxClaims: "1", openHours: "24" };
 }
 
 function has(values: Values, key: string): boolean {
@@ -119,7 +119,7 @@ function paramTable(card: Card, values: Values): string[] {
     rows.push(["where", values.where || "<WHERE>"]);
   }
   rows.push(["slaHours", values.sla || "<DEADLINE>"]);
-  rows.push(["openHours", "24"]);
+  rows.push(["openHours", values.openHours || "24"]);
   rows.push(["trustRequirement", values.trust || "<WHO CAN CLAIM>"]);
   if (card.postingMode === "batch") {
     rows.push(["maxClaimsPerAgent", values.maxClaims || "1"]);
