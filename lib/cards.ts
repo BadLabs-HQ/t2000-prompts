@@ -20,11 +20,13 @@ export const commonFields: Field[] = [
     key: "openHours",
     label: "How long it stays open",
     type: "select",
-    help: "Hours the posting sits on the board. Unclaimed jobs refund to you fee-free when it lapses. Only 24, 72 and 168 are valid.",
+    help: "Hours the posting sits on the board. Unclaimed jobs refund to you fee-free when it lapses. Any number of hours up to 720 is valid.",
     options: [
       { value: "24", label: "24 hours" },
       { value: "72", label: "3 days" },
       { value: "168", label: "7 days" },
+      { value: "336", label: "14 days" },
+      { value: "720", label: "30 days" },
     ],
   },
   {
